@@ -1,68 +1,9 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>考研英语一真题训练器 · 2023—2026 · 记忆复习版</title>
-<meta name="description" content="2023—2026考研英语一真题词汇、词组、长难句、翻译、错题与遗忘曲线复习训练。">
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<header class="topbar">
-  <div class="brand"><span class="brand-mark">K</span><div><strong>考研英语一 · 真题训练器</strong><small>2023—2026 · MEMORY V3</small></div></div>
-  <div class="top-actions">
-    <button class="ghost" id="exportProgress">导出记忆</button>
-    <button class="ghost" id="importProgress">导入记忆</button>
-    <input id="importFile" type="file" accept="application/json" hidden>
-    <button class="ghost" id="resetProgress">重置进度</button>
-  </div>
-</header>
-<main>
-<section id="home" class="view active">
-  <div class="hero">
-    <div>
-      <span class="eyebrow">TRUE PAPER TRAINER · V3 MEMORY</span>
-      <h1>真题练习 + 内置记忆 + 每日复习。</h1>
-      <p>做过什么、错过什么、什么时候该复习，都会保存在当前浏览器。新词进入遗忘曲线式间隔复习；到期词重新放回真题语境，像完形一样选择。</p>
-    </div>
-    <div class="hero-card"><div class="big" id="masteryPct">0%</div><span>词汇长期掌握度</span><div class="progress"><i id="masteryBar"></i></div></div>
-  </div>
-
-  <div class="memory-banner">
-    <div><span class="eyebrow">TODAY</span><h2>今天的记忆任务</h2><p id="memorySummary">正在读取本机记忆…</p></div>
-    <button class="primary big-button" data-go="spaced-review">开始今日复习</button>
-  </div>
-
-  <div class="stats six">
-    <div class="stat"><b id="statTotal">0</b><span>总词汇 / 词组</span></div>
-    <div class="stat"><b id="statLearned">0</b><span>已经训练过</span></div>
-    <div class="stat due"><b id="statDue">0</b><span>今天到期复习</span></div>
-    <div class="stat"><b id="statWrong">0</b><span>当前错题</span></div>
-    <div class="stat"><b id="statMastered">0</b><span>稳定掌握</span></div>
-    <div class="stat"><b id="statToday">0</b><span>今日已复习</span></div>
-  </div>
-
-  <div class="module-grid">
-    <button class="module" data-go="match"><span>01</span><h2>词汇 / 词组连线</h2><p>随机抽取新词和薄弱词。第一次遇到后自动进入复习计划。</p><em>开始连线 →</em></button>
-    <button class="module" data-go="build-en"><span>02</span><h2>汉译 → 英文拼句</h2><p>真题完整句按意群重组，并加入干扰块。</p><em>开始拼句 →</em></button>
-    <button class="module" data-go="build-zh"><span>03</span><h2>英文 → 中文拼译</h2><p>按中文意义块重组，不死卡唯一中文字序。</p><em>开始拼译 →</em></button>
-    <button class="module" data-go="free"><span>04</span><h2>无提示汉译</h2><p>宽松语义评分；允许不同但合理的中文表达。</p><em>开始翻译 →</em></button>
-    <button class="module" data-go="structure"><span>05</span><h2>长难句拆骨架</h2><p>抓主干、从句、逻辑连接，再回到整句理解。</p><em>开始拆句 →</em></button>
-    <button class="module accent" data-go="spaced-review"><span>06</span><h2>复习词汇 · 遗忘曲线</h2><p>只抽今天到期的词，全部放回真题语境做四选一。</p><em><span id="dueInline">0</span> 个待复习 →</em></button>
-    <button class="module wrong-accent" data-go="review"><span>07</span><h2>错题强化 · 真题语境填词</h2><p>专门回炉仍在错题簿里的词；答对后逐步退出错题簿。</p><em>强化错题 →</em></button>
-  </div>
-
-  <div class="memory-help">
-    <b>记忆规则</b><span>首次学会 → 1 天 → 2 天 → 4 天 → 7 天 → 15 天 → 30 天 → 60 天 → 120 天。答错会回到短间隔，并进入错题强化。它是“遗忘曲线式间隔复习”，不是把某一条实验曲线机械套到每个人身上。</span>
-  </div>
-  <div class="source-note" id="corpusNote"></div>
-</section>
-
-<section id="trainer" class="view">
-  <div class="trainer-head"><button class="back" id="backHome">← 首页</button><div><span id="modeEyebrow" class="eyebrow"></span><h1 id="modeTitle"></h1></div><div class="year-filter" id="yearFilter"></div></div>
-  <div id="trainerBody"></div>
-</section>
-</main>
-<footer>考研英语一 · 2023—2026 · 真题全量训练器 · Memory V3 · GitHub Pages</footer>
-<script src="generated-data.js"></script><script src="data.js"></script><script src="app.js"></script>
-</body></html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>考研英语一真题训练器 · 2023—2026 · 全量版</title><meta name="description" content="2023—2026考研英语一真题全量词汇、词组、长难句、翻译和错题训练。"><link rel="stylesheet" href="styles.css"></head>
+<body><header class="topbar"><div class="brand"><span class="brand-mark">K</span><div><strong>考研英语一 · 真题训练器</strong><small>2023—2026 · FULL CORPUS</small></div></div><button class="ghost" id="resetProgress">重置进度</button></header><main>
+<section id="home" class="view active"><div class="hero"><div><span class="eyebrow">TRUE PAPER TRAINER · V2 FULL</span><h1>这次按四套整卷建库。</h1><p>不是 174 个样例词。词汇、搭配、完整句子都直接来自 2023—2026 英语一整卷；错题会自动回炉。</p></div><div class="hero-card"><div class="big" id="masteryPct">0%</div><span>综合掌握度</span><div class="progress"><i id="masteryBar"></i></div></div></div>
+<div class="stats six"><div class="stat"><b id="statWords">0</b><span>训练词汇</span></div><div class="stat"><b id="statPhrases">0</b><span>词组/搭配</span></div><div class="stat"><b id="statSent">0</b><span>完整真题句</span></div><div class="stat"><b id="statLong">0</b><span>长难句</span></div><div class="stat"><b id="statWrong">0</b><span>当前错题</span></div><div class="stat"><b id="statDone">0</b><span>累计练习</span></div></div>
+<div class="module-grid"><button class="module" data-go="match"><span>01</span><h2>词汇 / 词组连线</h2><p>每轮 50 个，5 组 × 10；错词自动提高权重。</p><em>开始连线 →</em></button><button class="module" data-go="build-en"><span>02</span><h2>汉译 → 英文拼句</h2><p>真题完整句按意群重组，并加入干扰块。</p><em>开始拼句 →</em></button><button class="module" data-go="build-zh"><span>03</span><h2>英文 → 中文拼译</h2><p>按中文意义块重组，不死卡唯一中文字序。</p><em>开始拼译 →</em></button><button class="module" data-go="free"><span>04</span><h2>无提示汉译</h2><p>宽松评分；Part C 用人工校对译文，其余句子使用参考译文并允许自判。</p><em>开始翻译 →</em></button><button class="module" data-go="structure"><span>05</span><h2>长难句拆骨架</h2><p>优先抽取 15 词以上句子，识别主干、从句和逻辑连接。</p><em>开始拆句 →</em></button><button class="module accent" data-go="review"><span>06</span><h2>错题强化 · 真题语境填词</h2><p>错词重新放回原卷语境，做选择式回炉。</p><em>强化错题 →</em></button></div>
+<div class="source-note" id="corpusNote"></div></section>
+<section id="trainer" class="view"><div class="trainer-head"><button class="back" id="backHome">← 首页</button><div><span id="modeEyebrow" class="eyebrow"></span><h1 id="modeTitle"></h1></div><div class="year-filter" id="yearFilter"></div></div><div id="trainerBody"></div></section></main><footer>考研英语一 · 2023—2026 真题全量训练器 · GitHub Pages</footer>
+<script src="generated-data.js"></script><script src="data.js"></script><script src="app.js"></script></body></html>
