@@ -1,0 +1,7 @@
+{
+  "name":"kaoyan-english-trainer-build",
+  "private":true,
+  "type":"module",
+  "scripts":{"build:data":"node scripts/build-generated.mjs"},
+  "dependencies":{"ecdict":"0.0.4","@huggingface/transformers":"latest"}
+}

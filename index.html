@@ -3,66 +3,72 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>考研英语一真题训练器 · 2023—2026 · 长难句阶梯训练版</title>
-<meta name="description" content="2023—2026考研英语一真题词汇、词组、长难句、翻译、错题与遗忘曲线复习训练。">
-<link rel="stylesheet" href="styles.css">
+<title>考研英语一真题训练器 · 2023—2026</title>
+<meta name="description" content="2023—2026考研英语一真题词汇、翻译、长难句与复习训练。">
+<link rel="stylesheet" href="styles.css?v=5.0.0">
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><span class="brand-mark">K</span><div><strong>考研英语一 · 真题训练器</strong><small>2023—2026 · ANATOMY V4</small></div></div>
+  <div class="brand"><span class="brand-mark">K</span><div><strong>考研英语一</strong><small>2023—2026</small></div></div>
   <div class="top-actions">
-    <button class="ghost" id="exportProgress">导出记忆</button>
-    <button class="ghost" id="importProgress">导入记忆</button>
+    <button class="ghost" id="exportProgress">导出进度</button>
+    <button class="ghost" id="importProgress">导入进度</button>
     <input id="importFile" type="file" accept="application/json" hidden>
-    <button class="ghost" id="resetProgress">重置进度</button>
+    <button class="ghost danger-link" id="resetProgress">重置</button>
   </div>
 </header>
 <main>
 <section id="home" class="view active">
-  <div class="hero">
+  <div class="home-head">
     <div>
-      <span class="eyebrow">TRUE PAPER TRAINER · V4 ANATOMY</span>
-      <h1>真题练习 + 内置记忆 + 长难句阶梯拆解。</h1>
-      <p>做过什么、错过什么、什么时候该复习，都会保存在当前浏览器。长难句按“精拆 → 较粗分析 → 只抓主干”三级训练：先把结构看透，再逐渐学会删掉修饰、压缩句子。</p>
+      <h1>今日练习</h1>
+      <p id="memorySummary">正在读取学习进度…</p>
     </div>
-    <div class="hero-card"><div class="big" id="masteryPct">0%</div><span>词汇长期掌握度</span><div class="progress"><i id="masteryBar"></i></div></div>
-  </div>
-
-  <div class="memory-banner">
-    <div><span class="eyebrow">TODAY</span><h2>今天的记忆任务</h2><p id="memorySummary">正在读取本机记忆…</p></div>
     <button class="primary big-button" data-go="spaced-review">开始今日复习</button>
   </div>
 
+  <div class="progress-card">
+    <div class="progress-line"><span>长期掌握度</span><b id="masteryPct">0%</b></div>
+    <div class="progress"><i id="masteryBar"></i></div>
+  </div>
+
   <div class="stats six">
-    <div class="stat"><b id="statTotal">0</b><span>总词汇 / 词组</span></div>
-    <div class="stat"><b id="statLearned">0</b><span>已经训练过</span></div>
-    <div class="stat due"><b id="statDue">0</b><span>今天到期复习</span></div>
-    <div class="stat"><b id="statWrong">0</b><span>当前错题</span></div>
+    <div class="stat"><b id="statTotal">0</b><span>词汇 / 词组</span></div>
+    <div class="stat"><b id="statLearned">0</b><span>已训练</span></div>
+    <div class="stat due"><b id="statDue">0</b><span>今日到期</span></div>
+    <div class="stat"><b id="statWrong">0</b><span>错题</span></div>
     <div class="stat"><b id="statMastered">0</b><span>稳定掌握</span></div>
-    <div class="stat"><b id="statToday">0</b><span>今日已复习</span></div>
+    <div class="stat"><b id="statToday">0</b><span>今日复习</span></div>
   </div>
 
+  <div id="dataStatus" class="data-status" hidden></div>
+
+  <div class="section-head"><h2>练习</h2></div>
   <div class="module-grid">
-    <button class="module" data-go="match"><span>01</span><h2>词汇 / 词组连线</h2><p>随机抽取新词和薄弱词。第一次遇到后自动进入复习计划。</p><em>开始连线 →</em></button>
-    <button class="module" data-go="build-en"><span>02</span><h2>汉译 → 英文拼句</h2><p>真题完整句按意群重组，并加入干扰块。</p><em>开始拼句 →</em></button>
-    <button class="module" data-go="build-zh"><span>03</span><h2>英文 → 中文拼译</h2><p>按中文意义块重组，不死卡唯一中文字序。</p><em>开始拼译 →</em></button>
-    <button class="module" data-go="free"><span>04</span><h2>无提示汉译</h2><p>宽松语义评分；允许不同但合理的中文表达。</p><em>开始翻译 →</em></button>
-    <button class="module anatomy-accent" data-go="structure"><span>05</span><h2>长难句 · 三阶段拆骨架</h2><p>20 句逐词精拆 → 120 句层级强化 → 全部长句主干压缩。</p><em>进入句子训练场 →</em></button>
-    <button class="module accent" data-go="spaced-review"><span>06</span><h2>复习词汇 · 遗忘曲线</h2><p>只抽今天到期的词，全部放回真题语境做四选一。</p><em><span id="dueInline">0</span> 个待复习 →</em></button>
-    <button class="module wrong-accent" data-go="review"><span>07</span><h2>错题强化 · 真题语境填词</h2><p>专门回炉仍在错题簿里的词；答对后逐步退出错题簿。</p><em>强化错题 →</em></button>
+    <button class="module" data-go="match"><span>01</span><h2>词汇 / 词组连线</h2><p>10 个一组，随机抽取新词与薄弱词。</p><em>开始 →</em></button>
+    <button class="module" data-go="build-en"><span>02</span><h2>汉译 → 英文拼句</h2><p>按意群把真题句重新拼回英语。</p><em>开始 →</em></button>
+    <button class="module" data-go="build-zh"><span>03</span><h2>英文 → 中文拼译</h2><p>按中文意群重组译文。</p><em>开始 →</em></button>
+    <button class="module" data-go="free"><span>04</span><h2>无提示汉译</h2><p>自己翻译，再进行宽松语义核对。</p><em>开始 →</em></button>
+    <button class="module anatomy-accent" data-go="structure"><span>05</span><h2>长难句拆骨架</h2><p>精拆 → 层级 → 主干压缩。</p><em>开始 →</em></button>
+    <button class="module accent" data-go="spaced-review"><span>06</span><h2>复习词汇</h2><p>到期词回到真题语境做填词。</p><em><span id="dueInline">0</span> 个待复习 →</em></button>
+    <button class="module wrong-accent" data-go="review"><span>07</span><h2>错题强化</h2><p>只练仍未掌握的词。</p><em>开始 →</em></button>
   </div>
-
-  <div class="memory-help">
-    <b>记忆规则</b><span>首次学会 → 1 天 → 2 天 → 4 天 → 7 天 → 15 天 → 30 天 → 60 天 → 120 天。答错会回到短间隔，并进入错题强化。它是“遗忘曲线式间隔复习”，不是把某一条实验曲线机械套到每个人身上。</span>
-  </div>
-  <div class="source-note" id="corpusNote"></div>
 </section>
 
 <section id="trainer" class="view">
-  <div class="trainer-head"><button class="back" id="backHome">← 首页</button><div><span id="modeEyebrow" class="eyebrow"></span><h1 id="modeTitle"></h1></div><div class="year-filter" id="yearFilter"></div></div>
+  <div class="trainer-head">
+    <button class="back" id="backHome">← 首页</button>
+    <div><span id="modeEyebrow" class="eyebrow"></span><h1 id="modeTitle"></h1></div>
+    <div class="year-filter" id="yearFilter"></div>
+  </div>
   <div id="trainerBody"></div>
 </section>
 </main>
-<footer>考研英语一 · 2023—2026 · 真题全量训练器 · Anatomy V4 · GitHub Pages</footer>
-<script src="generated-data.js"></script><script src="data.js"></script><script src="anatomy-data.js"></script><script src="app.js"></script>
-</body></html>
+<footer>2023—2026 · 考研英语一</footer>
+<script src="quality-data.js?v=5.0.0"></script>
+<script src="generated-data.js?v=5.0.0"></script>
+<script src="data.js?v=5.0.0"></script>
+<script src="anatomy-data.js?v=5.0.0"></script>
+<script src="app.js?v=5.0.0"></script>
+</body>
+</html>
