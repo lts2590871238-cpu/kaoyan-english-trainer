@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>考研英语一真题训练器 · 2023—2026 · 记忆复习版</title>
+<title>考研英语一真题训练器 · 2023—2026 · 长难句阶梯训练版</title>
 <meta name="description" content="2023—2026考研英语一真题词汇、词组、长难句、翻译、错题与遗忘曲线复习训练。">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><span class="brand-mark">K</span><div><strong>考研英语一 · 真题训练器</strong><small>2023—2026 · MEMORY V3</small></div></div>
+  <div class="brand"><span class="brand-mark">K</span><div><strong>考研英语一 · 真题训练器</strong><small>2023—2026 · ANATOMY V4</small></div></div>
   <div class="top-actions">
     <button class="ghost" id="exportProgress">导出记忆</button>
     <button class="ghost" id="importProgress">导入记忆</button>
@@ -21,9 +21,9 @@
 <section id="home" class="view active">
   <div class="hero">
     <div>
-      <span class="eyebrow">TRUE PAPER TRAINER · V3 MEMORY</span>
-      <h1>真题练习 + 内置记忆 + 每日复习。</h1>
-      <p>做过什么、错过什么、什么时候该复习，都会保存在当前浏览器。新词进入遗忘曲线式间隔复习；到期词重新放回真题语境，像完形一样选择。</p>
+      <span class="eyebrow">TRUE PAPER TRAINER · V4 ANATOMY</span>
+      <h1>真题练习 + 内置记忆 + 长难句阶梯拆解。</h1>
+      <p>做过什么、错过什么、什么时候该复习，都会保存在当前浏览器。长难句按“精拆 → 较粗分析 → 只抓主干”三级训练：先把结构看透，再逐渐学会删掉修饰、压缩句子。</p>
     </div>
     <div class="hero-card"><div class="big" id="masteryPct">0%</div><span>词汇长期掌握度</span><div class="progress"><i id="masteryBar"></i></div></div>
   </div>
@@ -47,7 +47,7 @@
     <button class="module" data-go="build-en"><span>02</span><h2>汉译 → 英文拼句</h2><p>真题完整句按意群重组，并加入干扰块。</p><em>开始拼句 →</em></button>
     <button class="module" data-go="build-zh"><span>03</span><h2>英文 → 中文拼译</h2><p>按中文意义块重组，不死卡唯一中文字序。</p><em>开始拼译 →</em></button>
     <button class="module" data-go="free"><span>04</span><h2>无提示汉译</h2><p>宽松语义评分；允许不同但合理的中文表达。</p><em>开始翻译 →</em></button>
-    <button class="module" data-go="structure"><span>05</span><h2>长难句拆骨架</h2><p>抓主干、从句、逻辑连接，再回到整句理解。</p><em>开始拆句 →</em></button>
+    <button class="module anatomy-accent" data-go="structure"><span>05</span><h2>长难句 · 三阶段拆骨架</h2><p>20 句逐词精拆 → 120 句层级强化 → 全部长句主干压缩。</p><em>进入句子训练场 →</em></button>
     <button class="module accent" data-go="spaced-review"><span>06</span><h2>复习词汇 · 遗忘曲线</h2><p>只抽今天到期的词，全部放回真题语境做四选一。</p><em><span id="dueInline">0</span> 个待复习 →</em></button>
     <button class="module wrong-accent" data-go="review"><span>07</span><h2>错题强化 · 真题语境填词</h2><p>专门回炉仍在错题簿里的词；答对后逐步退出错题簿。</p><em>强化错题 →</em></button>
   </div>
@@ -63,6 +63,6 @@
   <div id="trainerBody"></div>
 </section>
 </main>
-<footer>考研英语一 · 2023—2026 · 真题全量训练器 · Memory V3 · GitHub Pages</footer>
-<script src="generated-data.js"></script><script src="data.js"></script><script src="app.js"></script>
+<footer>考研英语一 · 2023—2026 · 真题全量训练器 · Anatomy V4 · GitHub Pages</footer>
+<script src="generated-data.js"></script><script src="data.js"></script><script src="anatomy-data.js"></script><script src="app.js"></script>
 </body></html>
