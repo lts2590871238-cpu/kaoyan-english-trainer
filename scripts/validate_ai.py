@@ -2,6 +2,7 @@
 import json,sys
 from pathlib import Path
 from collections import Counter
+from lexicon_rules import lexicon_output_issues
 ROOT=Path(__file__).resolve().parents[1]; SRC=ROOT/'data/source'; WORK=ROOT/'data/work'
 def load(p): return json.loads(p.read_text(encoding='utf8'))
 errors=[]
@@ -9,11 +10,11 @@ lex=load(WORK/'lexicon.base.json'); senses=load(WORK/'lexicon.senses.json'); sen
 terms={x['term'] for x in lex}
 if set(senses)!=terms:
     errors.append(f'lexicon sense key mismatch missing={list(terms-set(senses))[:10]} extra={list(set(senses)-terms)[:10]}')
-missing=[]
+bad=[]
 for x in lex:
-    s=senses.get(x['term'],{})
-    if not s.get('sense_zh') or not s.get('dict_zh') or (x['type']=='word' and not s.get('definition_en')) or (x.get('needs_context_fill') and (not s.get('example_en') or not s.get('example_zh'))): missing.append(x['term'])
-if missing: errors.append(f'incomplete AI lexicon fields: {missing[:20]}')
+    issues=lexicon_output_issues(x,senses.get(x['term'],{}))
+    if issues: bad.append((x['term'],issues))
+if bad: errors.append(f'incomplete AI lexicon fields/examples: {bad[:20]}')
 if len(sent)!=600: errors.append(f'sentence enrichment count={len(sent)}')
 bad_sent=[k for k,v in sent.items() if not v.get('zh') or not v.get('en_chunks') or not v.get('zh_chunks')]
 if bad_sent: errors.append(f'incomplete sentence enrichment: {bad_sent[:20]}')

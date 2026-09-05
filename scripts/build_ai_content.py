@@ -2,6 +2,7 @@
 import json, os, re, time, urllib.request, shutil
 from pathlib import Path
 from collections import Counter
+from lexicon_rules import allowed_forms, example_mentions_entry, merge_lexicon_ai, lexicon_output_issues
 
 ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/'data/source'
@@ -248,25 +249,27 @@ def generate_nonprecise_single(x,retries=4):
     raise RuntimeError(f'invalid analysis after individual repair {x["id"]}')
 
 
-def enrich_lexicon_single(x,retries=5):
+def enrich_lexicon_single(x,retries=6):
+    # Repair one lexicon item without making DeepSeek the dictionary of record.
+    # Local dictionary fields survive every AI reply. AI supplies contextual sense and,
+    # for option-only vocabulary, a practice example. Inflected forms are accepted.
     ctx=x['contexts'][0]['text'] if x.get('contexts') else ''
-    system='''你是考研英语词典编辑。这个词条已经通过上游真题词库审计，确定是合法学习词条；不要再判断它是否“有效”，也不要因为大小写、人名联想或地名联想拒绝任务。依据给定词典信息与真题语境，必须补全教学字段并输出严格 JSON。sense_zh 是本句最准确最短义；dict_zh 是学习者常用核心中文义；definition_en 是简洁准确的英英释义。'''
-    req={'term':x['term'],'type':x['type'],'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'dictionary_source':x.get('dictionary_source',''),'needs_context_fill':bool(x.get('needs_context_fill'))}
-    last=None
+    forms=sorted(allowed_forms(x))
+    system='''你是考研英语词汇语境校对员。词条已通过上游审计。不要判断 valid/invalid，不要改词条身份。可靠词典字段以输入为准；你主要负责给出本句最准确的短中文义。若 needs_context_fill=true，再生成一个自然、简短、语法正确的学习例句，例句必须实际使用 allowed_forms 中至少一个词形。输出严格 JSON。'''
+    req={'term':x['term'],'type':x['type'],'forms':x.get('forms',[]),'allowed_forms':forms,'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'dictionary_source':x.get('dictionary_source',''),'needs_context_fill':bool(x.get('needs_context_fill'))}
+    last=[]
     for attempt in range(retries):
         try:
-            g=call_json(system,'返回 {"term":"...","sense_zh":"...","dict_zh":"...","definition_en":"...","pos":"...","example_en":"若 needs_context_fill=true 则给一个自然学习例句，否则空字符串","example_zh":"对应汉译或空字符串"}。不得返回 valid 字段，不得拒绝词条。AI例句不是原真题，必须自然且含目标词。输入：\n'+json.dumps(req,ensure_ascii=False),5000)
-            sense=(g.get('sense_zh') or x.get('dict_zh') or '').strip()
-            dict_zh=(x.get('dict_zh') or g.get('dict_zh') or sense).strip()
-            definition=(x.get('definition_en') or g.get('definition_en') or '').strip()
-            pos=(x.get('pos') or g.get('pos') or ('phrase' if x.get('type')=='phrase' else '')).strip()
-            ex_en=str(g.get('example_en') or '').strip(); ex_zh=str(g.get('example_zh') or '').strip()
-            need_ctx=bool(x.get('needs_context_fill'))
-            if sense and dict_zh and (x.get('type')!='word' or definition) and (not need_ctx or (ex_en and ex_zh and x['term'].lower() in ex_en.lower())):
-                return {'sense_zh':sense,'dict_zh':dict_zh,'definition_en':definition,'pos':pos,'example_en':ex_en,'example_zh':ex_zh}
-            last='incomplete dictionary fields'
+            g=call_json(system,'返回 {"term":"...","sense_zh":"本句准确短义","dict_zh":"仅输入缺失时补充，否则可留空","definition_en":"仅输入缺失时补充，否则可留空","pos":"仅输入缺失时补充，否则可留空","example_en":"仅 needs_context_fill=true 时生成，必须使用 allowed_forms 中至少一个词形","example_zh":"对应汉译"}。输入：\n'+json.dumps(req,ensure_ascii=False),4200)
+            out=merge_lexicon_ai(x,g)
+            issues=lexicon_output_issues(x,out)
+            if not issues:
+                return out
+            last=issues
+            if set(issues).issubset({'example_en','example_zh','example_form'}):
+                req['repair_note']='上一次例句未通过。请务必原样使用 allowed_forms 中的一个形式，例如：'+(', '.join(forms[:8]) if forms else x['term'])
         except Exception as e:
-            last=e
+            last=[str(e)]
         time.sleep(min(1+attempt,4))
     raise RuntimeError(f'lexicon individual repair failed {x["term"]}: {last}')
 
@@ -390,7 +393,7 @@ main_stem：只给 main_stem_indices、abridged_en、zh、main_stem_zh、discard
         save_ckpt('analysis.json',analysis_out)
     print('analysis',len(analysis_out),'/',len(analysis),flush=True)
 
-# ---------- 3000 context-specific word senses + dictionary gap filling ----------
+# ---------- 3000 context-specific word senses; local dictionary is authoritative ----------
 lexpath=WORK/'lexicon.base.json'
 if not lexpath.exists():
     raise SystemExit('Run build_lexicon.py before build_ai_content.py')
@@ -404,31 +407,64 @@ lex_out={k:v for k,v in lex_out.items() if k in scheduled_terms}
 if len(lex_out)!=old_n:
     print('pruned stale lexicon checkpoint',old_n,'->',len(lex_out),flush=True)
     save_ckpt('lexicon_senses.json',lex_out)
-system3='''你是考研英语词典编辑。所有输入词条已经通过上游词库审计，确定属于正式学习词库；你不得再做 valid/invalid 判断。依据可靠词典信息和给定真题语境处理词条，不得发明不存在的词义。sense_zh 是“这个词在该真题语境中的最准确、最短中文义”；dict_zh 是适合学习者的常用核心中文词典义；definition_en 是简洁、准确的英英词典式释义。若输入已有 dict_zh/definition_en，优先保留其含义，只在缺失或明显不完整时补齐。输出严格 JSON。'''
+
+system3='''你是考研英语词汇语境校对员。所有词条已经通过上游词库审计。可靠词典字段以输入为准，不要覆盖、拒绝或重判词条。你的核心任务是：根据真题 context 给出 sense_zh（本句最准确、最短中文义）。若 needs_context_fill=true，另生成一个自然学习例句，必须使用 allowed_forms 中至少一个实际词形，并给出汉译。输出严格 JSON。'''
 pending=[x for x in scheduled if x['term'] not in lex_out]
+unresolved={}
 for batch in batches(pending,32):
     req=[]
     for x in batch:
         ctx=x['contexts'][0]['text'] if x.get('contexts') else ''
-        req.append({'term':x['term'],'type':x['type'],'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'dictionary_source':x.get('dictionary_source',''),'needs_context_fill':bool(x.get('needs_context_fill'))})
-    user='返回 {"items":[{"term":"...","sense_zh":"本句准确义","dict_zh":"核心中文词典义","definition_en":"English dictionary-style definition","pos":"词性或phrase","example_en":"仅 needs_context_fill=true 时生成自然例句，否则空字符串","example_zh":"对应汉译或空字符串"}]}。不得返回 valid 字段。AI例句不得冒充真题。输入：\n'+json.dumps(req,ensure_ascii=False)
-    obj=call_json(system3,user,11000)
-    got={i['term'].lower():i for i in obj.get('items',[]) if isinstance(i,dict) and i.get('term')}
+        req.append({'term':x['term'],'type':x['type'],'forms':x.get('forms',[]),'allowed_forms':sorted(allowed_forms(x)),'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'needs_context_fill':bool(x.get('needs_context_fill'))})
+    user='返回 {"items":[{"term":"...","sense_zh":"本句准确短义","example_en":"仅 needs_context_fill=true 时给出，必须使用 allowed_forms 中至少一个形式","example_zh":"对应汉译"}]}。不要重写词典字段，不得返回 valid。输入：\n'+json.dumps(req,ensure_ascii=False)
+    try:
+        obj=call_json(system3,user,9000)
+        got={str(i.get('term','')).lower():i for i in obj.get('items',[]) if isinstance(i,dict) and i.get('term')}
+    except Exception as e:
+        print('lexicon batch API failed; falling back to individual repair:',e,flush=True)
+        got={}
     for x in batch:
         g=got.get(x['term'].lower()) or {}
-        sense=(g.get('sense_zh') or x.get('dict_zh') or '').strip()
-        dict_zh=(x.get('dict_zh') or g.get('dict_zh') or sense).strip()
-        definition=(x.get('definition_en') or g.get('definition_en') or '').strip()
-        pos=(x.get('pos') or g.get('pos') or ('phrase' if x.get('type')=='phrase' else '')).strip()
-        ex_en=str(g.get('example_en') or '').strip(); ex_zh=str(g.get('example_zh') or '').strip(); need_ctx=bool(x.get('needs_context_fill'))
-        if not sense or not dict_zh or (x.get('type')=='word' and not definition) or (need_ctx and (not ex_en or not ex_zh or x['term'].lower() not in ex_en.lower())):
-            print('repair lexicon individually',x['term'],flush=True)
-            fixed=enrich_lexicon_single(x)
-            sense,dict_zh,definition,pos=fixed['sense_zh'],fixed['dict_zh'],fixed['definition_en'],fixed['pos']
-            ex_en,ex_zh=fixed.get('example_en',''),fixed.get('example_zh','')
-        lex_out[x['term']]={'sense_zh':sense,'dict_zh':dict_zh,'definition_en':definition,'pos':pos,'example_en':ex_en,'example_zh':ex_zh}
+        out=merge_lexicon_ai(x,g)
+        issues=lexicon_output_issues(x,out)
+        if issues:
+            print('repair lexicon individually',x['term'],'issues='+','.join(issues),flush=True)
+            try:
+                out=enrich_lexicon_single(x)
+                issues=lexicon_output_issues(x,out)
+            except Exception as e:
+                issues=['repair_exception:'+str(e)]
+        if issues:
+            unresolved[x['term']]={'issues':issues}
+            print('defer lexicon unresolved',x['term'],issues,flush=True)
+            continue
+        lex_out[x['term']]=out
         save_ckpt('lexicon_senses.json',lex_out)
-    print('lexicon dictionary+senses',len(lex_out),'/',len(scheduled),flush=True)
+    print('lexicon dictionary+senses',len(lex_out),'/',len(scheduled),'deferred',len(unresolved),flush=True)
+
+if unresolved:
+    print('final lexicon repair pass',len(unresolved),'items',flush=True)
+    still={}
+    byterm={x['term']:x for x in scheduled}
+    for term in list(unresolved):
+        x=byterm[term]
+        try:
+            out=enrich_lexicon_single(x,retries=9)
+            issues=lexicon_output_issues(x,out)
+        except Exception as e:
+            out=None; issues=['repair_exception:'+str(e)]
+        if issues:
+            still[term]=issues
+        else:
+            lex_out[term]=out
+            save_ckpt('lexicon_senses.json',lex_out)
+    unresolved=still
+
+if unresolved:
+    (WORK/'lexicon_unresolved.json').write_text(json.dumps(unresolved,ensure_ascii=False,indent=2),encoding='utf8')
+    raise RuntimeError(f'lexicon enrichment unresolved after full pass: {len(unresolved)} items; sample={list(unresolved.items())[:8]}')
+if (WORK/'lexicon_unresolved.json').exists():
+    (WORK/'lexicon_unresolved.json').unlink()
 
 # ---------- publish complete enrichment files ----------
 (WORK/'sentences.enriched.json').write_text(json.dumps(sent_out,ensure_ascii=False,indent=2),encoding='utf8')
