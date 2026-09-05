@@ -393,84 +393,24 @@ main_stem：只给 main_stem_indices、abridged_en、zh、main_stem_zh、discard
         save_ckpt('analysis.json',analysis_out)
     print('analysis',len(analysis_out),'/',len(analysis),flush=True)
 
-# ---------- 3000 context-specific word senses; local dictionary is authoritative ----------
-lexpath=WORK/'lexicon.base.json'
-if not lexpath.exists():
+
+# ---------- Lexicon dictionary/senses are LOCAL, not AI ----------
+# build_lexicon.py already created data/work/lexicon.senses.json from ECDICT.
+# We deliberately do not call DeepSeek 3000 times. This makes the build fast and
+# removes a whole class of failures caused by inflected forms or missing AI fields.
+lexpath=WORK/'lexicon.base.json'; sensepath=WORK/'lexicon.senses.json'
+if not lexpath.exists() or not sensepath.exists():
     raise SystemExit('Run build_lexicon.py before build_ai_content.py')
 lex=json.loads(lexpath.read_text(encoding='utf8'))
-scheduled=[x for x in lex if x.get('scheduled')]
-assert len(scheduled)==3000
-lex_out=load_ckpt('lexicon_senses.json',{})
-scheduled_terms={x['term'] for x in scheduled}
-old_n=len(lex_out)
-lex_out={k:v for k,v in lex_out.items() if k in scheduled_terms}
-if len(lex_out)!=old_n:
-    print('pruned stale lexicon checkpoint',old_n,'->',len(lex_out),flush=True)
-    save_ckpt('lexicon_senses.json',lex_out)
-
-system3='''你是考研英语词汇语境校对员。所有词条已经通过上游词库审计。可靠词典字段以输入为准，不要覆盖、拒绝或重判词条。你的核心任务是：根据真题 context 给出 sense_zh（本句最准确、最短中文义）。若 needs_context_fill=true，另生成一个自然学习例句，必须使用 allowed_forms 中至少一个实际词形，并给出汉译。输出严格 JSON。'''
-pending=[x for x in scheduled if x['term'] not in lex_out]
-unresolved={}
-for batch in batches(pending,32):
-    req=[]
-    for x in batch:
-        ctx=x['contexts'][0]['text'] if x.get('contexts') else ''
-        req.append({'term':x['term'],'type':x['type'],'forms':x.get('forms',[]),'allowed_forms':sorted(allowed_forms(x)),'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'needs_context_fill':bool(x.get('needs_context_fill'))})
-    user='返回 {"items":[{"term":"...","sense_zh":"本句准确短义","example_en":"仅 needs_context_fill=true 时给出，必须使用 allowed_forms 中至少一个形式","example_zh":"对应汉译"}]}。不要重写词典字段，不得返回 valid。输入：\n'+json.dumps(req,ensure_ascii=False)
-    try:
-        obj=call_json(system3,user,9000)
-        got={str(i.get('term','')).lower():i for i in obj.get('items',[]) if isinstance(i,dict) and i.get('term')}
-    except Exception as e:
-        print('lexicon batch API failed; falling back to individual repair:',e,flush=True)
-        got={}
-    for x in batch:
-        g=got.get(x['term'].lower()) or {}
-        out=merge_lexicon_ai(x,g)
-        issues=lexicon_output_issues(x,out)
-        if issues:
-            print('repair lexicon individually',x['term'],'issues='+','.join(issues),flush=True)
-            try:
-                out=enrich_lexicon_single(x)
-                issues=lexicon_output_issues(x,out)
-            except Exception as e:
-                issues=['repair_exception:'+str(e)]
-        if issues:
-            unresolved[x['term']]={'issues':issues}
-            print('defer lexicon unresolved',x['term'],issues,flush=True)
-            continue
-        lex_out[x['term']]=out
-        save_ckpt('lexicon_senses.json',lex_out)
-    print('lexicon dictionary+senses',len(lex_out),'/',len(scheduled),'deferred',len(unresolved),flush=True)
-
-if unresolved:
-    print('final lexicon repair pass',len(unresolved),'items',flush=True)
-    still={}
-    byterm={x['term']:x for x in scheduled}
-    for term in list(unresolved):
-        x=byterm[term]
-        try:
-            out=enrich_lexicon_single(x,retries=9)
-            issues=lexicon_output_issues(x,out)
-        except Exception as e:
-            out=None; issues=['repair_exception:'+str(e)]
-        if issues:
-            still[term]=issues
-        else:
-            lex_out[term]=out
-            save_ckpt('lexicon_senses.json',lex_out)
-    unresolved=still
-
-if unresolved:
-    (WORK/'lexicon_unresolved.json').write_text(json.dumps(unresolved,ensure_ascii=False,indent=2),encoding='utf8')
-    raise RuntimeError(f'lexicon enrichment unresolved after full pass: {len(unresolved)} items; sample={list(unresolved.items())[:8]}')
-if (WORK/'lexicon_unresolved.json').exists():
-    (WORK/'lexicon_unresolved.json').unlink()
+lex_out=json.loads(sensepath.read_text(encoding='utf8'))
+if len(lex)!=3000 or len(lex_out)!=3000:
+    raise RuntimeError(f'local lexicon incomplete: lex={len(lex)} senses={len(lex_out)}')
+print('lexicon dictionary+senses 3000 / 3000 (local; zero DeepSeek word calls)',flush=True)
 
 # ---------- publish complete enrichment files ----------
 (WORK/'sentences.enriched.json').write_text(json.dumps(sent_out,ensure_ascii=False,indent=2),encoding='utf8')
 (WORK/'corpus.translations.json').write_text(json.dumps(context_zh,ensure_ascii=False,indent=2),encoding='utf8')
 (WORK/'analysis.enriched.json').write_text(json.dumps(analysis_out,ensure_ascii=False,indent=2),encoding='utf8')
+# lexicon.senses.json is already canonical local output; rewrite only for formatting consistency.
 (WORK/'lexicon.senses.json').write_text(json.dumps(lex_out,ensure_ascii=False,indent=2),encoding='utf8')
-
-# A successful build no longer needs recovery checkpoints. Failure leaves them for the workflow to commit.
-print('AI enrichment complete')
+print('AI enrichment complete (sentences/analysis only; vocabulary dictionary is local)')

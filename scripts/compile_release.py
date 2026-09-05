@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]; SRC=ROOT/'data/source'; WORK=ROOT/'dat
 if CAND.exists(): shutil.rmtree(CAND)
 CAND.mkdir(parents=True)
 def load(p): return json.loads(p.read_text(encoding='utf8'))
-lex=load(WORK/'lexicon.base.json'); senses=load(WORK/'lexicon.senses.json'); sent=load(WORK/'sentences.enriched.json'); analysis=load(WORK/'analysis.enriched.json'); ctxzh=load(WORK/'corpus.translations.json'); daysw=load(WORK/'days_words.json'); dict_base=load(WORK/'dictionary.lookup.base.json'); dayss=load(SRC/'days_sentences.json'); corpus_src=load(SRC/'corpus_sentences.json')
+lex=load(WORK/'lexicon.base.json'); senses=load(WORK/'lexicon.senses.json'); sent=load(WORK/'sentences.enriched.json'); analysis=load(WORK/'analysis.enriched.json'); ctxzh=load(WORK/'corpus.translations.json'); daysw=load(WORK/'days_words.json'); dict_base=load(WORK/'dictionary.lookup.base.json'); dayss=load(SRC/'days_sentences.json'); corpus_src=load(SRC/'corpus_sentences.json'); wordctx=load(WORK/'word_contexts.json') if (WORK/'word_contexts.json').exists() else {}
 # EXACT same corpus policy as build_lexicon.py and validators.
 corpus_good=[x for x in corpus_src if x.get('source')!='写作']
 corpus={x['id']:{'en':x['text'],'year':x['year'],'page':x['page'],'source':x['source'],'word_count':x['word_count'],'true_paper':True} for x in corpus_good}
@@ -26,8 +26,9 @@ for x in lex:
         if len(refs)>=8: break
     if not refs and x.get('needs_context_fill'):
         pid='practice_'+x['item_id']
-        ex_en=(s.get('example_en') or '').strip(); ex_zh=(s.get('example_zh') or '').strip()
-        if not ex_en or not ex_zh: raise SystemExit('missing AI practice context for '+x['term'])
+        w=wordctx.get(x['term'],{})
+        ex_en=(w.get('example_en') or '').strip(); ex_zh=(w.get('example_zh') or '').strip()
+        if not ex_en or not ex_zh: raise SystemExit('missing batched practice context for '+x['term'])
         corpus[pid]={'en':ex_en,'year':None,'page':None,'source':'AI练习例句','word_count':len(ex_en.split()),'true_paper':False}
         ctxzh[pid]=ex_zh
         refs=[{'sentence_id':pid}]
@@ -44,7 +45,7 @@ files={
 'lexicon.json':final,'dictionary_lookup.json':dlookup,'lexicon_index.json':lex_index,'sentences.json':sent,'sentence_meta.json':sentence_meta,
 'corpus.json':corpus,'context_translations.json':ctxzh,'analysis.json':analysis,'schedule.json':{'words':daysw,'sentences':dayss}}
 for name,obj in files.items(): (CAND/name).write_text(json.dumps(obj,ensure_ascii=False,separators=(',',':')),encoding='utf8')
-meta={'version':'7.0','ready':True,'title':'轩轩冲刺50分大作战！','days':100,
+meta={'version':'9.0','ready':True,'title':'轩轩冲刺50分大作战！','days':100,
 'daily':{'words':30,'en_to_zh':2,'zh_to_en':2,'focus':2,'focus_rotation':'odd=translation, even=analysis'},
 'counts':{'vocab':len(final),'dictionary':len(dlookup),'sentences':len(sent),'analysis':len(analysis),'corpus_contexts':len(corpus)},
 'bands':dict(Counter(x['freq_band'] for x in final)),'sentence_pools':dict(Counter(x['pool'] for x in sent.values())),
