@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json,shutil
+from release_contract import write_manifest
 from pathlib import Path
 from collections import Counter
 ROOT=Path(__file__).resolve().parents[1]; SRC=ROOT/'data/source'; WORK=ROOT/'data/work'; CAND=ROOT/'data/candidate'
@@ -46,11 +47,14 @@ files={
 'lexicon.json':final,'dictionary_lookup.json':dlookup,'lexicon_index.json':lex_index,'sentences.json':sent,'sentence_meta.json':sentence_meta,
 'corpus.json':corpus,'context_translations.json':ctxzh,'analysis.json':analysis,'schedule.json':{'words':daysw,'sentences':dayss}}
 for name,obj in files.items(): (CAND/name).write_text(json.dumps(obj,ensure_ascii=False,separators=(',',':')),encoding='utf8')
-meta={'version':'13.0','ready':True,'title':'轩轩冲刺50分大作战！','days':100,
+meta={'version':'18.0','ready':True,'title':'轩轩冲刺50分大作战！','days':100,
 'daily':{'words':30,'en_to_zh':2,'zh_to_en':2,'focus':2,'focus_rotation':'odd=translation, even=analysis'},
 'counts':{'vocab':len(final),'word_exposures':3000,'unique_new_words':len(final),'reinforcement_exposures':0,'dictionary':len(dlookup),'sentences':len(sent),'analysis':len(analysis),'corpus_contexts':len(corpus)},
 'bands':dict(Counter(x['freq_band'] for x in final)),'sentence_pools':dict(Counter(x['pool'] for x in sent.values())),
 'analysis_stages':dict(Counter(x['stage'] for x in analysis.values())),
 'requirements':{'missing_word_sense':sum(not x.get('sense_zh') for x in final),'missing_sentence_zh':sum(not x.get('zh') for x in sent.values()),'contextless_words':sum(not x.get('contexts') for x in final)},'practice_contexts':sum(1 for v in corpus.values() if not v.get('true_paper',True))}
 (CAND/'meta.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf8')
-print(json.dumps(meta,ensure_ascii=False,indent=2)); print('CANDIDATE COMPILE: COMPLETE')
+manifest=write_manifest(CAND)
+print(json.dumps(meta,ensure_ascii=False,indent=2))
+print('RELEASE MANIFEST:',manifest['release_id'])
+print('CANDIDATE COMPILE: COMPLETE')

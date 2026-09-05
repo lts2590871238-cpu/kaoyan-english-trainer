@@ -2,15 +2,16 @@
 import json,sys
 from pathlib import Path
 from collections import Counter
+from release_contract import validate_manifest
 ROOT=Path(__file__).resolve().parents[1]
 TARGET=Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'data/candidate'
 def load(p): return json.loads(p.read_text(encoding='utf8'))
 errors=[]
-req=['lexicon.json','lexicon_index.json','dictionary_lookup.json','sentences.json','sentence_meta.json','corpus.json','analysis.json','context_translations.json','schedule.json','meta.json']
-for f in req:
-    if not (TARGET/f).exists(): errors.append('missing '+f)
-if errors: print('RELEASE VALIDATION: FAIL'); print('\n'.join('- '+e for e in errors)); sys.exit(1)
-lex=load(TARGET/'lexicon.json'); dlookup=load(TARGET/'dictionary_lookup.json'); lexi=load(TARGET/'lexicon_index.json'); sent=load(TARGET/'sentences.json'); smeta=load(TARGET/'sentence_meta.json'); corpus=load(TARGET/'corpus.json'); ana=load(TARGET/'analysis.json'); ctx=load(TARGET/'context_translations.json'); sch=load(TARGET/'schedule.json')
+manifest,merr=validate_manifest(TARGET)
+errors.extend(merr)
+if errors:
+    print('RELEASE VALIDATION: FAIL'); print('\n'.join('- '+e for e in errors)); sys.exit(1)
+lex=load(TARGET/'lexicon.json'); dlookup=load(TARGET/'dictionary_lookup.json'); lexi=load(TARGET/'lexicon_index.json'); sent=load(TARGET/'sentences.json'); smeta=load(TARGET/'sentence_meta.json'); corpus=load(TARGET/'corpus.json'); ana=load(TARGET/'analysis.json'); ctx=load(TARGET/'context_translations.json'); sch=load(TARGET/'schedule.json'); meta=load(TARGET/'meta.json')
 N=len(lex); terms=[x.get('term') for x in lex]; ids=[x.get('item_id') for x in lex]
 def dups(xs): return [k for k,v in Counter(xs).items() if v>1][:20]
 if N!=3000: errors.append(f'unique lexicon must be exactly 3000: {N}')
@@ -50,8 +51,7 @@ stages=Counter(x['stage'] for x in ana.values())
 if stages!=Counter({'precise':30,'coarse':30,'main_stem':40}): errors.append(f'bad analysis stages {dict(stages)}')
 word_days=sch.get('words',[])
 if len(word_days)!=100: errors.append(f'word schedule days={len(word_days)}')
-term_band={x['term']:x.get('freq_band') for x in lex}
-word_terms=[]
+term_band={x['term']:x.get('freq_band') for x in lex}; word_terms=[]
 for d in word_days:
     items=d.get('items',[])
     if len(items)!=30: errors.append(f'day {d.get("day")} has {len(items)} words'); break
@@ -64,7 +64,10 @@ if Counter(term_band[t] for t in word_terms if t in term_band)!=Counter({'high':
 if len(sch.get('sentences',[]))!=100: errors.append('sentence 100-day schedule broken')
 for d in sch.get('sentences',[]):
     if len(d.get('en_to_zh',[]))!=2 or len(d.get('zh_to_en',[]))!=2 or len(d.get('focus_ids',[]))!=2: errors.append(f'daily sentence quota broken day={d.get("day")}'); break
+if meta.get('counts',{}).get('vocab')!=3000: errors.append('meta vocab count != 3000')
+if manifest and manifest.get('counts')!=meta.get('counts'): errors.append('manifest counts differ from meta counts')
 if errors:
     print('RELEASE VALIDATION: FAIL'); print('\n'.join('- '+e for e in errors)); sys.exit(1)
 print('RELEASE VALIDATION: PASS')
-print('3000 UNIQUE new vocab items; pronunciation/TTS target 3000/3000; no review occupies the 3000 new-word slots; local dictionary covers every item; 600 mutually exclusive sentences; 100 analyses; 100-day schedules exact.')
+print('ATOMIC RELEASE CONTRACT: PASS release_id='+manifest['release_id'])
+print('3000 unique vocab items; TTS target 3000/3000; 600 mutually exclusive sentences; 100 analyses; 100-day schedules exact; all release files hash-verified.')
