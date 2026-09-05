@@ -44,10 +44,11 @@ def valid_field(k,v):
     return True
 
 def missing_fields(entry,sense):
-    out=[]
-    for k in ('dict_zh','definition_en','pos'):
-        if not valid_field(k,sense.get(k) or entry.get(k)): out.append(k)
-    return out
+    # V14: POS is local metadata and never an AI backfill target.
+    # Curated phrases only require their audited Chinese meaning; ordinary
+    # words require Chinese meaning + English definition.
+    required=('dict_zh','definition_en') if entry.get('type')=='word' else ('dict_zh',)
+    return [k for k in required if not valid_field(k,sense.get(k) or entry.get(k))]
 
 lex=load(WORK/'lexicon.base.json'); senses=load(WORK/'lexicon.senses.json')
 byterm={x['term']:x for x in lex}
@@ -62,18 +63,22 @@ backfill={k:v for k,v in backfill.items() if k in byterm and isinstance(v,dict)}
 # Apply valid checkpoint values before deciding debt.
 for term,z in backfill.items():
     s=senses.setdefault(term,{})
-    for k in ('dict_zh','definition_en','pos','sense_zh'):
+    for k in ('dict_zh','definition_en','sense_zh'):
         if valid_field(k,z.get(k)) if k!='sense_zh' else bool(str(z.get(k) or '').strip()): s[k]=str(z[k]).strip()
+    # Keep POS deterministic/local.
+    if not s.get('pos'):
+        s['pos']=byterm[term].get('pos') or ('phrase' if byterm[term].get('type')=='phrase' else 'word')
 
 def debt_terms():
     return [t for t,x in byterm.items() if missing_fields(x,senses.get(t,{}))]
 
 pending=debt_terms()
-print(f'dictionary backfill queue: {len(pending)} / 3000 (local complete={3000-len(pending)})',flush=True)
+N=len(lex)
+print(f'dictionary backfill queue: {len(pending)} / {N} (local complete={N-len(pending)})',flush=True)
 if not pending:
     save_json(WORK/'lexicon.senses.json',senses); print('DICTIONARY BACKFILL: PASS 0 calls needed'); raise SystemExit(0)
 
-system='''你是考研英语词典数据校对员。输入是一组已经由本地 ECDICT/WordNet 尽量填充的真题词条，只补 missing_fields，绝不改写已有可靠字段。\n要求：\n1. dict_zh：简洁、准确、词典式中文核心义，不写长句，不编造语境。\n2. definition_en：简洁、自然、学习词典风格的英文释义，必须解释该词本身，不得写“a word that...”这类空话。\n3. pos：用 noun/verb/adjective/adverb/preposition/conjunction/phrase 等简洁英文。\n4. sense_zh：结合提供的真题 context，在该句中的最合适中文义；若无 context，则等于最常用 dict_zh。\n5. 不得把人名、地名解释成普通词；输入词条已经过专名过滤。\n6. 严格返回 JSON：{"items":[...]}，每个输入 term 恰好返回一次。'''
+system='''你是考研英语词典数据校对员。输入是一组已经由本地 ECDICT/WordNet 尽量填充的真题词条，只补 missing_fields，绝不改写已有可靠字段。\n要求：\n1. dict_zh：简洁、准确、词典式中文核心义，不写长句，不编造语境。\n2. definition_en：简洁、自然、学习词典风格的英文释义，必须解释该词本身，不得写“a word that...”这类空话。\n3. pos 已由本地词典/WordNet确定，不需要生成。\n4. sense_zh：结合提供的真题 context，在该句中的最合适中文义；若无 context，则等于最常用 dict_zh。\n5. 不得把人名、地名解释成普通词；输入词条已经过专名过滤。\n6. 严格返回 JSON：{"items":[...]}，每个输入 term 恰好返回一次。'''
 
 def make_req(terms):
     req=[]
@@ -82,7 +87,8 @@ def make_req(terms):
         ctx=[c.get('text','') for c in x.get('contexts',[])[:2] if c.get('text')]
         req.append({'term':t,'type':x.get('type'),'forms':x.get('forms',[])[:8],
                     'dict_zh':s.get('dict_zh') or x.get('dict_zh',''),'definition_en':s.get('definition_en') or x.get('definition_en',''),
-                    'pos':s.get('pos') or x.get('pos',''),'missing_fields':missing_fields(x,s),'context':ctx})
+                    'pos':s.get('pos') or x.get('pos') or ('phrase' if x.get('type')=='phrase' else 'word'),
+                    'missing_fields':missing_fields(x,s),'context':ctx})
     return req
 
 def accept(terms,obj):
@@ -95,11 +101,13 @@ def accept(terms,obj):
         before=missing_fields(x,s)
         for k in before:
             if valid_field(k,z.get(k)): s[k]=str(z[k]).strip()
+        if not s.get('pos'):
+            s['pos']=x.get('pos') or ('phrase' if x.get('type')=='phrase' else 'word')
         if str(z.get('sense_zh') or '').strip(): s['sense_zh']=str(z['sense_zh']).strip()
         elif not s.get('sense_zh'): s['sense_zh']=s.get('dict_zh') or x.get('match_zh') or ''
         after=missing_fields(x,s)
         if not after:
-            backfill[t]={k:s.get(k,'') for k in ('dict_zh','definition_en','pos','sense_zh')}; n+=1
+            backfill[t]={k:s.get(k,'') for k in ('dict_zh','definition_en','sense_zh')}; n+=1
     save_json(ckpt_path,backfill); save_json(WORK/'lexicon.senses.json',senses)
     return n
 
@@ -130,8 +138,10 @@ if pending:
 # Merge completed dictionary values into lexicon base and lookup base for downstream context builder/UI.
 for x in lex:
     s=senses[x['term']]
-    for k in ('dict_zh','definition_en','pos'):
+    for k in ('dict_zh','definition_en'):
         if s.get(k): x[k]=s[k]
+    if not x.get('pos'):
+        x['pos']=s.get('pos') or ('phrase' if x.get('type')=='phrase' else 'word')
     if not s.get('sense_zh'): s['sense_zh']=x.get('match_zh') or x.get('dict_zh','')
     x['missing_dictionary_fields']=[]
 save_json(WORK/'lexicon.base.json',lex); save_json(WORK/'lexicon.senses.json',senses)
@@ -141,4 +151,4 @@ dmap={x.get('term'):x for x in base if x.get('term')}
 for x in lex:
     dmap[x['term']]={'term':x['term'],'forms':x.get('forms',[]),'phonetic':x.get('phonetic',''),'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos','')}
 save_json(WORK/'dictionary.lookup.base.json',sorted(dmap.values(),key=lambda x:x['term']))
-print(f'DICTIONARY BACKFILL: PASS complete=3000; AI-backed items={len(backfill)}')
+print(f'DICTIONARY BACKFILL: PASS complete={N}; AI-backed items={len(backfill)}')

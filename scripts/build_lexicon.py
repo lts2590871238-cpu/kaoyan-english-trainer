@@ -34,9 +34,40 @@ def zh_short(s):
 def en_short(s):
     lines=split_lines(s)
     return ' '.join(lines[:2])[:420] if lines else ''
-def pos_main(s):
-    s=(s or '').strip()
-    return s.split('/')[0].split(':')[0].strip() if s else ''
+def normalize_pos(s):
+    """Turn ECDICT/WordNet POS metadata into stable learner-facing labels.
+
+    ECDICT often stores values such as ``n:46/v:54`` and many rows leave the
+    field blank.  POS is useful metadata, but it must NEVER turn an otherwise
+    valid dictionary item into an AI-backfill debt.
+    """
+    s=(s or '').strip().lower()
+    if not s:
+        return ''
+    direct={'n':'noun','v':'verb','vt':'verb','vi':'verb','a':'adjective','adj':'adjective',
+            's':'adjective','r':'adverb','adv':'adverb','prep':'preposition','conj':'conjunction',
+            'pron':'pronoun','num':'number','art':'article','aux':'auxiliary','phrase':'phrase',
+            'noun':'noun','verb':'verb','adjective':'adjective','adverb':'adverb',
+            'preposition':'preposition','conjunction':'conjunction'}
+    labels=[]
+    for part in s.split('/'):
+        key=part.split(':',1)[0].strip()
+        val=direct.get(key)
+        if val and val not in labels:
+            labels.append(val)
+    return '/'.join(labels[:3])
+
+def infer_pos_from_translation(s):
+    s=(s or '').strip().lower()
+    if not s:
+        return ''
+    probes=[('vt.','verb'),('vi.','verb'),('v.','verb'),('n.','noun'),('adj.','adjective'),
+            ('a.','adjective'),('adv.','adverb'),('prep.','preposition'),('conj.','conjunction'),
+            ('pron.','pronoun'),('num.','number')]
+    for marker,label in probes:
+        if marker in s[:40]:
+            return label
+    return ''
 def short_match_zh(s):
     s=(s or '').strip()
     if not s:return ''
@@ -142,17 +173,22 @@ for item in surface:
     srow=surface_rows.get(w) or {}
     # Field-wise fallback instead of all-or-nothing row fallback.
     dz=zh_short(crow.get('translation')) or zh_short(srow.get('translation'))
+    wndef=wordnet_defs.get(term) or wordnet_defs.get(w) or {}
     de=en_short(crow.get('definition'))
     def_source='ecdict' if de else ''
     if not de:
-        wndef=wordnet_defs.get(term) or wordnet_defs.get(w) or {}
         de=en_short(wndef.get('definition_en'))
         if de: def_source='wordnet'
     if not de:
         de=en_short(srow.get('definition'))
         if de: def_source='ecdict_surface'
     phon=(crow.get('phonetic') or srow.get('phonetic') or '').strip()
-    pos=pos_main(crow.get('pos') or srow.get('pos'))
+    # Important V14 contract: POS is local metadata, not an AI-required field.
+    # Prefer ECDICT, then WordNet, then translation hints, and finally a safe
+    # generic label.  This fixes the V13 failure where 2968/3000 entries were
+    # treated as incomplete merely because ECDICT POS was blank.
+    pos=(normalize_pos(crow.get('pos')) or normalize_pos(srow.get('pos')) or
+         normalize_pos(wndef.get('pos')) or infer_pos_from_translation(dz) or 'word')
     row_for_meta=crow or srow
     contexts=clean_contexts(item.get('contexts',[]))
     rec={'term':term,'type':'word','count':int(item.get('count',0)),'year_counts':defaultdict(int),'contexts':contexts,
@@ -230,7 +266,15 @@ for r in entries:
 entries=[]
 for r in canon.values():
     r['year_counts']=dict(sorted(r['year_counts'].items())); r['forms']=sorted(r['forms']); r['needs_context_fill']=not bool(r.get('contexts'))
-    r['missing_dictionary_fields']=[k for k in ('dict_zh','definition_en','pos') if not (r.get(k) or '').strip()]
+    # Hard dictionary debt is intentionally narrow.  For ordinary words we
+    # require Chinese meaning + English definition.  Curated phrases already
+    # have an audited Chinese meaning and do not need an English gloss to be
+    # usable.  POS is guaranteed locally above and must never trigger DeepSeek.
+    hard=('dict_zh','definition_en') if r.get('type')=='word' else ('dict_zh',)
+    r['missing_dictionary_fields']=[k for k in hard if not (r.get(k) or '').strip()]
+    if not (r.get('pos') or '').strip():
+        r['pos']='phrase' if r.get('type')=='phrase' else 'word'
+    r['tts_text']=r['term']
     entries.append(r)
 
 
