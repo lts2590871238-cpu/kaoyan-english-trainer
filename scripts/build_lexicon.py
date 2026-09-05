@@ -32,22 +32,34 @@ def zh_short(s):
 def en_short(s):
     lines=split_lines(s)
     return ' '.join(lines[:2])[:360] if lines else ''
-def lexical(w): return bool(len(w)>=3 and re.fullmatch(r"[a-z]+(?:[-'][a-z]+)*",w))
+def lexical(w):
+    # Contractions/possessives such as it's/don't are not scheduled as independent vocabulary.
+    # Hyphenated lexical items are allowed.
+    return bool(len(w)>=3 and re.fullmatch(r"[a-z]+(?:-[a-z]+)*",w))
 
 def looks_like_proper_noun(term,contexts):
-    # Conservative heuristic for ECDICT-unresolved fallback terms. Ignore sentence-initial caps.
+    """Reject names/places/acronym-like proper nouns using original true-paper casing.
+
+    Apply this to every candidate, including ECDICT-resolved words: dictionary presence
+    does not make California/Paul/Britain suitable 100-day vocabulary items.
+    Sentence-initial capitalization is ignored.
+    """
     if not contexts:return False
-    hits=cap=0
+    noninitial=mid_caps=0
     pat=re.compile(r'(?<![A-Za-z])'+re.escape(term)+r'(?![A-Za-z])',re.I)
-    for c in contexts[:10]:
+    for c in contexts[:12]:
         text=c.get('text','')
         for m in pat.finditer(text):
-            hits+=1
             token=text[m.start():m.end()]
             prefix=text[:m.start()].rstrip()
             sent_initial=(not prefix) or prefix.endswith(('.', '!', '?', ':', ';'))
-            if token[:1].isupper() and not sent_initial: cap+=1
-    return hits>=2 and cap/hits>=0.75
+            if not sent_initial:
+                noninitial+=1
+                if token[:1].isupper():
+                    mid_caps+=1
+    if noninitial>=1 and mid_caps==noninitial:
+        return True
+    return noninitial>=2 and (mid_caps/noninitial)>=0.75
 
 needed={norm_word(x['surface']) for x in surface}
 rows={}
@@ -93,7 +105,11 @@ for item in surface:
 
 # Convert to eligible entries first.
 entries=[]
+proper_noun_excluded=0
 for lemma,r in agg.items():
+    if looks_like_proper_noun(lemma,r.get('contexts',[])):
+        proper_noun_excluded+=1
+        continue
     yc=dict(sorted(r['year_counts'].items())); core=sum(c for y,c in yc.items() if y>=2023)>0
     pre=sum(c for y,c in yc.items() if y<=2022)
     # Project rule: 2023-2026 is core; 2020-2022-only additions require >=5 total occurrences.
@@ -177,6 +193,7 @@ report={
  'core_entries':sum(r['core_2023_2026'] for r in entries),'supplement_entries':sum(r['supplement_2020_2022'] for r in entries),
  'needs_ai_dictionary_fill':sum(bool(r.get('ai_dictionary_fill')) for r in scheduled),
  'ai_fallback_entries':sum(r.get('dictionary_source')=='ai_fallback' for r in scheduled),
+ 'proper_noun_excluded':proper_noun_excluded,
  'missing_to_3000':max(0,3000-len(entries)),'days_with_30':sum(len(d['items'])==30 for d in days)
 }
 (OUT/'lexicon_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
