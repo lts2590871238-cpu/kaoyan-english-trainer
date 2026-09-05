@@ -16,6 +16,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Record source revision
+        run: echo "START_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -23,8 +26,14 @@ jobs:
 
       - name: Clean transient build directories
         run: |
-          rm -rf data/work data/candidate cache
+          rm -rf data/work data/candidate data/.generated-next data/.generated-old cache
           mkdir -p data/work data/candidate data/checkpoints cache/nltk_data/corpora
+
+      - name: Release contract self-test
+        run: python scripts/test_release_contract.py
+
+      - name: Seed safe reusable AI outputs from older release
+        run: python scripts/seed_legacy_release_cache.py
 
       - name: Source preflight
         run: python scripts/preflight_source.py
@@ -84,13 +93,13 @@ jobs:
       - name: Validate AI outputs before compile
         run: python scripts/validate_ai.py
 
-      - name: Compile isolated release candidate
+      - name: Compile isolated release candidate + manifest
         run: python scripts/compile_release.py
 
       - name: Validate isolated release candidate
         run: python scripts/validate_release.py data/candidate
 
-      - name: Publish validated release only
+      - name: Publish validated release by atomic directory swap
         run: python scripts/publish_release.py
 
       - name: Validate published release
@@ -108,17 +117,23 @@ jobs:
             data/work/word_contexts_report.json
             data/work/proper_noun_exclusions.json
             data/candidate/meta.json
+            data/candidate/release_manifest.json
             data/checkpoints/
             audit/
           if-no-files-found: warn
 
-      - name: Commit validated V15 generated data
+      - name: Commit ONE validated atomic release
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A data/generated data/checkpoints
-          git diff --cached --quiet && exit 0
-          git commit -m "Publish validated V15 exact-3000 training data"
+          python scripts/validate_release.py data/generated
           git fetch origin main
-          git rebase origin/main
+          REMOTE_SHA=$(git rev-parse origin/main)
+          if [ "$REMOTE_SHA" != "$START_SHA" ]; then
+            echo "::error::main changed while this build was running. No half-release was pushed. Re-run the workflow once from the new main revision."
+            exit 1
+          fi
+          git add -A data/generated
+          git diff --cached --quiet && { echo "Validated release is already published."; exit 0; }
+          git commit -m "Publish validated V18 atomic training release"
           git push origin HEAD:main
