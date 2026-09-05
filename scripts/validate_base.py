@@ -26,6 +26,8 @@ for x in lex:
     if not (x.get('pos') or '').strip(): bad_pos.append(x['term'])
 if bad_pos:
     errors.append(f'local POS fallback failed: {bad_pos[:20]}')
+missing_tts=[x['term'] for x in lex if not str(x.get('tts_text') or '').strip()]
+if missing_tts: errors.append(f'pronunciation/TTS target missing: {missing_tts[:20]}')
 broken=[]; context_debt=[]
 for x in lex:
     if not x.get('contexts'):

@@ -105,9 +105,32 @@ def clean_contexts(contexts,limit=12):
     return out
 
 
-def looks_like_proper_noun(term,contexts,translation=''):
-    if any(k in (translation or '') for k in ('人名','地名','姓氏')): return True
-    if not contexts:return False
+PROPER_MARKERS=('人名','姓氏','地名','专有名词','国名','州名','城市名','河名','山名')
+
+def looks_like_proper_noun(term,contexts,translation='',wndef=None,count=0,has_local_dictionary=False):
+    """Deterministic named-entity filter.
+
+    The source extractor intentionally keeps question/option vocabulary, so some
+    one-off proper names have no full-sentence context.  The old filter returned
+    False immediately in that case and names such as Manet/Vermeer/Sinclair could
+    occupy learning slots.  V15 uses three independent signals:
+      1) explicit proper-name markers in ECDICT;
+      2) WordNet instance synsets (person/place instances);
+      3) one-off, contextless, dictionary-less tokens, which are not suitable
+         learner items even if they are not provably names.
+    Normal words such as illustrator/ply remain eligible when a real dictionary
+    entry exists.
+    """
+    translation=translation or ''
+    wndef=wndef or {}
+    if any(k in translation for k in PROPER_MARKERS):
+        return True
+    if bool(wndef.get('is_instance')):
+        return True
+    if not contexts:
+        if int(count or 0)<=1 and not has_local_dictionary and not str(wndef.get('definition_en') or '').strip():
+            return True
+        return False
     pat=re.compile(r'(?<![A-Za-z])'+re.escape(term)+r'(?![A-Za-z])',re.I)
     noninitial=mid_caps=0
     for c in contexts[:12]:
@@ -210,9 +233,16 @@ for item in surface:
         if not old.get('definition_source') and rec.get('definition_source'): old['definition_source']=rec['definition_source']
 
 entries=[]; proper_excluded=0
+proper_exclusions=[]
 for term,r in agg.items():
-    if looks_like_proper_noun(term,r['contexts'],r.get('dict_zh','')):
-        proper_excluded+=1; continue
+    wndef=wordnet_defs.get(term) or {}
+    has_local_dictionary=bool((r.get('dict_zh') or '').strip() or (r.get('definition_en') or '').strip())
+    if looks_like_proper_noun(term,r['contexts'],r.get('dict_zh',''),wndef=wndef,count=r.get('count',0),has_local_dictionary=has_local_dictionary):
+        proper_excluded+=1
+        proper_exclusions.append({'term':term,'count':r.get('count',0),'year_counts':dict(r.get('year_counts',{})),
+                                  'has_context':bool(r.get('contexts')),'dict_zh':r.get('dict_zh',''),
+                                  'wordnet_instance':bool(wndef.get('is_instance'))})
+        continue
     yc=dict(sorted(r['year_counts'].items()))
     core=sum(c for y,c in yc.items() if int(y)>=2023)>0
     # Keep all clean non-core candidates that occur at least twice. Selection into the
@@ -392,6 +422,7 @@ report={'eligible_unique_entries':len(entries),'unique_learning_items':3000,'sch
         'dictionary_backfill_items':3000-complete,'missing_fields':dict(missing),
         'lexicon_fingerprint':hashlib.sha256('\n'.join(terms).encode()).hexdigest()}
 (WORK/'lexicon_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
+(WORK/'proper_noun_exclusions.json').write_text(json.dumps(proper_exclusions,ensure_ascii=False,indent=2),encoding='utf8')
 print(json.dumps(report,ensure_ascii=False,indent=2))
 print('CANONICAL LEARNING LEXICON BUILD: PASS')
 print('EXACT 3000 UNIQUE LEXICON BUILD: PASS')

@@ -29,7 +29,8 @@ for x in lex:
         w=wordctx.get(x['term'],{})
         ex_en=(w.get('example_en') or '').strip(); ex_zh=(w.get('example_zh') or '').strip()
         if not ex_en or not ex_zh: raise SystemExit('missing batched practice context for '+x['term'])
-        corpus[pid]={'en':ex_en,'year':None,'page':None,'source':'AI练习例句','word_count':len(ex_en.split()),'true_paper':False}
+        psource=(w.get('source') or 'AI练习例句').strip()
+        corpus[pid]={'en':ex_en,'year':None,'page':None,'source':psource,'word_count':len(ex_en.split()),'true_paper':False}
         ctxzh[pid]=ex_zh
         refs=[{'sentence_id':pid}]
     y['contexts']=refs

@@ -27,6 +27,8 @@ misszh=[x['term'] for x in lex if not x.get('sense_zh') or not x.get('dict_zh')]
 if misszh: errors.append(f'missing Chinese meanings: {misszh[:20]}')
 missdef=[x['term'] for x in lex if x.get('type')=='word' and not x.get('definition_en')]
 if missdef: errors.append(f'missing English definitions: {missdef[:20]}')
+misstts=[x['term'] for x in lex if not str(x.get('tts_text') or '').strip()]
+if misstts: errors.append(f'missing pronunciation/TTS targets: {misstts[:20]}')
 ctxless=[x['term'] for x in lex if x.get('type')=='word' and not x.get('contexts')]
 if ctxless: errors.append(f'word without context: {ctxless[:20]}')
 broken=[]
@@ -65,4 +67,4 @@ for d in sch.get('sentences',[]):
 if errors:
     print('RELEASE VALIDATION: FAIL'); print('\n'.join('- '+e for e in errors)); sys.exit(1)
 print('RELEASE VALIDATION: PASS')
-print('3000 UNIQUE new vocab items; no review occupies the 3000 new-word slots; local dictionary covers every item; 600 mutually exclusive sentences; 100 analyses; 100-day schedules exact.')
+print('3000 UNIQUE new vocab items; pronunciation/TTS target 3000/3000; no review occupies the 3000 new-word slots; local dictionary covers every item; 600 mutually exclusive sentences; 100 analyses; 100-day schedules exact.')

@@ -54,7 +54,17 @@ for i,term in enumerate(sorted(terms),1):
         if syns: break
     if syns:
         s=syns[0]
-        out[term]={'definition_en':s.definition().strip(),'pos':POS.get(s.pos(),s.pos()),'source':'wordnet'}
+        try:
+            is_instance=bool(s.instance_hypernyms())
+        except Exception:
+            is_instance=False
+        examples=[]
+        try:
+            examples=[e.strip() for e in s.examples() if str(e).strip()][:3]
+        except Exception:
+            examples=[]
+        out[term]={'definition_en':s.definition().strip(),'pos':POS.get(s.pos(),s.pos()),'source':'wordnet',
+                   'is_instance':is_instance,'examples':examples,'synset':s.name()}
     if i%1000==0: print(f'wordnet cache {i}/{len(terms)}',flush=True)
 OUT.parent.mkdir(parents=True,exist_ok=True)
 OUT.write_text(json.dumps(out,ensure_ascii=False,indent=2),encoding='utf8')
