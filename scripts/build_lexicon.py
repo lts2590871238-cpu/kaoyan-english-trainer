@@ -7,6 +7,8 @@ ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/'data/source'; WORK=ROOT/'data/work'; WORK.mkdir(parents=True,exist_ok=True)
 ECDICT=Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'cache/ecdict.csv'
 LEMMA=Path(sys.argv[2]) if len(sys.argv)>2 else ROOT/'cache/lemma.en.txt'
+WORDNET=Path(sys.argv[3]) if len(sys.argv)>3 else ROOT/'cache/wordnet_defs.json'
+wordnet_defs=json.loads(WORDNET.read_text(encoding='utf8')) if WORDNET.exists() else {}
 
 surface=json.loads((SRC/'words_surface.json').read_text(encoding='utf8'))
 phrases=json.loads((SRC/'phrases_curated.json').read_text(encoding='utf8'))
@@ -157,8 +159,15 @@ for item in surface:
     row=canon_rows.get(term) or surface_rows.get(w)
     if not row: continue
     dz=zh_short(row.get('translation'))
+    # English definition is local-first: ECDICT, then Princeton WordNet.
     de=en_short(row.get('definition'))
-    # Word dictionary must be complete locally. AI is never used to repair dictionary fields.
+    def_source='ecdict' if de else ''
+    if not de:
+        wndef=wordnet_defs.get(term) or wordnet_defs.get(w) or {}
+        de=en_short(wndef.get('definition_en'))
+        if de: def_source='wordnet'
+    # Chinese meaning remains ECDICT-derived; candidates without it are excluded.
+    # English definitions are never fabricated by AI during the 3000-word build.
     if not dz or not de: continue
     contexts=clean_contexts(item.get('contexts',[]))
     rec={'term':term,'type':'word','count':int(item.get('count',0)),'year_counts':defaultdict(int),'contexts':contexts,
@@ -167,7 +176,7 @@ for item in surface:
          'oxford':1 if str(row.get('oxford') or '').strip() not in ('','0') else 0,
          'bnc':int(row.get('bnc') or 0) if str(row.get('bnc') or '').isdigit() else 0,
          'frq':int(row.get('frq') or 0) if str(row.get('frq') or '').isdigit() else 0,
-         'forms':{w},'dictionary_source':'ecdict','needs_context_fill':not bool(contexts)}
+         'forms':{w},'dictionary_source':'ecdict','definition_source':def_source,'needs_context_fill':not bool(contexts)}
     for y,c in item.get('year_counts',{}).items(): rec['year_counts'][int(y)]+=int(c)
     if term not in agg: agg[term]=rec
     else: merge(agg[term],rec)
@@ -198,7 +207,7 @@ for phrase,zh in phrases.items():
     prow=canon_rows.get(p,{})
     entries.append({'term':p,'type':'phrase','count':sum(yc.values()),'year_counts':dict(sorted(yc.items())),'contexts':ctx,
         'phonetic':(prow.get('phonetic') or '').strip(),'dict_zh':zh,'match_zh':short_match_zh(zh),
-        'definition_en':en_short(prow.get('definition')),'pos':'phrase','collins':0,'oxford':0,'bnc':0,'frq':0,'forms':[p],
+        'definition_en':en_short(prow.get('definition')) or en_short((wordnet_defs.get(p) or {}).get('definition_en')),'pos':'phrase','collins':0,'oxford':0,'bnc':0,'frq':0,'forms':[p],
         'dictionary_source':'curated','needs_context_fill':False,'core_2023_2026':True,'supplement_2020_2022':False})
 
 # Canonical term dedupe; phrase semantics win exact collisions.
@@ -226,7 +235,8 @@ def priority(r):
 
 entries.sort(key=priority)
 if len(entries)<3000:
-    raise SystemExit(f'BASE FAIL: only {len(entries)} locally complete canonical entries; do not call AI to fabricate dictionary fields')
+    # Detailed diagnosis: never spend AI calls on a structurally insufficient base.
+    raise SystemExit(f'BASE FAIL: only {len(entries)} locally complete canonical entries after ECDICT+WordNet; need 3000. This is a source-selection problem, not an AI problem.')
 scheduled=entries[:3000]
 terms=[r['term'] for r in scheduled]
 if len(set(terms))!=3000: raise SystemExit('BASE FAIL: duplicate canonical terms')
@@ -260,6 +270,7 @@ lookup.sort(key=lambda x:x['term'])
 (WORK/'lexicon.senses.json').write_text(json.dumps(senses,ensure_ascii=False,indent=2),encoding='utf8')
 (WORK/'days_words.json').write_text(json.dumps(days,ensure_ascii=False,indent=2),encoding='utf8')
 report={'lemma_mapped_surfaces':sum(1 for w in needed if fmap.get(w,w)!=w),'eligible_unique_entries':len(entries),'scheduled_entries':3000,
+        'scheduled_definition_sources':dict(Counter(r.get('definition_source','') or 'phrase_or_unknown' for r in scheduled)),
         'scheduled_words':sum(r['type']=='word' for r in scheduled),'scheduled_phrases':sum(r['type']=='phrase' for r in scheduled),
         'proper_noun_excluded':proper_excluded,'days_with_30':100,'unique_scheduled_terms':3000,
         'contextless_scheduled_terms':sum(not r.get('contexts') for r in scheduled),
