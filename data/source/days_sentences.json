@@ -1,0 +1,1602 @@
+[
+  {
+    "day": 1,
+    "en_to_zh": [
+      "s0435",
+      "s0674"
+    ],
+    "zh_to_en": [
+      "s0092",
+      "s0112"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0362",
+      "s0359"
+    ]
+  },
+  {
+    "day": 2,
+    "en_to_zh": [
+      "s0375",
+      "s0607"
+    ],
+    "zh_to_en": [
+      "s0430",
+      "s0552"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0283",
+      "s0039"
+    ]
+  },
+  {
+    "day": 3,
+    "en_to_zh": [
+      "s0398",
+      "s0658"
+    ],
+    "zh_to_en": [
+      "s0017",
+      "s0263"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0416",
+      "s0545"
+    ]
+  },
+  {
+    "day": 4,
+    "en_to_zh": [
+      "s0553",
+      "s0593"
+    ],
+    "zh_to_en": [
+      "s0606",
+      "s0102"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0189",
+      "s0494"
+    ]
+  },
+  {
+    "day": 5,
+    "en_to_zh": [
+      "s0370",
+      "s0448"
+    ],
+    "zh_to_en": [
+      "s0197",
+      "s0510"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0522",
+      "s0629"
+    ]
+  },
+  {
+    "day": 6,
+    "en_to_zh": [
+      "s0609",
+      "s0541"
+    ],
+    "zh_to_en": [
+      "s0460",
+      "s0259"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0050",
+      "s0066"
+    ]
+  },
+  {
+    "day": 7,
+    "en_to_zh": [
+      "s0625",
+      "s0623"
+    ],
+    "zh_to_en": [
+      "s0044",
+      "s0653"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0458",
+      "s0550"
+    ]
+  },
+  {
+    "day": 8,
+    "en_to_zh": [
+      "s0649",
+      "s0433"
+    ],
+    "zh_to_en": [
+      "s0455",
+      "s0474"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0157",
+      "s0503"
+    ]
+  },
+  {
+    "day": 9,
+    "en_to_zh": [
+      "s0557",
+      "s0461"
+    ],
+    "zh_to_en": [
+      "s0223",
+      "s0107"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0361",
+      "s0591"
+    ]
+  },
+  {
+    "day": 10,
+    "en_to_zh": [
+      "s0650",
+      "s0355"
+    ],
+    "zh_to_en": [
+      "s0447",
+      "s0134"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0056",
+      "s0394"
+    ]
+  },
+  {
+    "day": 11,
+    "en_to_zh": [
+      "s0659",
+      "s0340"
+    ],
+    "zh_to_en": [
+      "s0212",
+      "s0631"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0517",
+      "s0287"
+    ]
+  },
+  {
+    "day": 12,
+    "en_to_zh": [
+      "s0424",
+      "s0210"
+    ],
+    "zh_to_en": [
+      "s0481",
+      "s0240"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0453",
+      "s0592"
+    ]
+  },
+  {
+    "day": 13,
+    "en_to_zh": [
+      "s0126",
+      "s0270"
+    ],
+    "zh_to_en": [
+      "s0202",
+      "s0125"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0408",
+      "s0468"
+    ]
+  },
+  {
+    "day": 14,
+    "en_to_zh": [
+      "s0032",
+      "s0291"
+    ],
+    "zh_to_en": [
+      "s0230",
+      "s0386"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0537",
+      "s0450"
+    ]
+  },
+  {
+    "day": 15,
+    "en_to_zh": [
+      "s0655",
+      "s0289"
+    ],
+    "zh_to_en": [
+      "s0053",
+      "s0390"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0211",
+      "s0594"
+    ]
+  },
+  {
+    "day": 16,
+    "en_to_zh": [
+      "s0603",
+      "s0427"
+    ],
+    "zh_to_en": [
+      "s0033",
+      "s0348"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0356",
+      "s0363"
+    ]
+  },
+  {
+    "day": 17,
+    "en_to_zh": [
+      "s0103",
+      "s0564"
+    ],
+    "zh_to_en": [
+      "s0045",
+      "s0229"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0488",
+      "s0392"
+    ]
+  },
+  {
+    "day": 18,
+    "en_to_zh": [
+      "s0560",
+      "s0413"
+    ],
+    "zh_to_en": [
+      "s0577",
+      "s0129"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0072",
+      "s0324"
+    ]
+  },
+  {
+    "day": 19,
+    "en_to_zh": [
+      "s0444",
+      "s0105"
+    ],
+    "zh_to_en": [
+      "s0173",
+      "s0209"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0456",
+      "s0595"
+    ]
+  },
+  {
+    "day": 20,
+    "en_to_zh": [
+      "s0582",
+      "s0590"
+    ],
+    "zh_to_en": [
+      "s0093",
+      "s0216"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0077",
+      "s0268"
+    ]
+  },
+  {
+    "day": 21,
+    "en_to_zh": [
+      "s0127",
+      "s0272"
+    ],
+    "zh_to_en": [
+      "s0473",
+      "s0482"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0471",
+      "s0078"
+    ]
+  },
+  {
+    "day": 22,
+    "en_to_zh": [
+      "s0670",
+      "s0296"
+    ],
+    "zh_to_en": [
+      "s0183",
+      "s0242"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0486",
+      "s0047"
+    ]
+  },
+  {
+    "day": 23,
+    "en_to_zh": [
+      "s0205",
+      "s0188"
+    ],
+    "zh_to_en": [
+      "s0618",
+      "s0432"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0357",
+      "s0410"
+    ]
+  },
+  {
+    "day": 24,
+    "en_to_zh": [
+      "s0292",
+      "s0096"
+    ],
+    "zh_to_en": [
+      "s0391",
+      "s0602"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0329",
+      "s0549"
+    ]
+  },
+  {
+    "day": 25,
+    "en_to_zh": [
+      "s0298",
+      "s0401"
+    ],
+    "zh_to_en": [
+      "s0535",
+      "s0049"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0612",
+      "s0360"
+    ]
+  },
+  {
+    "day": 26,
+    "en_to_zh": [
+      "s0397",
+      "s0035"
+    ],
+    "zh_to_en": [
+      "s0583",
+      "s0147"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0076",
+      "s0617"
+    ]
+  },
+  {
+    "day": 27,
+    "en_to_zh": [
+      "s0207",
+      "s0387"
+    ],
+    "zh_to_en": [
+      "s0313",
+      "s0709"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0412",
+      "s0315"
+    ]
+  },
+  {
+    "day": 28,
+    "en_to_zh": [
+      "s0443",
+      "s0604"
+    ],
+    "zh_to_en": [
+      "s0523",
+      "s0305"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0374",
+      "s0097"
+    ]
+  },
+  {
+    "day": 29,
+    "en_to_zh": [
+      "s0080",
+      "s0404"
+    ],
+    "zh_to_en": [
+      "s0058",
+      "s0469"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0095",
+      "s0457"
+    ]
+  },
+  {
+    "day": 30,
+    "en_to_zh": [
+      "s0111",
+      "s0381"
+    ],
+    "zh_to_en": [
+      "s0339",
+      "s0711"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0021",
+      "s0121"
+    ]
+  },
+  {
+    "day": 31,
+    "en_to_zh": [
+      "s0352",
+      "s0246"
+    ],
+    "zh_to_en": [
+      "s0260",
+      "s0062"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0373",
+      "s0585"
+    ]
+  },
+  {
+    "day": 32,
+    "en_to_zh": [
+      "s0614",
+      "s0326"
+    ],
+    "zh_to_en": [
+      "s0237",
+      "s0588"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0280",
+      "s0300"
+    ]
+  },
+  {
+    "day": 33,
+    "en_to_zh": [
+      "s0451",
+      "s0436"
+    ],
+    "zh_to_en": [
+      "s0411",
+      "s0278"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0626",
+      "s0554"
+    ]
+  },
+  {
+    "day": 34,
+    "en_to_zh": [
+      "s0586",
+      "s0501"
+    ],
+    "zh_to_en": [
+      "s0580",
+      "s0633"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0316",
+      "s0667"
+    ]
+  },
+  {
+    "day": 35,
+    "en_to_zh": [
+      "s0599",
+      "s0345"
+    ],
+    "zh_to_en": [
+      "s0327",
+      "s0589"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0467",
+      "s0563"
+    ]
+  },
+  {
+    "day": 36,
+    "en_to_zh": [
+      "s0079",
+      "s0406"
+    ],
+    "zh_to_en": [
+      "s0542",
+      "s0091"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0446",
+      "s0052"
+    ]
+  },
+  {
+    "day": 37,
+    "en_to_zh": [
+      "s0271",
+      "s0019"
+    ],
+    "zh_to_en": [
+      "s0518",
+      "s0284"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0409",
+      "s0487"
+    ]
+  },
+  {
+    "day": 38,
+    "en_to_zh": [
+      "s0037",
+      "s0419"
+    ],
+    "zh_to_en": [
+      "s0726",
+      "s0681"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0267",
+      "s0675"
+    ]
+  },
+  {
+    "day": 39,
+    "en_to_zh": [
+      "s0156",
+      "s0480"
+    ],
+    "zh_to_en": [
+      "s0724",
+      "s0247"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0184",
+      "s0354"
+    ]
+  },
+  {
+    "day": 40,
+    "en_to_zh": [
+      "s0423",
+      "s0295"
+    ],
+    "zh_to_en": [
+      "s0256",
+      "s0701"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0511",
+      "s0676"
+    ]
+  },
+  {
+    "day": 41,
+    "en_to_zh": [
+      "s0396",
+      "s0546"
+    ],
+    "zh_to_en": [
+      "s0135",
+      "s0144"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0075",
+      "s0648"
+    ]
+  },
+  {
+    "day": 42,
+    "en_to_zh": [
+      "s0438",
+      "s0057"
+    ],
+    "zh_to_en": [
+      "s0379",
+      "s0691"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0285",
+      "s0089"
+    ]
+  },
+  {
+    "day": 43,
+    "en_to_zh": [
+      "s0621",
+      "s0104"
+    ],
+    "zh_to_en": [
+      "s0538",
+      "s0249"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0294",
+      "s0098"
+    ]
+  },
+  {
+    "day": 44,
+    "en_to_zh": [
+      "s0520",
+      "s0220"
+    ],
+    "zh_to_en": [
+      "s0700",
+      "s0248"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0224",
+      "s0434"
+    ]
+  },
+  {
+    "day": 45,
+    "en_to_zh": [
+      "s0011",
+      "s0318"
+    ],
+    "zh_to_en": [
+      "s0707",
+      "s0130"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0317",
+      "s0143"
+    ]
+  },
+  {
+    "day": 46,
+    "en_to_zh": [
+      "s0353",
+      "s0512"
+    ],
+    "zh_to_en": [
+      "s0722",
+      "s0250"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0114",
+      "s0715"
+    ]
+  },
+  {
+    "day": 47,
+    "en_to_zh": [
+      "s0452",
+      "s0483"
+    ],
+    "zh_to_en": [
+      "s0258",
+      "s0068"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0273",
+      "s0325"
+    ]
+  },
+  {
+    "day": 48,
+    "en_to_zh": [
+      "s0620",
+      "s0219"
+    ],
+    "zh_to_en": [
+      "s0139",
+      "s0727"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0383",
+      "s0459"
+    ]
+  },
+  {
+    "day": 49,
+    "en_to_zh": [
+      "s0610",
+      "s0117"
+    ],
+    "zh_to_en": [
+      "s0539",
+      "s0660"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0627",
+      "s0543"
+    ]
+  },
+  {
+    "day": 50,
+    "en_to_zh": [
+      "s0651",
+      "s0718"
+    ],
+    "zh_to_en": [
+      "s0351",
+      "s0153"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0630",
+      "s0418"
+    ]
+  },
+  {
+    "day": 51,
+    "en_to_zh": [
+      "s0320",
+      "s0310"
+    ],
+    "zh_to_en": [
+      "s0008",
+      "s0719"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0251",
+      "s0495"
+    ]
+  },
+  {
+    "day": 52,
+    "en_to_zh": [
+      "s0661",
+      "s0190"
+    ],
+    "zh_to_en": [
+      "s0449",
+      "s0429"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0060",
+      "s0099"
+    ]
+  },
+  {
+    "day": 53,
+    "en_to_zh": [
+      "s0200",
+      "s0074"
+    ],
+    "zh_to_en": [
+      "s0720",
+      "s0548"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0601",
+      "s0502"
+    ]
+  },
+  {
+    "day": 54,
+    "en_to_zh": [
+      "s0343",
+      "s0347"
+    ],
+    "zh_to_en": [
+      "s0206",
+      "s0155"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0420",
+      "s0172"
+    ]
+  },
+  {
+    "day": 55,
+    "en_to_zh": [
+      "s0192",
+      "s0380"
+    ],
+    "zh_to_en": [
+      "s0350",
+      "s0717"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0029",
+      "s0485"
+    ]
+  },
+  {
+    "day": 56,
+    "en_to_zh": [
+      "s0232",
+      "s0669"
+    ],
+    "zh_to_en": [
+      "s0425",
+      "s0441"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0151",
+      "s0048"
+    ]
+  },
+  {
+    "day": 57,
+    "en_to_zh": [
+      "s0109",
+      "s0159"
+    ],
+    "zh_to_en": [
+      "s0730",
+      "s0115"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0342",
+      "s0536"
+    ]
+  },
+  {
+    "day": 58,
+    "en_to_zh": [
+      "s0613",
+      "s0124"
+    ],
+    "zh_to_en": [
+      "s0252",
+      "s0437"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0277",
+      "s0071"
+    ]
+  },
+  {
+    "day": 59,
+    "en_to_zh": [
+      "s0081",
+      "s0611"
+    ],
+    "zh_to_en": [
+      "s0082",
+      "s0731"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0385",
+      "s0169"
+    ]
+  },
+  {
+    "day": 60,
+    "en_to_zh": [
+      "s0431",
+      "s0016"
+    ],
+    "zh_to_en": [
+      "s0132",
+      "s0254"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0598",
+      "s0521"
+    ]
+  },
+  {
+    "day": 61,
+    "en_to_zh": [
+      "s0445",
+      "s0028"
+    ],
+    "zh_to_en": [
+      "s0664",
+      "s0253"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0414",
+      "s0393"
+    ]
+  },
+  {
+    "day": 62,
+    "en_to_zh": [
+      "s0026",
+      "s0368"
+    ],
+    "zh_to_en": [
+      "s0046",
+      "s0734"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0297",
+      "s0615"
+    ]
+  },
+  {
+    "day": 63,
+    "en_to_zh": [
+      "s0377",
+      "s0113"
+    ],
+    "zh_to_en": [
+      "s0264",
+      "s0678"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0309",
+      "s0596"
+    ]
+  },
+  {
+    "day": 64,
+    "en_to_zh": [
+      "s0036",
+      "s0622"
+    ],
+    "zh_to_en": [
+      "s0110",
+      "s0193"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0470",
+      "s0388"
+    ]
+  },
+  {
+    "day": 65,
+    "en_to_zh": [
+      "s0152",
+      "s0015"
+    ],
+    "zh_to_en": [
+      "s0695",
+      "s0738"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0515",
+      "s0314"
+    ]
+  },
+  {
+    "day": 66,
+    "en_to_zh": [
+      "s0178",
+      "s0128"
+    ],
+    "zh_to_en": [
+      "s0721",
+      "s0022"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0266",
+      "s0012"
+    ]
+  },
+  {
+    "day": 67,
+    "en_to_zh": [
+      "s0500",
+      "s0136"
+    ],
+    "zh_to_en": [
+      "s0733",
+      "s0704"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0479",
+      "s0652"
+    ]
+  },
+  {
+    "day": 68,
+    "en_to_zh": [
+      "s0199",
+      "s0454"
+    ],
+    "zh_to_en": [
+      "s0191",
+      "s0042"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0422",
+      "s0302"
+    ]
+  },
+  {
+    "day": 69,
+    "en_to_zh": [
+      "s0293",
+      "s0328"
+    ],
+    "zh_to_en": [
+      "s0714",
+      "s0106"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0007",
+      "s0624"
+    ]
+  },
+  {
+    "day": 70,
+    "en_to_zh": [
+      "s0154",
+      "s0529"
+    ],
+    "zh_to_en": [
+      "s0118",
+      "s0706"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0371",
+      "s0004"
+    ]
+  },
+  {
+    "day": 71,
+    "en_to_zh": [
+      "s0088",
+      "s0203"
+    ],
+    "zh_to_en": [
+      "s0025",
+      "s0018"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0006",
+      "s0584"
+    ]
+  },
+  {
+    "day": 72,
+    "en_to_zh": [
+      "s0671",
+      "s0217"
+    ],
+    "zh_to_en": [
+      "s0094",
+      "s0689"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0484",
+      "s0556"
+    ]
+  },
+  {
+    "day": 73,
+    "en_to_zh": [
+      "s0031",
+      "s0177"
+    ],
+    "zh_to_en": [
+      "s0215",
+      "s0710"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0559",
+      "s0426"
+    ]
+  },
+  {
+    "day": 74,
+    "en_to_zh": [
+      "s0665",
+      "s0041"
+    ],
+    "zh_to_en": [
+      "s0732",
+      "s0690"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0281",
+      "s0439"
+    ]
+  },
+  {
+    "day": 75,
+    "en_to_zh": [
+      "s0547",
+      "s0170"
+    ],
+    "zh_to_en": [
+      "s0735",
+      "s0024"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0712",
+      "s0407"
+    ]
+  },
+  {
+    "day": 76,
+    "en_to_zh": [
+      "s0540",
+      "s0108"
+    ],
+    "zh_to_en": [
+      "s0226",
+      "s0713"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0508",
+      "s0358"
+    ]
+  },
+  {
+    "day": 77,
+    "en_to_zh": [
+      "s0141",
+      "s0010"
+    ],
+    "zh_to_en": [
+      "s0187",
+      "s0728"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0288",
+      "s0063"
+    ]
+  },
+  {
+    "day": 78,
+    "en_to_zh": [
+      "s0225",
+      "s0009"
+    ],
+    "zh_to_en": [
+      "s0146",
+      "s0222"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0587",
+      "s0498"
+    ]
+  },
+  {
+    "day": 79,
+    "en_to_zh": [
+      "s0428",
+      "s0196"
+    ],
+    "zh_to_en": [
+      "s0221",
+      "s0014"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0619",
+      "s0513"
+    ]
+  },
+  {
+    "day": 80,
+    "en_to_zh": [
+      "s0073",
+      "s0034"
+    ],
+    "zh_to_en": [
+      "s0683",
+      "s0699"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0551",
+      "s0319"
+    ]
+  },
+  {
+    "day": 81,
+    "en_to_zh": [
+      "s0067",
+      "s0514"
+    ],
+    "zh_to_en": [
+      "s0716",
+      "s0684"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0020",
+      "s0149"
+    ]
+  },
+  {
+    "day": 82,
+    "en_to_zh": [
+      "s0668",
+      "s0138"
+    ],
+    "zh_to_en": [
+      "s0680",
+      "s0686"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0530",
+      "s0364"
+    ]
+  },
+  {
+    "day": 83,
+    "en_to_zh": [
+      "s0150",
+      "s0122"
+    ],
+    "zh_to_en": [
+      "s0239",
+      "s0694"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0290",
+      "s0344"
+    ]
+  },
+  {
+    "day": 84,
+    "en_to_zh": [
+      "s0182",
+      "s0227"
+    ],
+    "zh_to_en": [
+      "s0697",
+      "s0692"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0038",
+      "s0282"
+    ]
+  },
+  {
+    "day": 85,
+    "en_to_zh": [
+      "s0065",
+      "s0218"
+    ],
+    "zh_to_en": [
+      "s0133",
+      "s0262"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0666",
+      "s0579"
+    ]
+  },
+  {
+    "day": 86,
+    "en_to_zh": [
+      "s0055",
+      "s0003"
+    ],
+    "zh_to_en": [
+      "s0696",
+      "s0257"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0382",
+      "s0299"
+    ]
+  },
+  {
+    "day": 87,
+    "en_to_zh": [
+      "s0708",
+      "s0349"
+    ],
+    "zh_to_en": [
+      "s0693",
+      "s0703"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0372",
+      "s0464"
+    ]
+  },
+  {
+    "day": 88,
+    "en_to_zh": [
+      "s0245",
+      "s0341"
+    ],
+    "zh_to_en": [
+      "s0679",
+      "s0682"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0496",
+      "s0311"
+    ]
+  },
+  {
+    "day": 89,
+    "en_to_zh": [
+      "s0059",
+      "s0555"
+    ],
+    "zh_to_en": [
+      "s0705",
+      "s0723"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0085",
+      "s0405"
+    ]
+  },
+  {
+    "day": 90,
+    "en_to_zh": [
+      "s0013",
+      "s0195"
+    ],
+    "zh_to_en": [
+      "s0685",
+      "s0279"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0265",
+      "s0389"
+    ]
+  },
+  {
+    "day": 91,
+    "en_to_zh": [
+      "s0120",
+      "s0090"
+    ],
+    "zh_to_en": [
+      "s0736",
+      "s0158"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0322",
+      "s0581"
+    ]
+  },
+  {
+    "day": 92,
+    "en_to_zh": [
+      "s0064",
+      "s0605"
+    ],
+    "zh_to_en": [
+      "s0729",
+      "s0725"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0628",
+      "s0303"
+    ]
+  },
+  {
+    "day": 93,
+    "en_to_zh": [
+      "s0069",
+      "s0600"
+    ],
+    "zh_to_en": [
+      "s0739",
+      "s0737"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0402",
+      "s0531"
+    ]
+  },
+  {
+    "day": 94,
+    "en_to_zh": [
+      "s0005",
+      "s0148"
+    ],
+    "zh_to_en": [
+      "s0306",
+      "s0635"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0367",
+      "s0558"
+    ]
+  },
+  {
+    "day": 95,
+    "en_to_zh": [
+      "s0070",
+      "s0231"
+    ],
+    "zh_to_en": [
+      "s0312",
+      "s0493"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0562",
+      "s0301"
+    ]
+  },
+  {
+    "day": 96,
+    "en_to_zh": [
+      "s0145",
+      "s0100"
+    ],
+    "zh_to_en": [
+      "s0286",
+      "s0687"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0395",
+      "s0528"
+    ]
+  },
+  {
+    "day": 97,
+    "en_to_zh": [
+      "s0634",
+      "s0131"
+    ],
+    "zh_to_en": [
+      "s0346",
+      "s0491"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0532",
+      "s0489"
+    ]
+  },
+  {
+    "day": 98,
+    "en_to_zh": [
+      "s0140",
+      "s0213"
+    ],
+    "zh_to_en": [
+      "s0524",
+      "s0323"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0384",
+      "s0509"
+    ]
+  },
+  {
+    "day": 99,
+    "en_to_zh": [
+      "s0208",
+      "s0261"
+    ],
+    "zh_to_en": [
+      "s0369",
+      "s0307"
+    ],
+    "focus": "translation",
+    "focus_ids": [
+      "s0051",
+      "s0119"
+    ]
+  },
+  {
+    "day": 100,
+    "en_to_zh": [
+      "s0519",
+      "s0043"
+    ],
+    "zh_to_en": [
+      "s0702",
+      "s0164"
+    ],
+    "focus": "analysis",
+    "focus_ids": [
+      "s0415",
+      "s0578"
+    ]
+  }
+]

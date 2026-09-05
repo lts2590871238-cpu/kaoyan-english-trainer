@@ -1,0 +1,8 @@
+{
+  "version": "6.0",
+  "ready": false,
+  "title": "轩轩冲刺50分大作战！",
+  "days": 100,
+  "counts": {"vocab": 3000, "sentences": 600, "analysis": 100},
+  "message": "请先在 GitHub Actions 运行 Build stable bilingual content。"
+}

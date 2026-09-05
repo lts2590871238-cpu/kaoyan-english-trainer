@@ -1,0 +1,4 @@
+window.XUANXUAN_CONFIG = {
+  AI_PROXY_URL: "",
+  DEFAULT_ACCENT: "en-US"
+};

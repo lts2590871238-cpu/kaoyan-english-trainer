@@ -1,74 +1,15 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>考研英语一真题训练器 · 2023—2026</title>
-<meta name="description" content="2023—2026考研英语一真题词汇、翻译、长难句与复习训练。">
-<link rel="stylesheet" href="styles.css?v=5.0.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#fff8f3" />
+  <title>轩轩冲刺50分大作战！</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<header class="topbar">
-  <div class="brand"><span class="brand-mark">K</span><div><strong>考研英语一</strong><small>2023—2026</small></div></div>
-  <div class="top-actions">
-    <button class="ghost" id="exportProgress">导出进度</button>
-    <button class="ghost" id="importProgress">导入进度</button>
-    <input id="importFile" type="file" accept="application/json" hidden>
-    <button class="ghost danger-link" id="resetProgress">重置</button>
-  </div>
-</header>
-<main>
-<section id="home" class="view active">
-  <div class="home-head">
-    <div>
-      <h1>今日练习</h1>
-      <p id="memorySummary">正在读取学习进度…</p>
-    </div>
-    <button class="primary big-button" data-go="spaced-review">开始今日复习</button>
-  </div>
-
-  <div class="progress-card">
-    <div class="progress-line"><span>长期掌握度</span><b id="masteryPct">0%</b></div>
-    <div class="progress"><i id="masteryBar"></i></div>
-  </div>
-
-  <div class="stats six">
-    <div class="stat"><b id="statTotal">0</b><span>词汇 / 词组</span></div>
-    <div class="stat"><b id="statLearned">0</b><span>已训练</span></div>
-    <div class="stat due"><b id="statDue">0</b><span>今日到期</span></div>
-    <div class="stat"><b id="statWrong">0</b><span>错题</span></div>
-    <div class="stat"><b id="statMastered">0</b><span>稳定掌握</span></div>
-    <div class="stat"><b id="statToday">0</b><span>今日复习</span></div>
-  </div>
-
-  <div id="dataStatus" class="data-status" hidden></div>
-
-  <div class="section-head"><h2>练习</h2></div>
-  <div class="module-grid">
-    <button class="module" data-go="match"><span>01</span><h2>词汇 / 词组连线</h2><p>10 个一组，随机抽取新词与薄弱词。</p><em>开始 →</em></button>
-    <button class="module" data-go="build-en"><span>02</span><h2>汉译 → 英文拼句</h2><p>按意群把真题句重新拼回英语。</p><em>开始 →</em></button>
-    <button class="module" data-go="build-zh"><span>03</span><h2>英文 → 中文拼译</h2><p>按中文意群重组译文。</p><em>开始 →</em></button>
-    <button class="module" data-go="free"><span>04</span><h2>无提示汉译</h2><p>自己翻译，再进行宽松语义核对。</p><em>开始 →</em></button>
-    <button class="module anatomy-accent" data-go="structure"><span>05</span><h2>长难句拆骨架</h2><p>精拆 → 层级 → 主干压缩。</p><em>开始 →</em></button>
-    <button class="module accent" data-go="spaced-review"><span>06</span><h2>复习词汇</h2><p>到期词回到真题语境做填词。</p><em><span id="dueInline">0</span> 个待复习 →</em></button>
-    <button class="module wrong-accent" data-go="review"><span>07</span><h2>错题强化</h2><p>只练仍未掌握的词。</p><em>开始 →</em></button>
-  </div>
-</section>
-
-<section id="trainer" class="view">
-  <div class="trainer-head">
-    <button class="back" id="backHome">← 首页</button>
-    <div><span id="modeEyebrow" class="eyebrow"></span><h1 id="modeTitle"></h1></div>
-    <div class="year-filter" id="yearFilter"></div>
-  </div>
-  <div id="trainerBody"></div>
-</section>
-</main>
-<footer>2023—2026 · 考研英语一</footer>
-<script src="quality-data.js?v=5.0.0"></script>
-<script src="generated-data.js?v=5.0.0"></script>
-<script src="data.js?v=5.0.0"></script>
-<script src="anatomy-data.js?v=5.0.0"></script>
-<script src="app.js?v=5.0.0"></script>
+  <div id="app"></div>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
