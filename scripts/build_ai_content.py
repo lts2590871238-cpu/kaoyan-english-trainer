@@ -5,10 +5,13 @@ from collections import Counter
 
 ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/'data/source'
-OUT=ROOT/'data/generated'
-OUT.mkdir(parents=True,exist_ok=True)
-CKPT=OUT/'checkpoints'
-CKPT.mkdir(parents=True,exist_ok=True)
+WORK=ROOT/'data/work'; WORK.mkdir(parents=True,exist_ok=True)
+CKPT=ROOT/'data/checkpoints'; CKPT.mkdir(parents=True,exist_ok=True)
+LEGACY=ROOT/'data/generated/checkpoints'
+if LEGACY.exists():
+    for _p in LEGACY.glob('*.json'):
+        _dst=CKPT/_p.name
+        if not _dst.exists(): shutil.copy2(_p,_dst)
 KEY=os.environ.get('DEEPSEEK_API_KEY','').strip()
 if not KEY:
     raise SystemExit('DEEPSEEK_API_KEY is missing. Add it as a GitHub Actions secret; never put it in repository files.')
@@ -248,17 +251,19 @@ def generate_nonprecise_single(x,retries=4):
 def enrich_lexicon_single(x,retries=5):
     ctx=x['contexts'][0]['text'] if x.get('contexts') else ''
     system='''你是考研英语词典编辑。这个词条已经通过上游真题词库审计，确定是合法学习词条；不要再判断它是否“有效”，也不要因为大小写、人名联想或地名联想拒绝任务。依据给定词典信息与真题语境，必须补全教学字段并输出严格 JSON。sense_zh 是本句最准确最短义；dict_zh 是学习者常用核心中文义；definition_en 是简洁准确的英英释义。'''
-    req={'term':x['term'],'type':x['type'],'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'dictionary_source':x.get('dictionary_source','')}
+    req={'term':x['term'],'type':x['type'],'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'dictionary_source':x.get('dictionary_source',''),'needs_context_fill':bool(x.get('needs_context_fill'))}
     last=None
     for attempt in range(retries):
         try:
-            g=call_json(system,'返回 {"term":"...","sense_zh":"...","dict_zh":"...","definition_en":"...","pos":"..."}。不得返回 valid 字段，不得拒绝词条。输入：\n'+json.dumps(req,ensure_ascii=False),4500)
+            g=call_json(system,'返回 {"term":"...","sense_zh":"...","dict_zh":"...","definition_en":"...","pos":"...","example_en":"若 needs_context_fill=true 则给一个自然学习例句，否则空字符串","example_zh":"对应汉译或空字符串"}。不得返回 valid 字段，不得拒绝词条。AI例句不是原真题，必须自然且含目标词。输入：\n'+json.dumps(req,ensure_ascii=False),5000)
             sense=(g.get('sense_zh') or x.get('dict_zh') or '').strip()
             dict_zh=(x.get('dict_zh') or g.get('dict_zh') or sense).strip()
             definition=(x.get('definition_en') or g.get('definition_en') or '').strip()
             pos=(x.get('pos') or g.get('pos') or ('phrase' if x.get('type')=='phrase' else '')).strip()
-            if sense and dict_zh and (x.get('type')!='word' or definition):
-                return {'sense_zh':sense,'dict_zh':dict_zh,'definition_en':definition,'pos':pos}
+            ex_en=str(g.get('example_en') or '').strip(); ex_zh=str(g.get('example_zh') or '').strip()
+            need_ctx=bool(x.get('needs_context_fill'))
+            if sense and dict_zh and (x.get('type')!='word' or definition) and (not need_ctx or (ex_en and ex_zh and x['term'].lower() in ex_en.lower())):
+                return {'sense_zh':sense,'dict_zh':dict_zh,'definition_en':definition,'pos':pos,'example_en':ex_en,'example_zh':ex_zh}
             last='incomplete dictionary fields'
         except Exception as e:
             last=e
@@ -327,7 +332,7 @@ for batch in batches(pending,10):
 
 # ---------- translate every remaining corpus sentence for review explanations ----------
 corpus_all=json.loads((SRC/'corpus_sentences.json').read_text(encoding='utf8'))
-corpus=[x for x in corpus_all if x.get('source') not in ('完形','写作')]
+corpus=[x for x in corpus_all if x.get('source')!='写作']
 context_zh=load_ckpt('corpus_translations.json',{})
 for k,v in sent_out.items():
     if k in {x['id'] for x in corpus}:
@@ -386,7 +391,7 @@ main_stem：只给 main_stem_indices、abridged_en、zh、main_stem_zh、discard
     print('analysis',len(analysis_out),'/',len(analysis),flush=True)
 
 # ---------- 3000 context-specific word senses + dictionary gap filling ----------
-lexpath=OUT/'lexicon.base.json'
+lexpath=WORK/'lexicon.base.json'
 if not lexpath.exists():
     raise SystemExit('Run build_lexicon.py before build_ai_content.py')
 lex=json.loads(lexpath.read_text(encoding='utf8'))
@@ -405,8 +410,8 @@ for batch in batches(pending,32):
     req=[]
     for x in batch:
         ctx=x['contexts'][0]['text'] if x.get('contexts') else ''
-        req.append({'term':x['term'],'type':x['type'],'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'dictionary_source':x.get('dictionary_source','')})
-    user='返回 {"items":[{"term":"...","sense_zh":"本句准确义","dict_zh":"核心中文词典义","definition_en":"English dictionary-style definition","pos":"词性或phrase"}]}。不得返回 valid 字段。输入：\n'+json.dumps(req,ensure_ascii=False)
+        req.append({'term':x['term'],'type':x['type'],'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'dictionary_source':x.get('dictionary_source',''),'needs_context_fill':bool(x.get('needs_context_fill'))})
+    user='返回 {"items":[{"term":"...","sense_zh":"本句准确义","dict_zh":"核心中文词典义","definition_en":"English dictionary-style definition","pos":"词性或phrase","example_en":"仅 needs_context_fill=true 时生成自然例句，否则空字符串","example_zh":"对应汉译或空字符串"}]}。不得返回 valid 字段。AI例句不得冒充真题。输入：\n'+json.dumps(req,ensure_ascii=False)
     obj=call_json(system3,user,11000)
     got={i['term'].lower():i for i in obj.get('items',[]) if isinstance(i,dict) and i.get('term')}
     for x in batch:
@@ -415,20 +420,21 @@ for batch in batches(pending,32):
         dict_zh=(x.get('dict_zh') or g.get('dict_zh') or sense).strip()
         definition=(x.get('definition_en') or g.get('definition_en') or '').strip()
         pos=(x.get('pos') or g.get('pos') or ('phrase' if x.get('type')=='phrase' else '')).strip()
-        if not sense or not dict_zh or (x.get('type')=='word' and not definition):
+        ex_en=str(g.get('example_en') or '').strip(); ex_zh=str(g.get('example_zh') or '').strip(); need_ctx=bool(x.get('needs_context_fill'))
+        if not sense or not dict_zh or (x.get('type')=='word' and not definition) or (need_ctx and (not ex_en or not ex_zh or x['term'].lower() not in ex_en.lower())):
             print('repair lexicon individually',x['term'],flush=True)
             fixed=enrich_lexicon_single(x)
             sense,dict_zh,definition,pos=fixed['sense_zh'],fixed['dict_zh'],fixed['definition_en'],fixed['pos']
-        lex_out[x['term']]={'sense_zh':sense,'dict_zh':dict_zh,'definition_en':definition,'pos':pos}
+            ex_en,ex_zh=fixed.get('example_en',''),fixed.get('example_zh','')
+        lex_out[x['term']]={'sense_zh':sense,'dict_zh':dict_zh,'definition_en':definition,'pos':pos,'example_en':ex_en,'example_zh':ex_zh}
         save_ckpt('lexicon_senses.json',lex_out)
     print('lexicon dictionary+senses',len(lex_out),'/',len(scheduled),flush=True)
 
 # ---------- publish complete enrichment files ----------
-(OUT/'sentences.enriched.json').write_text(json.dumps(sent_out,ensure_ascii=False,indent=2),encoding='utf8')
-(OUT/'corpus.translations.json').write_text(json.dumps(context_zh,ensure_ascii=False,indent=2),encoding='utf8')
-(OUT/'analysis.enriched.json').write_text(json.dumps(analysis_out,ensure_ascii=False,indent=2),encoding='utf8')
-(OUT/'lexicon.senses.json').write_text(json.dumps(lex_out,ensure_ascii=False,indent=2),encoding='utf8')
+(WORK/'sentences.enriched.json').write_text(json.dumps(sent_out,ensure_ascii=False,indent=2),encoding='utf8')
+(WORK/'corpus.translations.json').write_text(json.dumps(context_zh,ensure_ascii=False,indent=2),encoding='utf8')
+(WORK/'analysis.enriched.json').write_text(json.dumps(analysis_out,ensure_ascii=False,indent=2),encoding='utf8')
+(WORK/'lexicon.senses.json').write_text(json.dumps(lex_out,ensure_ascii=False,indent=2),encoding='utf8')
 
 # A successful build no longer needs recovery checkpoints. Failure leaves them for the workflow to commit.
-shutil.rmtree(CKPT,ignore_errors=True)
 print('AI enrichment complete')
