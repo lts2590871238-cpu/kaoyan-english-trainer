@@ -45,6 +45,9 @@ jobs:
       - name: Build local WordNet fallback cache
         run: python scripts/build_wordnet_cache.py cache/lemma.en.txt cache/nltk_data cache/wordnet_defs.json
 
+      - name: Verify V16 core phrase extension
+        run: python scripts/verify_v16_core_phrases.py
+
       - name: Build EXACT 3000 unique new-word lexicon + 100x30 schedule
         run: python scripts/build_lexicon.py cache/ecdict.csv cache/lemma.en.txt cache/wordnet_defs.json
 
