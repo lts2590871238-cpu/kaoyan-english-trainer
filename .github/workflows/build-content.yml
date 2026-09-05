@@ -45,11 +45,20 @@ jobs:
       - name: Build local WordNet fallback cache
         run: python scripts/build_wordnet_cache.py cache/lemma.en.txt cache/nltk_data cache/wordnet_defs.json
 
-      - name: Build 3000-word LOCAL lexicon
+      - name: Build canonical 3000-word schedule with local-first dictionary
         run: python scripts/build_lexicon.py cache/ecdict.csv cache/lemma.en.txt cache/wordnet_defs.json
 
-      - name: Validate local lexicon before any AI
+      - name: Validate canonical 3000 before dictionary backfill
         run: python scripts/validate_base.py
+
+      - name: Backfill ONLY missing dictionary fields
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DEEPSEEK_BUILD_MODEL: deepseek-v4-flash
+        run: python scripts/build_dictionary_backfill.py
+
+      - name: Validate completed 3000-word dictionary
+        run: python scripts/validate_dictionary.py
 
       - name: Lexicon rule self-test
         run: python scripts/test_lexicon_rules.py
@@ -88,6 +97,7 @@ jobs:
           name: xuanxuan-build-reports
           path: |
             data/work/lexicon_report.json
+            data/work/dictionary_backfill_unresolved.json
             data/work/word_contexts_unresolved.json
             data/candidate/meta.json
             data/checkpoints/
@@ -100,7 +110,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A data/generated data/checkpoints
           git diff --cached --quiet && exit 0
-          git commit -m "Publish validated V10 training data"
+          git commit -m "Publish validated V11 training data"
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
