@@ -394,10 +394,9 @@ main_stem：只给 main_stem_indices、abridged_en、zh、main_stem_zh、discard
     print('analysis',len(analysis_out),'/',len(analysis),flush=True)
 
 
-# ---------- Lexicon dictionary/senses are LOCAL, not AI ----------
-# build_lexicon.py already created data/work/lexicon.senses.json from ECDICT.
-# We deliberately do not call DeepSeek 3000 times. This makes the build fast and
-# removes a whole class of failures caused by inflected forms or missing AI fields.
+# ---------- Lexicon dictionary/senses are already COMPLETE here ----------
+# build_lexicon.py used local dictionaries first; build_dictionary_backfill.py filled only the small remaining debt in batches.
+# This stage never loops over 3000 words with DeepSeek.
 lexpath=WORK/'lexicon.base.json'; sensepath=WORK/'lexicon.senses.json'
 if not lexpath.exists() or not sensepath.exists():
     raise SystemExit('Run build_lexicon.py before build_ai_content.py')
@@ -405,7 +404,7 @@ lex=json.loads(lexpath.read_text(encoding='utf8'))
 lex_out=json.loads(sensepath.read_text(encoding='utf8'))
 if len(lex)!=3000 or len(lex_out)!=3000:
     raise RuntimeError(f'local lexicon incomplete: lex={len(lex)} senses={len(lex_out)}')
-print('lexicon dictionary+senses 3000 / 3000 (local; zero DeepSeek word calls)',flush=True)
+print('lexicon dictionary+senses 3000 / 3000 (prebuilt; no per-word AI loop in this stage)',flush=True)
 
 # ---------- publish complete enrichment files ----------
 (WORK/'sentences.enriched.json').write_text(json.dumps(sent_out,ensure_ascii=False,indent=2),encoding='utf8')
@@ -413,4 +412,4 @@ print('lexicon dictionary+senses 3000 / 3000 (local; zero DeepSeek word calls)',
 (WORK/'analysis.enriched.json').write_text(json.dumps(analysis_out,ensure_ascii=False,indent=2),encoding='utf8')
 # lexicon.senses.json is already canonical local output; rewrite only for formatting consistency.
 (WORK/'lexicon.senses.json').write_text(json.dumps(lex_out,ensure_ascii=False,indent=2),encoding='utf8')
-print('AI enrichment complete (sentences/analysis only; vocabulary dictionary is local)')
+print('AI enrichment complete (sentences/analysis only; vocabulary dictionary was completed before this stage)')

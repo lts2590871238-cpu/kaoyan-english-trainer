@@ -14,7 +14,7 @@ for x in lex:
     s=senses.get(x['term'],{})
     if not s.get('sense_zh') or not s.get('dict_zh'): bad.append((x['term'],'zh'))
     if x.get('type')=='word' and not s.get('definition_en'): bad.append((x['term'],'definition_en'))
-if bad: errors.append(f'incomplete LOCAL dictionary/senses: {bad[:20]}')
+if bad: errors.append(f'incomplete dictionary/senses after backfill: {bad[:20]}')
 need=[x for x in lex if not x.get('contexts')]
 missing_ctx=[]
 for x in need:
@@ -33,4 +33,4 @@ if not allowed.issubset(set(ctx)): errors.append(f'context translations missing 
 if errors:
     print('AI OUTPUT VALIDATION: FAIL'); print('\n'.join('- '+e for e in errors)); sys.exit(1)
 print('AI OUTPUT VALIDATION: PASS')
-print(f'Lexicon dictionary is 100% local; DeepSeek was used only for 600 sentence content, 100 analyses, and {len(need)} missing practice contexts.')
+print(f'Lexicon dictionary is complete (local-first + limited missing-field backfill); DeepSeek sentence stage covers 600 sentence content, 100 analyses, and {len(need)} missing practice contexts.')

@@ -29,46 +29,36 @@ def split_lines(s): return [x.strip() for x in (s or '').replace('\\n','\n').spl
 def zh_short(s):
     lines=split_lines(s)
     if not lines:return ''
-    z='；'.join(lines[:2])
-    z=re.sub(r'\s+',' ',z)
+    z='；'.join(lines[:2]); z=re.sub(r'\s+',' ',z)
     return z[:220]
 def en_short(s):
     lines=split_lines(s)
     return ' '.join(lines[:2])[:420] if lines else ''
 def pos_main(s):
     s=(s or '').strip()
-    if not s:return ''
-    return s.split('/')[0].split(':')[0].strip()
+    return s.split('/')[0].split(':')[0].strip() if s else ''
 def short_match_zh(s):
     s=(s or '').strip()
     if not s:return ''
     s=re.sub(r'^(?:n|v|vt|vi|adj|adv|prep|conj|pron|aux|a|r)\.?\s*','',s,flags=re.I)
-    # Remove obvious inflection explanation; canonical lemma should not need it, but keep this defensive.
-    for m in FORM_MARKERS:
-        s=s.replace(m,'')
+    for m in FORM_MARKERS: s=s.replace(m,'')
     parts=[p.strip(' .；;,，') for p in re.split(r'[；;\n]|\s{2,}',s) if p.strip()]
     return (parts[0] if parts else s)[:60]
 
 
 def parse_lemma_file(path, needed):
-    """ECDICT's lemma.en.txt is sorted by corpus frequency. First mapping wins.
-    Example: help/... -> helped,helping,helps.
-    """
     fmap={}
-    if not path.exists():
-        raise SystemExit(f'lemma file missing: {path}')
+    if not path.exists(): raise SystemExit(f'lemma file missing: {path}')
     with path.open(encoding='utf8',errors='ignore') as f:
         for line in f:
             line=line.strip()
             if not line or line.startswith(';') or '->' not in line: continue
-            left,right=line.split('->',1)
-            lemma=norm(left.split('/',1)[0])
+            left,right=line.split('->',1); lemma=norm(left.split('/',1)[0])
             if not lemma: continue
             if lemma in needed: fmap.setdefault(lemma,lemma)
             for raw in right.split(','):
                 form=norm(raw)
-                if form in needed and form not in fmap:
-                    fmap[form]=lemma
+                if form in needed and form not in fmap: fmap[form]=lemma
     return fmap
 
 
@@ -110,20 +100,13 @@ def load_rows(terms):
 
 
 def standalone_surface(surface,lemma,row):
-    """Keep a lexicalized form only when the dictionary treats it as a real lexeme,
-    not merely an inflection. This prevents housing/marketing-like nouns from being
-    blindly collapsed while still merging helped/helps/libraries/etc.
-    """
     if surface==lemma or not row:return False
     trans=row.get('translation') or ''
     if any(m in trans for m in FORM_MARKERS): return False
     p=row.get('pos') or ''
     coll=int(row.get('collins') or 0) if str(row.get('collins') or '').isdigit() else 0
     ox=str(row.get('oxford') or '').strip() not in ('','0')
-    # Strong standalone dictionary evidence: common lexicalized noun/adjective/adverb.
-    if (coll>=2 or ox) and re.search(r'(^|/)(n|a|adj|adv)(:|/|$)',p):
-        return True
-    return False
+    return bool((coll>=2 or ox) and re.search(r'(^|/)(n|a|adj|adv)(:|/|$)',p))
 
 
 def merge(dst,src):
@@ -138,61 +121,69 @@ def merge(dst,src):
 
 needed={norm(x['surface']) for x in surface if lexical(norm(x['surface']))}
 fmap=parse_lemma_file(LEMMA,needed)
-# First pass dictionary rows for surfaces; determine canonical candidates; then fetch canonical rows.
 surface_rows=load_rows(needed)
-canonical_needed=set()
-canon_of={}
+canonical_needed=set(); canon_of={}
 for w in needed:
-    lemma=fmap.get(w,w)
-    row=surface_rows.get(w)
+    lemma=fmap.get(w,w); row=surface_rows.get(w)
     term=w if standalone_surface(w,lemma,row) else lemma
-    canon_of[w]=term
-    canonical_needed.add(term)
+    canon_of[w]=term; canonical_needed.add(term)
 canon_rows=load_rows(canonical_needed | set(norm(p) for p in phrases))
 
+# IMPORTANT V11 RULE:
+# Selection is based on corpus value, NOT on whether every dictionary field is already present.
+# Local dictionaries are used first; missing fields are queued for a small batched backfill later.
 agg={}
 for item in surface:
     w=norm(item.get('surface'))
     if w not in needed: continue
     term=canon_of.get(w,w)
     if term in SKIP or not lexical(term): continue
-    row=canon_rows.get(term) or surface_rows.get(w)
-    if not row: continue
-    dz=zh_short(row.get('translation'))
-    # English definition is local-first: ECDICT, then Princeton WordNet.
-    de=en_short(row.get('definition'))
+    crow=canon_rows.get(term) or {}
+    srow=surface_rows.get(w) or {}
+    # Field-wise fallback instead of all-or-nothing row fallback.
+    dz=zh_short(crow.get('translation')) or zh_short(srow.get('translation'))
+    de=en_short(crow.get('definition'))
     def_source='ecdict' if de else ''
     if not de:
         wndef=wordnet_defs.get(term) or wordnet_defs.get(w) or {}
         de=en_short(wndef.get('definition_en'))
         if de: def_source='wordnet'
-    # Chinese meaning remains ECDICT-derived; candidates without it are excluded.
-    # English definitions are never fabricated by AI during the 3000-word build.
-    if not dz or not de: continue
+    if not de:
+        de=en_short(srow.get('definition'))
+        if de: def_source='ecdict_surface'
+    phon=(crow.get('phonetic') or srow.get('phonetic') or '').strip()
+    pos=pos_main(crow.get('pos') or srow.get('pos'))
+    row_for_meta=crow or srow
     contexts=clean_contexts(item.get('contexts',[]))
     rec={'term':term,'type':'word','count':int(item.get('count',0)),'year_counts':defaultdict(int),'contexts':contexts,
-         'phonetic':(row.get('phonetic') or '').strip(),'dict_zh':dz,'match_zh':short_match_zh(dz),'definition_en':de,
-         'pos':pos_main(row.get('pos')),'collins':int(row.get('collins') or 0) if str(row.get('collins') or '').isdigit() else 0,
-         'oxford':1 if str(row.get('oxford') or '').strip() not in ('','0') else 0,
-         'bnc':int(row.get('bnc') or 0) if str(row.get('bnc') or '').isdigit() else 0,
-         'frq':int(row.get('frq') or 0) if str(row.get('frq') or '').isdigit() else 0,
-         'forms':{w},'dictionary_source':'ecdict','definition_source':def_source,'needs_context_fill':not bool(contexts)}
+         'phonetic':phon,'dict_zh':dz,'match_zh':short_match_zh(dz),'definition_en':de,'pos':pos,
+         'collins':int(row_for_meta.get('collins') or 0) if str(row_for_meta.get('collins') or '').isdigit() else 0,
+         'oxford':1 if str(row_for_meta.get('oxford') or '').strip() not in ('','0') else 0,
+         'bnc':int(row_for_meta.get('bnc') or 0) if str(row_for_meta.get('bnc') or '').isdigit() else 0,
+         'frq':int(row_for_meta.get('frq') or 0) if str(row_for_meta.get('frq') or '').isdigit() else 0,
+         'forms':{w},'dictionary_source':'local' if (dz or de) else 'missing',
+         'definition_source':def_source,'needs_context_fill':not bool(contexts)}
     for y,c in item.get('year_counts',{}).items(): rec['year_counts'][int(y)]+=int(c)
     if term not in agg: agg[term]=rec
-    else: merge(agg[term],rec)
+    else:
+        # Merge corpus counts and keep any stronger local dictionary fields discovered on another form.
+        old=agg[term]; merge(old,rec)
+        for key in ('dict_zh','match_zh','definition_en','pos','phonetic'):
+            if not old.get(key) and rec.get(key): old[key]=rec[key]
+        if old.get('dictionary_source')=='missing' and rec.get('dictionary_source')!='missing': old['dictionary_source']=rec['dictionary_source']
+        if not old.get('definition_source') and rec.get('definition_source'): old['definition_source']=rec['definition_source']
 
 entries=[]; proper_excluded=0
 for term,r in agg.items():
     if looks_like_proper_noun(term,r['contexts'],r.get('dict_zh','')):
         proper_excluded+=1; continue
     yc=dict(sorted(r['year_counts'].items()))
-    core=sum(c for y,c in yc.items() if y>=2023)>0
-    # 2020-2022 supplement only if absent from core and total seven-year frequency >= 5.
+    core=sum(c for y,c in yc.items() if int(y)>=2023)>0
     if not core and int(r['count'])<5: continue
     r['year_counts']=yc; r['forms']=sorted(r['forms']); r['core_2023_2026']=core; r['supplement_2020_2022']=not core
     entries.append(r)
 
-# Curated phrases remain independent learning items. Only use genuine 2023-2026 paper contexts.
+# Curated phrases are valid learning units even if they lack an English dictionary gloss locally.
 for phrase,zh in phrases.items():
     p=norm(phrase)
     if not p or p in SKIP: continue
@@ -205,12 +196,13 @@ for phrase,zh in phrases.items():
             if len(ctx)<10: ctx.append({'sentence_id':s['id'],'year':s['year'],'page':s['page'],'text':s['text'],'source':s.get('source','')})
     if not ctx: continue
     prow=canon_rows.get(p,{})
+    pdef=en_short(prow.get('definition')) or en_short((wordnet_defs.get(p) or {}).get('definition_en'))
     entries.append({'term':p,'type':'phrase','count':sum(yc.values()),'year_counts':dict(sorted(yc.items())),'contexts':ctx,
-        'phonetic':(prow.get('phonetic') or '').strip(),'dict_zh':zh,'match_zh':short_match_zh(zh),
-        'definition_en':en_short(prow.get('definition')) or en_short((wordnet_defs.get(p) or {}).get('definition_en')),'pos':'phrase','collins':0,'oxford':0,'bnc':0,'frq':0,'forms':[p],
-        'dictionary_source':'curated','needs_context_fill':False,'core_2023_2026':True,'supplement_2020_2022':False})
+        'phonetic':(prow.get('phonetic') or '').strip(),'dict_zh':zh,'match_zh':short_match_zh(zh),'definition_en':pdef,
+        'pos':'phrase','collins':0,'oxford':0,'bnc':0,'frq':0,'forms':[p],'dictionary_source':'curated',
+        'definition_source':'ecdict' if pdef else '', 'needs_context_fill':False,'core_2023_2026':True,'supplement_2020_2022':False})
 
-# Canonical term dedupe; phrase semantics win exact collisions.
+# Canonical term dedupe.
 canon={}
 for r in entries:
     t=r['term']
@@ -219,10 +211,16 @@ for r in entries:
     else:
         if r.get('type')=='phrase':
             old=canon[t]; r2=dict(r); r2['year_counts']=defaultdict(int,{int(y):int(c) for y,c in old.get('year_counts',{}).items()}); r2['forms']=set(old.get('forms',[]))|set(r.get('forms',[])); r2['contexts']=list(r.get('contexts',[])); canon[t]=r2
-        else: merge(canon[t],r)
+        else:
+            old=canon[t]; merge(old,r)
+            for key in ('dict_zh','match_zh','definition_en','pos','phonetic'):
+                if not old.get(key) and r.get(key): old[key]=r[key]
+
 entries=[]
 for r in canon.values():
-    r['year_counts']=dict(sorted(r['year_counts'].items())); r['forms']=sorted(r['forms']); r['needs_context_fill']=not bool(r.get('contexts')); entries.append(r)
+    r['year_counts']=dict(sorted(r['year_counts'].items())); r['forms']=sorted(r['forms']); r['needs_context_fill']=not bool(r.get('contexts'))
+    r['missing_dictionary_fields']=[k for k in ('dict_zh','definition_en','pos') if not (r.get(k) or '').strip()]
+    entries.append(r)
 
 
 def priority(r):
@@ -231,24 +229,23 @@ def priority(r):
     corpusw=(10000/(int(r.get('bnc',0))+1000) if int(r.get('bnc',0) or 0)>0 else 0)+(10000/(int(r.get('frq',0))+1000) if int(r.get('frq',0) or 0)>0 else 0)
     context_bonus=5 if r.get('contexts') else 0
     phrase_bonus=2 if r.get('type')=='phrase' else 0
-    return (-core,-freq,-dictw,-context_bonus,-corpusw,-phrase_bonus,r['term'])
+    # Prefer locally complete entries when learning value is otherwise similar, but never discard useful source words only for missing fields.
+    complete_bonus=4 if not r.get('missing_dictionary_fields') else 0
+    return (-core,-freq,-dictw,-context_bonus,-complete_bonus,-corpusw,-phrase_bonus,r['term'])
 
 entries.sort(key=priority)
 if len(entries)<3000:
-    # Detailed diagnosis: never spend AI calls on a structurally insufficient base.
-    raise SystemExit(f'BASE FAIL: only {len(entries)} locally complete canonical entries after ECDICT+WordNet; need 3000. This is a source-selection problem, not an AI problem.')
+    raise SystemExit(f'BASE FAIL: only {len(entries)} canonical learning candidates after source/quality filtering; need 3000')
 scheduled=entries[:3000]
 terms=[r['term'] for r in scheduled]
 if len(set(terms))!=3000: raise SystemExit('BASE FAIL: duplicate canonical terms')
 for i,r in enumerate(scheduled):
     r['item_id']=f'v{i+1:04d}'; r['rank']=i+1; r['freq_band']='high' if i<1500 else ('mid' if i<2400 else 'low'); r['scheduled']=True
-# 100-day 5:3:2 distribution exactly.
+
 high=scheduled[:1500]; mid=scheduled[1500:2400]; low=scheduled[2400:]
 days=[]
 for d in range(100):
-    items=[]; ids=[]
-    hs=high[d*15:(d+1)*15]; ms=mid[d*9:(d+1)*9]; ls=low[d*6:(d+1)*6]
-    # interleave three 10-item subgroups so one band does not clump visually
+    items=[]; ids=[]; hs=high[d*15:(d+1)*15]; ms=mid[d*9:(d+1)*9]; ls=low[d*6:(d+1)*6]
     for b in range(3):
         grp=hs[b*5:(b+1)*5]+ms[b*3:(b+1)*3]+ls[b*2:(b+1)*2]
         items.extend(x['term'] for x in grp); ids.extend(x['item_id'] for x in grp)
@@ -256,25 +253,32 @@ for d in range(100):
 flat=[t for d in days for t in d['items']]
 if len(flat)!=3000 or len(set(flat))!=3000 or set(flat)!=set(terms): raise SystemExit('BASE FAIL: schedule not bijective')
 
-# Local dictionary-derived sense file: zero DeepSeek calls for 3000 dictionary entries.
+# Initialize sense table from local sources. Missing fields are intentionally preserved for the LIMITED backfill stage.
 senses={}
 for x in scheduled:
-    senses[x['term']]={'sense_zh':x.get('match_zh') or short_match_zh(x.get('dict_zh')) or x.get('dict_zh',''),
-                      'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),
-                      'example_en':'','example_zh':'','sense_source':'local_dictionary'}
-lookup=[{'term':r['term'],'forms':r.get('forms',[]),'phonetic':r.get('phonetic',''),'dict_zh':r.get('dict_zh',''),'definition_en':r.get('definition_en',''),'pos':r.get('pos','')} for r in entries if r.get('dict_zh')]
+    senses[x['term']]={'sense_zh':x.get('match_zh') or x.get('dict_zh',''),'dict_zh':x.get('dict_zh',''),
+                      'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'example_en':'','example_zh':'',
+                      'sense_source':'local_dictionary' if not x.get('missing_dictionary_fields') else 'local_partial'}
+
+# Keep all useful lookup entries, even partial; scheduled items will be made complete in backfill stage.
+lookup=[{'term':r['term'],'forms':r.get('forms',[]),'phonetic':r.get('phonetic',''),'dict_zh':r.get('dict_zh',''),
+         'definition_en':r.get('definition_en',''),'pos':r.get('pos','')} for r in entries]
 lookup.sort(key=lambda x:x['term'])
 
 (WORK/'dictionary.lookup.base.json').write_text(json.dumps(lookup,ensure_ascii=False,indent=2),encoding='utf8')
 (WORK/'lexicon.base.json').write_text(json.dumps(scheduled,ensure_ascii=False,indent=2),encoding='utf8')
 (WORK/'lexicon.senses.json').write_text(json.dumps(senses,ensure_ascii=False,indent=2),encoding='utf8')
 (WORK/'days_words.json').write_text(json.dumps(days,ensure_ascii=False,indent=2),encoding='utf8')
+missing=Counter()
+for r in scheduled:
+    for k in r.get('missing_dictionary_fields',[]): missing[k]+=1
+complete=sum(not r.get('missing_dictionary_fields') for r in scheduled)
 report={'lemma_mapped_surfaces':sum(1 for w in needed if fmap.get(w,w)!=w),'eligible_unique_entries':len(entries),'scheduled_entries':3000,
-        'scheduled_definition_sources':dict(Counter(r.get('definition_source','') or 'phrase_or_unknown' for r in scheduled)),
         'scheduled_words':sum(r['type']=='word' for r in scheduled),'scheduled_phrases':sum(r['type']=='phrase' for r in scheduled),
         'proper_noun_excluded':proper_excluded,'days_with_30':100,'unique_scheduled_terms':3000,
-        'contextless_scheduled_terms':sum(not r.get('contexts') for r in scheduled),
-        'local_dictionary_complete_words':sum(bool(r['type']!='word' or (r.get('dict_zh') and r.get('definition_en'))) for r in scheduled),
+        'contextless_scheduled_terms':sum(not r.get('contexts') for r in scheduled),'local_dictionary_complete_items':complete,
+        'dictionary_backfill_items':3000-complete,'missing_fields':dict(missing),
         'lexicon_fingerprint':hashlib.sha256('\n'.join(terms).encode()).hexdigest()}
 (WORK/'lexicon_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
-print(json.dumps(report,ensure_ascii=False,indent=2)); print('LOCAL LEXICON BUILD: PASS')
+print(json.dumps(report,ensure_ascii=False,indent=2))
+print('CANONICAL 3000 BUILD: PASS')
