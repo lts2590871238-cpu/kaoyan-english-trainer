@@ -169,6 +169,105 @@ def targeted_fill_missing(x,item,toks,missing):
     return item
 
 
+
+def sentence_item_valid(i):
+    if not isinstance(i,dict):
+        return False
+    if not str(i.get('zh') or '').strip():
+        return False
+    en_chunks=i.get('en_chunks')
+    zh_chunks=i.get('zh_chunks')
+    if not isinstance(en_chunks,list) or len([x for x in en_chunks if str(x).strip()])<2:
+        return False
+    if not isinstance(zh_chunks,list) or len([x for x in zh_chunks if str(x).strip()])<2:
+        return False
+    return True
+
+
+def enrich_sentence_single(x,retries=4):
+    system='''你是考研英语一真题教学数据编辑。只处理这一句用户给出的真题原句，不改写原句，不杜撰内容。中文翻译必须准确、自然、保留原句逻辑。英文拼句块必须来自原句，按原句顺序切分；中文意群块必须完整覆盖译文。输出严格 JSON。'''
+    base={"id":x['id'],"pool":x['pool'],"year":x['year'],"text":x['text']}
+    last=None
+    for attempt in range(retries):
+        user='''为这一句生成训练数据，只返回单项 JSON：{"id":"...","zh":"完整准确汉译","en_chunks":["..."],"zh_chunks":["..."],"en_distractors":["...","..."],"zh_distractors":["...","..."],"key_points":["..."]}。
+硬要求：
+1. en_chunks 至少 2 块，且每块都必须是原句中连续出现的文字，顺序保持不变；
+2. zh_chunks 至少 2 块，按译文顺序覆盖完整含义；
+3. 不得省略 zh、en_chunks、zh_chunks；
+4. 干扰块各 2 个，语法上像但语义不合；
+5. 如果句子有倒装、插入、从句，翻译要恢复正常中文语序但不能丢逻辑。
+输入：\n'''+json.dumps(base,ensure_ascii=False)
+        try:
+            i=call_json(system,user,6000)
+            if i.get('id')!=x['id']:
+                i['id']=x['id']
+            if sentence_item_valid(i):
+                return i
+            last='schema incomplete'
+        except Exception as e:
+            last=e
+        time.sleep(min(1+attempt,4))
+    raise RuntimeError(f'invalid sentence enrichment after individual repair: {x["id"]}: {last}')
+
+
+def translate_context_single(x,retries=4):
+    system='''你是考研英语一真题译文编辑。只翻译这一句给定英文原句，不增加信息。中文准确、自然、逻辑关系清楚。只返回严格 JSON。'''
+    for attempt in range(retries):
+        try:
+            obj=call_json(system,'返回 {"id":"'+x['id']+'","zh":"完整准确汉译"}。原句：\n'+x['text'],3500)
+            zh=str(obj.get('zh') or '').strip()
+            if zh:
+                return zh
+        except Exception:
+            pass
+        time.sleep(min(1+attempt,4))
+    raise RuntimeError(f'missing corpus translation after individual repair {x["id"]}')
+
+
+def generate_nonprecise_single(x,retries=4):
+    toks=tokenize(x['text'])
+    system='''你是严格的英语句法教师。只分析这一句给定考研英语真题。必须使用给定 token 的 0 起始索引，不得改词或增词。输出严格 JSON。目标是训练从粗略层级识别到只抓主干。'''
+    req={'id':x['id'],'stage':x['stage'],'sentence':x['text'],'tokens':[{'i':i,'t':t} for i,t in enumerate(toks)]}
+    for attempt in range(retries):
+        if x['stage']=='coarse':
+            task='''返回 {"id":"...","segments":[{"label":"中文结构标签","token_indices":[...],"removable_first_pass":true,"note":"..."}],"main_stem_indices":[...],"abridged_en":"...","zh":"完整汉译","main_stem_zh":"...","logic":"..."}。segments 至少 2 段。main_stem_indices 只保留不可删主干。'''
+        else:
+            task='''返回 {"id":"...","main_stem_indices":[...],"abridged_en":"...","zh":"完整汉译","main_stem_zh":"...","discard_notes":["..."],"logic":"..."}。main_stem_indices 只保留不可删主谓宾/主系表及必要成分。'''
+        try:
+            i=call_json(system,task+'\n输入：\n'+json.dumps(req,ensure_ascii=False),7000)
+            i['id']=x['id']
+            ok,_=validate_main_indices(i,toks,x['id'])
+            if i.get('zh') and ok and (x['stage']!='coarse' or len(i.get('segments',[]))>=2):
+                return i,toks
+        except Exception:
+            pass
+        time.sleep(min(1+attempt,4))
+    raise RuntimeError(f'invalid analysis after individual repair {x["id"]}')
+
+
+def enrich_lexicon_single(x,retries=4):
+    ctx=x['contexts'][0]['text'] if x.get('contexts') else ''
+    system='''你是考研英语词典编辑。处理一个真实词条。依据给定词典信息与真题语境，输出严格 JSON。不要把正常英语词误判成人名/OCR。sense_zh 是本句最准确最短义；dict_zh 是学习者常用核心中文义；definition_en 是简洁准确英英释义。'''
+    req={'term':x['term'],'type':x['type'],'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'dictionary_source':x.get('dictionary_source','')}
+    last=None
+    for attempt in range(retries):
+        try:
+            g=call_json(system,'返回 {"term":"...","valid":true,"sense_zh":"...","dict_zh":"...","definition_en":"...","pos":"..."}。只有明确人名、地名或OCR乱码才能 valid=false。输入：\n'+json.dumps(req,ensure_ascii=False),4500)
+            if g.get('valid') is False:
+                last='AI marked invalid'
+                continue
+            sense=(g.get('sense_zh') or x.get('dict_zh') or '').strip()
+            dict_zh=(x.get('dict_zh') or g.get('dict_zh') or sense).strip()
+            definition=(x.get('definition_en') or g.get('definition_en') or '').strip()
+            pos=(x.get('pos') or g.get('pos') or ('phrase' if x.get('type')=='phrase' else '')).strip()
+            if sense and dict_zh and (x.get('type')!='word' or definition):
+                return {'sense_zh':sense,'dict_zh':dict_zh,'definition_en':definition,'pos':pos}
+            last='incomplete dictionary fields'
+        except Exception as e:
+            last=e
+        time.sleep(min(1+attempt,4))
+    raise RuntimeError(f'lexicon individual repair failed {x["term"]}: {last}')
+
 def generate_precise(x):
     toks=tokenize(x['text'])
     system='''你是严格的英语句法教师。只分析给定考研英语真题原句。必须使用用户提供的 token 列表及 0 起始索引，不得改词、增词。输出严格 JSON。目标是教学用逐词精析：每一个含英文字母或数字的 lexical token 必须且只能分配到一个 primary group；嵌套关系通过 group 的 note 说明，不能把同一 token 重复放到多个 group。'''
@@ -221,11 +320,12 @@ for batch in batches(pending,10):
     got={i['id']:i for i in obj.get('items',[]) if isinstance(i,dict) and i.get('id')}
     for x in batch:
         i=got.get(x['id'])
-        if not i or not i.get('zh') or len(i.get('en_chunks',[]))<2 or len(i.get('zh_chunks',[]))<2:
-            raise RuntimeError(f'invalid sentence enrichment: {x["id"]}')
+        if not sentence_item_valid(i):
+            print('repair sentence individually',x['id'],flush=True)
+            i=enrich_sentence_single(x)
         i.update({'year':x['year'],'page':x['page'],'source':x['source'],'en':x['text'],'pool':x['pool'],'word_count':x['word_count']})
         sent_out[x['id']]=i
-    save_ckpt('sentences.json',sent_out)
+        save_ckpt('sentences.json',sent_out)
     print('sentences',len(sent_out),'/',len(all_s),flush=True)
 
 # ---------- translate every remaining corpus sentence for review explanations ----------
@@ -245,9 +345,10 @@ for batch in batches(remaining_corpus,18):
     for x in batch:
         zh=got.get(x['id'],'')
         if not zh:
-            raise RuntimeError(f'missing corpus translation {x["id"]}')
+            print('repair context translation individually',x['id'],flush=True)
+            zh=translate_context_single(x)
         context_zh[x['id']]=zh
-    save_ckpt('corpus_translations.json',context_zh)
+        save_ckpt('corpus_translations.json',context_zh)
     print('corpus translations',len(context_zh),'/',len(corpus),flush=True)
 
 # ---------- 100 analysis items with stage-specific structure ----------
@@ -278,16 +379,13 @@ main_stem：只给 main_stem_indices、abridged_en、zh、main_stem_zh、discard
     got={i['id']:i for i in obj.get('items',[]) if isinstance(i,dict) and i.get('id')}
     for x in batch:
         i=got.get(x['id']); toks=tokenize(x['text'])
-        if not i or not i.get('zh'):
-            raise RuntimeError(f'invalid analysis {x["id"]}')
-        ok,msg=validate_main_indices(i,toks,x['id'])
-        if not ok:
-            raise RuntimeError(f'{msg} {x["id"]}')
-        if x['stage']=='coarse' and len(i.get('segments',[]))<2:
-            raise RuntimeError(f'coarse segments failed {x["id"]}')
+        ok,msg=validate_main_indices(i or {},toks,x['id'])
+        if (not i or not i.get('zh') or not ok or (x['stage']=='coarse' and len(i.get('segments',[]))<2)):
+            print('repair analysis individually',x['id'],flush=True)
+            i,toks=generate_nonprecise_single(x)
         i.update({'id':x['id'],'stage':x['stage'],'en':x['text'],'tokens':toks,'year':x['year'],'page':x['page']})
         analysis_out[x['id']]=i
-    save_ckpt('analysis.json',analysis_out)
+        save_ckpt('analysis.json',analysis_out)
     print('analysis',len(analysis_out),'/',len(analysis),flush=True)
 
 # ---------- 3000 context-specific word senses + dictionary gap filling ----------
@@ -310,16 +408,16 @@ for batch in batches(pending,32):
     got={i['term'].lower():i for i in obj.get('items',[]) if isinstance(i,dict) and i.get('term')}
     for x in batch:
         g=got.get(x['term'].lower()) or {}
-        if g.get('valid') is False:
-            raise RuntimeError('AI rejected scheduled lexicon item as invalid: '+x['term']+'; replace/filter it before publishing')
         sense=(g.get('sense_zh') or x.get('dict_zh') or '').strip()
         dict_zh=(x.get('dict_zh') or g.get('dict_zh') or sense).strip()
         definition=(x.get('definition_en') or g.get('definition_en') or '').strip()
         pos=(x.get('pos') or g.get('pos') or ('phrase' if x.get('type')=='phrase' else '')).strip()
-        if not sense or not dict_zh or (x.get('type')=='word' and not definition):
-            raise RuntimeError('incomplete dictionary enrichment: '+x['term'])
+        if g.get('valid') is False or not sense or not dict_zh or (x.get('type')=='word' and not definition):
+            print('repair lexicon individually',x['term'],flush=True)
+            fixed=enrich_lexicon_single(x)
+            sense,dict_zh,definition,pos=fixed['sense_zh'],fixed['dict_zh'],fixed['definition_en'],fixed['pos']
         lex_out[x['term']]={'sense_zh':sense,'dict_zh':dict_zh,'definition_en':definition,'pos':pos}
-    save_ckpt('lexicon_senses.json',lex_out)
+        save_ckpt('lexicon_senses.json',lex_out)
     print('lexicon dictionary+senses',len(lex_out),'/',len(scheduled),flush=True)
 
 # ---------- publish complete enrichment files ----------
