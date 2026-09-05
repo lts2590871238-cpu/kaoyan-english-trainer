@@ -58,12 +58,12 @@ tiers=Counter(x.get('source_tier','') for x in lex)
 avail=report.get('source_tier_available',{}); selected=report.get('source_tier_selected',{})
 room=3000
 expected={}
-for key in ('core_2023_2026','supp_ge5','supp_eq4'):
+for key in ('core_2023_2026','supp_ge5','supp_eq4','supp_eq3'):
     k=min(room,int(avail.get(key,0))); expected[key]=k; room-=k
 if room!=0: errors.append(f'priority tiers cannot fill 3000 under frozen rule; remaining={room}, available={avail}')
 for key,val in expected.items():
     if int(selected.get(key,0))!=val: errors.append(f'source-tier priority broken {key}: selected={selected.get(key,0)} expected={val}')
-if any(k not in ('core_2023_2026','supp_ge5','supp_eq4') for k in tiers):
+if any(k not in ('core_2023_2026','supp_ge5','supp_eq4','supp_eq3') for k in tiers):
     errors.append(f'unexpected source tier in final lexicon: {dict(tiers)}')
 if errors:
     print('BASE VALIDATION: FAIL'); print('\n'.join('- '+e for e in errors)); sys.exit(1)

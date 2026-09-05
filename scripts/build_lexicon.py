@@ -245,10 +245,10 @@ for term,r in agg.items():
         continue
     yc=dict(sorted(r['year_counts'].items()))
     core=sum(c for y,c in yc.items() if int(y)>=2023)>0
-    # Keep all clean non-core candidates that occur at least twice. Selection into the
-    # final 3000 happens later by the frozen supplement tiers: >=5 first, then >=4.
-    # This preserves the user's priority while guaranteeing exactly 3000 UNIQUE items.
-    if not core and int(r['count'])<4: continue
+    # V17 supplement rule: preserve clean non-core candidates occurring at least
+    # three times. Final selection is strictly tiered: >=5 first, then =4, then
+    # =3 only for any remaining shortfall. Review/repetition never fills a new-word slot.
+    if not core and int(r['count'])<3: continue
     r['year_counts']=yc; r['forms']=sorted(r['forms']); r['core_2023_2026']=core; r['supplement_2020_2022']=not core
     if core:
         r['source_tier']='core_2023_2026'
@@ -257,7 +257,7 @@ for term,r in agg.items():
     elif int(r['count'])==4:
         r['source_tier']='supp_eq4'
     else:
-        r['source_tier']='supp_eq4'
+        r['source_tier']='supp_eq3'
     entries.append(r)
 
 # Curated phrases are valid learning units even if they lack an English dictionary gloss locally.
@@ -320,19 +320,18 @@ def priority(r):
 
 entries.sort(key=priority)
 
-# V13 FROZEN RULE: exactly 3000 UNIQUE learning items.
+# V17 FROZEN RULE: exactly 3000 UNIQUE learning items.
 # Priority order:
 # 1) all clean 2023-2026 core items;
 # 2) new 2020-2022 items with seven-year count >=5 (>4);
-# 3) if still short, count ==4 (>3).
-# The curated 2023-2026 phrase layer has been expanded with verified high-value
-# expressions from the original papers so the final library can reach exactly 3000
-# without lowering the old-year supplement threshold below four occurrences.
+# 3) if still short, count ==4 (>3);
+# 4) if still short, count ==3 (>2), only until the total reaches exactly 3000.
 # Repetition/review is handled elsewhere and NEVER occupies a new-word slot.
 core_entries=[r for r in entries if r.get('core_2023_2026')]
 supp5=[r for r in entries if not r.get('core_2023_2026') and int(r.get('count',0))>=5]
 supp4=[r for r in entries if not r.get('core_2023_2026') and int(r.get('count',0))==4]
-for arr in (core_entries,supp5,supp4): arr.sort(key=priority)
+supp3=[r for r in entries if not r.get('core_2023_2026') and int(r.get('count',0))==3]
+for arr in (core_entries,supp5,supp4,supp3): arr.sort(key=priority)
 
 scheduled=[]
 selection_counts={}
@@ -347,9 +346,10 @@ def take(label, arr, n=None):
 take('core_2023_2026',core_entries)
 take('supp_ge5',supp5)
 take('supp_eq4',supp4)
+take('supp_eq3',supp3)
 if len(scheduled)!=3000:
     avail={
-      'core':len(core_entries),'ge5':len(supp5),'eq4':len(supp4)
+      'core':len(core_entries),'ge5':len(supp5),'eq4':len(supp4),'eq3':len(supp3)
     }
     raise SystemExit(f'BASE FAIL: only {len(scheduled)} clean unique learning items after all frozen tiers; need 3000; available={avail}')
 
@@ -415,9 +415,9 @@ report={'eligible_unique_entries':len(entries),'unique_learning_items':3000,'sch
         'proper_noun_excluded':proper_excluded,'days_with_30':100,'unique_scheduled_terms':3000,
         'unique_band_counts':{'high':1500,'mid':900,'low':600},
         'exposure_band_counts':{'high':1500,'mid':900,'low':600},
-        'source_tier_available':{'core_2023_2026':len(core_entries),'supp_ge5':len(supp5),'supp_eq4':len(supp4)},
+        'source_tier_available':{'core_2023_2026':len(core_entries),'supp_ge5':len(supp5),'supp_eq4':len(supp4),'supp_eq3':len(supp3)},
         'source_tier_selected':selection_counts,
-        'lowest_supplement_tier_used':next((k for k in ('supp_eq4','supp_ge5') if selection_counts.get(k,0)>0), 'core_only'),
+        'lowest_supplement_tier_used':next((k for k in ('supp_eq3','supp_eq4','supp_ge5') if selection_counts.get(k,0)>0), 'core_only'),
         'contextless_scheduled_terms':sum(not r.get('contexts') for r in scheduled),'local_dictionary_complete_items':complete,
         'dictionary_backfill_items':3000-complete,'missing_fields':dict(missing),
         'lexicon_fingerprint':hashlib.sha256('\n'.join(terms).encode()).hexdigest()}
