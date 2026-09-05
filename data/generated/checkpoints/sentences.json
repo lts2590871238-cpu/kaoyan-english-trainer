@@ -1,0 +1,5447 @@
+{
+  "s0435": {
+    "id": "s0435",
+    "zh": "从其他民族的文化中窃取文物是令人憎恶的；它不仅夺走了实物，还夺走了其创造者的尊严和精神。",
+    "en_chunks": [
+      "Stealing artifacts from other peoples' cultures is obscene",
+      "it robs not only the physical objects",
+      "but the dignity and spirit of their creators"
+    ],
+    "zh_chunks": [
+      "从其他民族的文化中窃取文物",
+      "是令人憎恶的",
+      "它不仅夺走了实物",
+      "还夺走了其创造者的尊严和精神"
+    ],
+    "en_distractors": [
+      "it steals the physical objects",
+      "but also the dignity and spirit of their creators"
+    ],
+    "zh_distractors": [
+      "它偷走了实物",
+      "而且夺走了创造者的尊严和精神"
+    ],
+    "key_points": [
+      "obscene 译为“令人憎恶的”",
+      "not only...but... 结构译为“不仅……还……”",
+      "their creators 指“其创造者”"
+    ],
+    "year": 2024,
+    "page": 12,
+    "source": "阅读B",
+    "en": "Stealing artifacts from other peoples' cultures is obscene; it robs not only the physical objects, but the dignity and spirit of their creators.",
+    "pool": "en_to_zh",
+    "word_count": 23
+  },
+  "s0674": {
+    "id": "s0674",
+    "zh": "在你的文章中，你应该：1）简要描述图表，2）解读图表，3）给出你的评论。",
+    "en_chunks": [
+      "In your essay",
+      "you should 1) describe the charts briefly",
+      "2) interpret the charts",
+      "and 3) give your comments"
+    ],
+    "zh_chunks": [
+      "在你的文章中",
+      "你应该：1）简要描述图表",
+      "2）解读图表",
+      "3）给出你的评论"
+    ],
+    "en_distractors": [
+      "you should 1) describe the charts in detail",
+      "and 3) give your opinions"
+    ],
+    "zh_distractors": [
+      "你应该：1）详细描述图表",
+      "3）给出你的观点"
+    ],
+    "key_points": [
+      "briefly 译为“简要地”",
+      "interpret 译为“解读”",
+      "give your comments 译为“给出你的评论”"
+    ],
+    "year": 2026,
+    "page": 11,
+    "source": "翻译C",
+    "en": "In your essay, you should 1) describe the charts briefly, 2) interpret the charts, and 3) give your comments.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0375": {
+    "id": "s0375",
+    "zh": "罗马灯和罗马战车与LED灯条和跑车大不相同，但罗马钉子显然仍然是钉子。",
+    "en_chunks": [
+      "Roman lamps and Roman chariots are very different from LED strips and sports cars",
+      "but Roman nails are still clearly nails"
+    ],
+    "zh_chunks": [
+      "罗马灯和罗马战车",
+      "与LED灯条和跑车大不相同",
+      "但罗马钉子显然仍然是钉子"
+    ],
+    "en_distractors": [
+      "Roman lamps and Roman chariots are similar to LED strips and sports cars",
+      "but Roman nails are still obviously nails"
+    ],
+    "zh_distractors": [
+      "罗马灯和罗马战车与LED灯条和跑车相似",
+      "但罗马钉子显然还是钉子"
+    ],
+    "key_points": [
+      "very different from 译为“与……大不相同”",
+      "clearly 译为“显然”",
+      "注意对比关系"
+    ],
+    "year": 2024,
+    "page": 3,
+    "source": "阅读A",
+    "en": "Roman lamps and Roman chariots are very different from LED strips and sports cars, but Roman nails are still clearly nails.",
+    "pool": "en_to_zh",
+    "word_count": 21
+  },
+  "s0607": {
+    "id": "s0607",
+    "zh": "一位女士说，自从无线电话出现以来，街头斗殴减少了，但在刷子柄上停下来聊天也少了。",
+    "en_chunks": [
+      "A woman says there have been fewer street fights since the arrival of the wireless",
+      "but also less stopping and talking on the brush handle"
+    ],
+    "zh_chunks": [
+      "一位女士说",
+      "自从无线电话出现以来",
+      "街头斗殴减少了",
+      "但在刷子柄上停下来聊天也少了"
+    ],
+    "en_distractors": [
+      "A woman says there have been more street fights since the arrival of the wireless",
+      "but also less stopping and talking on the street"
+    ],
+    "zh_distractors": [
+      "一位女士说自从无线电话出现以来街头斗殴增多了",
+      "但在街上停下来聊天也少了"
+    ],
+    "key_points": [
+      "the wireless 指“无线电话”",
+      "fewer...but also less... 结构",
+      "brush handle 直译“刷子柄”，可能指电话听筒"
+    ],
+    "year": 2026,
+    "page": 7,
+    "source": "阅读A",
+    "en": "A woman says there have been fewer street fights since the arrival of the wireless but also less stopping and talking on the brush handle.",
+    "pool": "en_to_zh",
+    "word_count": 25
+  },
+  "s0398": {
+    "id": "s0398",
+    "zh": "但这些开源程序是通过从互联网上抓取图像构建的，通常未经艺术家许可，也未适当署名。",
+    "en_chunks": [
+      "But these open-source programs are built by scraping images from the internet",
+      "often without permission and proper attribution to artists"
+    ],
+    "zh_chunks": [
+      "但这些开源程序",
+      "是通过从互联网上抓取图像构建的",
+      "通常未经艺术家许可",
+      "也未适当署名"
+    ],
+    "en_distractors": [
+      "But these open-source programs are built by downloading images from the internet",
+      "often without permission and proper payment to artists"
+    ],
+    "zh_distractors": [
+      "但这些开源程序是通过从互联网上下载图像构建的",
+      "通常未经艺术家许可也未适当付费"
+    ],
+    "key_points": [
+      "scraping 译为“抓取”",
+      "without permission and proper attribution 译为“未经许可，也未适当署名”",
+      "attribution 指“署名”"
+    ],
+    "year": 2024,
+    "page": 7,
+    "source": "阅读A",
+    "en": "But these open-source programs are built by scraping images from the internet, often without permission and proper attribution to artists.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0658": {
+    "id": "s0658",
+    "zh": "我们正经历科学写作的黄金时代，其文字如此清晰易懂，以至于普通读者也能享受发现的不可预测性。",
+    "en_chunks": [
+      "We are living through a golden age of science writing",
+      "so lucid and accessible that even lay readers can relish the unpredictability of discovery"
+    ],
+    "zh_chunks": [
+      "我们正经历科学写作的黄金时代",
+      "其文字如此清晰易懂",
+      "以至于普通读者也能享受发现的不可预测性"
+    ],
+    "en_distractors": [
+      "We are living through a dark age of science writing",
+      "so lucid and accessible that even lay readers can ignore the unpredictability of discovery"
+    ],
+    "zh_distractors": [
+      "我们正经历科学写作的黑暗时代",
+      "以至于普通读者也能忽视发现的不可预测性"
+    ],
+    "key_points": [
+      "golden age 译为“黄金时代”",
+      "lucid and accessible 译为“清晰易懂”",
+      "lay readers 译为“普通读者”",
+      "relish 译为“享受”"
+    ],
+    "year": 2026,
+    "page": 10,
+    "source": "阅读B",
+    "en": "We are living through a golden age of science writing, so lucid and accessible that even lay readers can relish the unpredictability of discovery.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0553": {
+    "id": "s0553",
+    "zh": "在信息时代，大数据集、小团队和资金限制减缓了科学进程。",
+    "en_chunks": [
+      "In the information era",
+      "large data sets, small teams and financial restrictions have slowed scientific process"
+    ],
+    "zh_chunks": [
+      "在信息时代",
+      "大数据集、小团队和资金限制",
+      "减缓了科学进程"
+    ],
+    "en_distractors": [
+      "In the information age",
+      "large data sets, small teams and financial restrictions have accelerated scientific process"
+    ],
+    "zh_distractors": [
+      "在信息时代，大数据集、小团队和资金限制加速了科学进程",
+      "在信息时代，大数据集、小团队和资金限制阻碍了科学进程"
+    ],
+    "key_points": [
+      "information era 译为“信息时代”",
+      "financial restrictions 译为“资金限制”",
+      "slowed 译为“减缓”"
+    ],
+    "year": 2025,
+    "page": 13,
+    "source": "翻译C",
+    "en": "In the information era, large data sets, small teams and financial restrictions have slowed scientific process.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0593": {
+    "id": "s0593",
+    "zh": "美国、加拿大和欧洲的其他地区稳步增加了吸引电视节目和电影的激励措施，将加利福尼亚州远远甩在后面。",
+    "en_chunks": [
+      "Other regions in the United States, Canada and Europe have steadily increased incentives to attract TV shows and movies",
+      "leaving California in the dust"
+    ],
+    "zh_chunks": [
+      "美国、加拿大和欧洲的其他地区",
+      "稳步增加了吸引电视节目和电影的激励措施",
+      "将加利福尼亚州远远甩在后面"
+    ],
+    "en_distractors": [
+      "Other regions in the United States, Canada and Europe have steadily decreased incentives to attract TV shows and movies",
+      "leaving California behind"
+    ],
+    "zh_distractors": [
+      "美国、加拿大和欧洲的其他地区稳步减少了吸引电视节目和电影的激励措施",
+      "将加利福尼亚州抛在后面"
+    ],
+    "key_points": [
+      "steadily increased 译为“稳步增加”",
+      "incentives 译为“激励措施”",
+      "leaving...in the dust 译为“将……远远甩在后面”"
+    ],
+    "year": 2026,
+    "page": 5,
+    "source": "阅读A",
+    "en": "Other regions in the United States, Canada and Europe have steadily increased incentives to attract TV shows and movies, leaving California in the dust.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0370": {
+    "id": "s0370",
+    "zh": "罗马人把钉子埋得如此之深，以至于它们几乎两千年都不会被发现。",
+    "en_chunks": [
+      "The Romans buried the nails so deep",
+      "that they would not be discovered for almost two millennia"
+    ],
+    "zh_chunks": [
+      "罗马人把钉子埋得如此之深",
+      "以至于它们几乎两千年都不会被发现"
+    ],
+    "en_distractors": [
+      "The Romans buried the nails so shallow",
+      "that they would be discovered for almost two millennia"
+    ],
+    "zh_distractors": [
+      "罗马人把钉子埋得如此之浅",
+      "以至于它们几乎两千年都会被发现"
+    ],
+    "key_points": [
+      "so...that... 结构译为“如此……以至于……”",
+      "two millennia 译为“两千年”",
+      "被动语态"
+    ],
+    "year": 2024,
+    "page": 3,
+    "source": "阅读A",
+    "en": "The Romans buried the nails so deep that they would not be discovered for almost two millennia.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0448": {
+    "id": "s0448",
+    "zh": "在寻找通往水坑的路时，他们朝完全正确的方向出发，有一次是从大约三十英里的距离出发。",
+    "en_chunks": [
+      "When finding their way to waterholes",
+      "they headed off in exactly the right direction",
+      "on one occasion from a distance of roughly thirty miles"
+    ],
+    "zh_chunks": [
+      "在寻找通往水坑的路时",
+      "他们朝完全正确的方向出发",
+      "有一次是从大约三十英里的距离出发"
+    ],
+    "en_distractors": [
+      "When finding their way to waterholes",
+      "they headed off in the wrong direction",
+      "on one occasion from a distance of roughly thirty kilometers"
+    ],
+    "zh_distractors": [
+      "在寻找通往水坑的路时，他们朝错误的方向出发",
+      "有一次是从大约三十公里的距离出发"
+    ],
+    "key_points": [
+      "finding their way 译为“寻找路”",
+      "headed off 译为“出发”",
+      "exactly the right direction 译为“完全正确的方向”",
+      "roughly thirty miles 译为“大约三十英里”"
+    ],
+    "year": 2024,
+    "page": 13,
+    "source": "阅读B",
+    "en": "When finding their way to waterholes, they headed off in exactly the right direction, on one occasion from a distance of roughly thirty miles.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0609": {
+    "id": "s0609",
+    "zh": "确实，在数字时代之前的80多年里，线性语音广播带来了意外发现的礼物，为汽车旅行或枯燥的体力劳动增添了随机的生气。",
+    "en_chunks": [
+      "True:",
+      "for more than 80 pre-digital years,",
+      "linear speech broadcasting brought the gift of serendipity,",
+      "random enlivening of a car journey or dull manual task."
+    ],
+    "zh_chunks": [
+      "确实，",
+      "在数字时代之前的80多年里，",
+      "线性语音广播带来了意外发现的礼物，",
+      "为汽车旅行或枯燥的体力劳动增添了随机的生气。"
+    ],
+    "en_distractors": [
+      "for more than 80 digital years,",
+      "linear speech broadcasting brought the gift of predictability,"
+    ],
+    "zh_distractors": [
+      "在数字时代的80多年里，",
+      "线性语音广播带来了可预测性的礼物，"
+    ],
+    "key_points": [
+      "pre-digital years 译为“数字时代之前”",
+      "serendipity 译为“意外发现”或“机缘巧合”",
+      "random enlivening 译为“随机的生气”或“随机增添活力”"
+    ],
+    "year": 2026,
+    "page": 7,
+    "source": "阅读A",
+    "en": "True: for more than 80 pre-digital years, linear speech broadcasting brought the gift of serendipity, random enlivening of a car journey or dull manual task.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0541": {
+    "id": "s0541",
+    "zh": "这听起来容易且不自然，但彼得斯坚持认为这仍然是一个巨大的挑战。",
+    "en_chunks": [
+      "That makes it sound easy, and artificial,",
+      "but Peters insists",
+      "it is still a massive challenge."
+    ],
+    "zh_chunks": [
+      "这听起来容易且不自然，",
+      "但彼得斯坚持认为",
+      "这仍然是一个巨大的挑战。"
+    ],
+    "en_distractors": [
+      "That makes it sound difficult, and natural,",
+      "but Peters doubts"
+    ],
+    "zh_distractors": [
+      "这听起来困难且自然，",
+      "但彼得斯怀疑"
+    ],
+    "key_points": [
+      "artificial 译为“不自然”或“人为的”",
+      "insists 译为“坚持认为”",
+      "massive challenge 译为“巨大的挑战”"
+    ],
+    "year": 2025,
+    "page": 12,
+    "source": "阅读B",
+    "en": "That makes it sound easy, and artificial, but Peters insists it is still a massive challenge.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0625": {
+    "id": "s0625",
+    "zh": "国际野火协会前主席凯利·马丁表示，这种不足证明了现代消防的有效性。",
+    "en_chunks": [
+      "This deficit is a testament to the effectiveness of modern firefighting,",
+      "said Kelly Martin,",
+      "a past president of the International Association of Wildland Fire."
+    ],
+    "zh_chunks": [
+      "国际野火协会前主席凯利·马丁表示，",
+      "这种不足证明了现代消防的有效性。"
+    ],
+    "en_distractors": [
+      "This deficit is a testament to the ineffectiveness of modern firefighting,",
+      "said Kelly Martin, a current president of the International Association of Wildland Fire."
+    ],
+    "zh_distractors": [
+      "这种不足证明了现代消防的无效性。",
+      "国际野火协会现任主席凯利·马丁表示，"
+    ],
+    "key_points": [
+      "deficit 译为“不足”或“缺口”",
+      "testament 译为“证明”或“见证”",
+      "past president 译为“前主席”"
+    ],
+    "year": 2026,
+    "page": 8,
+    "source": "阅读A",
+    "en": "This deficit is a testament to the effectiveness of modern firefighting, said Kelly Martin, a past president of the International Association of Wildland Fire.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0623": {
+    "id": "s0623",
+    "zh": "在这项研究中，研究人员将历史上的火灾发生频率与过去几十年记录的野火进行了比较，并发现了惊人的不足。",
+    "en_chunks": [
+      "In the study,",
+      "the researchers compared the historical fire cadence",
+      "with the wildfires recorded over the past few decades,",
+      "and uncovered a striking shortfall."
+    ],
+    "zh_chunks": [
+      "在这项研究中，",
+      "研究人员将历史上的火灾发生频率",
+      "与过去几十年记录的野火进行了比较，",
+      "并发现了惊人的不足。"
+    ],
+    "en_distractors": [
+      "the researchers compared the historical fire cadence with the wildfires predicted over the past few decades,",
+      "and uncovered a striking surplus."
+    ],
+    "zh_distractors": [
+      "研究人员将历史上的火灾发生频率与过去几十年预测的野火进行了比较，",
+      "并发现了惊人的过剩。"
+    ],
+    "key_points": [
+      "fire cadence 译为“火灾发生频率”或“火灾节奏”",
+      "recorded 译为“记录的”",
+      "shortfall 译为“不足”或“缺口”"
+    ],
+    "year": 2026,
+    "page": 8,
+    "source": "阅读A",
+    "en": "In the study, the researchers compared the historical fire cadence with the wildfires recorded over the past few decades, and uncovered a striking shortfall.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0649": {
+    "id": "s0649",
+    "zh": "有些人被我所认为的商业车祸书籍所吸引——比如Theranos、Purdue或WeWork的故事。",
+    "en_chunks": [
+      "Some are drawn to what I think of as business car crash books",
+      "— the stories of Theranos, Purdue, or WeWork."
+    ],
+    "zh_chunks": [
+      "有些人被我所认为的商业车祸书籍所吸引",
+      "——比如Theranos、Purdue或WeWork的故事。"
+    ],
+    "en_distractors": [
+      "Some are drawn to what I think of as business success books",
+      "— the stories of Theranos, Purdue, or WeWork."
+    ],
+    "zh_distractors": [
+      "有些人被我所认为的商业成功书籍所吸引",
+      "——比如Theranos、Purdue或WeWork的故事。"
+    ],
+    "key_points": [
+      "drawn to 译为“被吸引”",
+      "business car crash books 译为“商业车祸书籍”或“商业失败案例书籍”",
+      "stories 译为“故事”"
+    ],
+    "year": 2026,
+    "page": 10,
+    "source": "阅读B",
+    "en": "Some are drawn to what I think of as business car crash books — the stories of Theranos, Purdue, or WeWork.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0433": {
+    "id": "s0433",
+    "zh": "博物馆中的文物有能力激发灵感，并可能激发那种学习和理解其创造者本质的需求。",
+    "en_chunks": [
+      "Artifacts in museums have the power to inspire,",
+      "and perhaps spark that need to learn and understand the nature of their creators."
+    ],
+    "zh_chunks": [
+      "博物馆中的文物有能力激发灵感，",
+      "并可能激发那种学习和理解其创造者本质的需求。"
+    ],
+    "en_distractors": [
+      "Artifacts in museums have the power to bore,",
+      "and perhaps spark that need to learn and understand the nature of their creators."
+    ],
+    "zh_distractors": [
+      "博物馆中的文物有能力使人厌烦，",
+      "并可能激发那种学习和理解其创造者本质的需求。"
+    ],
+    "key_points": [
+      "have the power to inspire 译为“有能力激发灵感”",
+      "spark 译为“激发”",
+      "the nature of their creators 译为“其创造者的本质”"
+    ],
+    "year": 2024,
+    "page": 11,
+    "source": "阅读B",
+    "en": "Artifacts in museums have the power to inspire, and perhaps spark that need to learn and understand the nature of their creators.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0557": {
+    "id": "s0557",
+    "zh": "他们恳求公民帮助计数虫子、分类癌细胞，甚至识别遥远的星系。",
+    "en_chunks": [
+      "They've implored citizens to help with bug counting and categorising cancer cells,",
+      "and even identifying distant galaxies."
+    ],
+    "zh_chunks": [
+      "他们恳求公民帮助计数虫子、分类癌细胞，",
+      "甚至识别遥远的星系。"
+    ],
+    "en_distractors": [
+      "They've implored citizens to help with bug counting and categorising cancer cells,",
+      "and even identifying nearby galaxies."
+    ],
+    "zh_distractors": [
+      "他们恳求公民帮助计数虫子、分类癌细胞，",
+      "甚至识别附近的星系。"
+    ],
+    "key_points": [
+      "implored 译为“恳求”",
+      "bug counting 译为“计数虫子”",
+      "categorising 译为“分类”",
+      "distant galaxies 译为“遥远的星系”"
+    ],
+    "year": 2025,
+    "page": 13,
+    "source": "翻译C",
+    "en": "They've implored citizens to help with bug counting and categorising cancer cells, and even identifying distant galaxies.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0461": {
+    "id": "s0461",
+    "zh": "它们发育良好的海马结构可能使大象像老鼠和人类一样构建认知地图。",
+    "en_chunks": [
+      "Their well-developed hippocampal structures",
+      "may enable elephants, like rats and people,",
+      "to construct cognitive maps."
+    ],
+    "zh_chunks": [
+      "它们发育良好的海马结构",
+      "可能使大象像老鼠和人类一样",
+      "构建认知地图。"
+    ],
+    "en_distractors": [
+      "Their poorly-developed hippocampal structures",
+      "may prevent elephants, like rats and people,"
+    ],
+    "zh_distractors": [
+      "它们发育不良的海马结构",
+      "可能阻止大象像老鼠和人类一样"
+    ],
+    "key_points": [
+      "well-developed 译为“发育良好的”",
+      "hippocampal structures 译为“海马结构”",
+      "enable ... to 译为“使……能够”",
+      "cognitive maps 译为“认知地图”"
+    ],
+    "year": 2024,
+    "page": 14,
+    "source": "翻译C",
+    "en": "Their well-developed hippocampal structures may enable elephants, like rats and people, to construct cognitive maps.",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0650": {
+    "id": "s0650",
+    "zh": "但在那些狭窄的兴趣领域之外，一片广阔的海洋在等待着，充满了酝酿中的想法、精神冒险和想象力的更新。",
+    "en_chunks": [
+      "But outside those narrow pools of interest,",
+      "a vast ocean awaits,",
+      "bountiful with simmering ideas, mental adventure and imaginative refreshment."
+    ],
+    "zh_chunks": [
+      "但在那些狭窄的兴趣领域之外，",
+      "一片广阔的海洋在等待着，",
+      "充满了酝酿中的想法、精神冒险和想象力的更新。"
+    ],
+    "en_distractors": [
+      "But inside those narrow pools of interest,",
+      "a vast ocean awaits,",
+      "bountiful with simmering ideas, mental adventure and imaginative refreshment."
+    ],
+    "zh_distractors": [
+      "但在那些狭窄的兴趣领域之内，",
+      "一片广阔的海洋在等待着，",
+      "充满了酝酿中的想法、精神冒险和想象力的更新。"
+    ],
+    "key_points": [
+      "narrow pools of interest 译为“狭窄的兴趣领域”",
+      "bountiful with 译为“充满了”",
+      "simmering ideas 译为“酝酿中的想法”",
+      "imaginative refreshment 译为“想象力的更新”或“想象力的焕发”"
+    ],
+    "year": 2026,
+    "page": 10,
+    "source": "阅读B",
+    "en": "But outside those narrow pools of interest, a vast ocean awaits, bountiful with simmering ideas, mental adventure and imaginative refreshment.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0355": {
+    "id": "s0355",
+    "zh": "与此同时，人工智能也可以被用来为社交媒体帖子和聊天网站生成内容。",
+    "en_chunks": [
+      "At the same time",
+      "Al can also be used to generate content",
+      "for social media posts and chat sites."
+    ],
+    "zh_chunks": [
+      "与此同时，",
+      "人工智能也可以被用来生成内容",
+      "为社交媒体帖子和聊天网站。"
+    ],
+    "en_distractors": [
+      "At the same time",
+      "Al can also be used to delete content",
+      "for social media posts and chat sites."
+    ],
+    "zh_distractors": [
+      "与此同时，",
+      "人工智能也可以被用来删除内容",
+      "为社交媒体帖子和聊天网站。"
+    ],
+    "key_points": [
+      "At the same time 译为“与此同时”",
+      "be used to 译为“被用来”",
+      "generate content 译为“生成内容”",
+      "social media posts and chat sites 译为“社交媒体帖子和聊天网站”"
+    ],
+    "year": 2023,
+    "page": 12,
+    "source": "翻译C",
+    "en": "At the same time Al can also be used to generate content for social media posts and chat sites.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0659": {
+    "id": "s0659",
+    "zh": "站在科学家的立场上，见证突破在多大程度上源于意外、冲突和纯粹的精神耐力。",
+    "en_chunks": [
+      "Stand in the shoes of scientists",
+      "and witness the degree",
+      "to which breakthroughs emerge",
+      "from accidents, conflict and sheer mental stamina."
+    ],
+    "zh_chunks": [
+      "站在科学家的立场上",
+      "见证突破在多大程度上",
+      "源于意外、冲突和纯粹的精神耐力"
+    ],
+    "en_distractors": [
+      "and observe the extent",
+      "from luck, competition and physical strength"
+    ],
+    "zh_distractors": [
+      "并观察程度",
+      "来自运气、竞争和体力"
+    ],
+    "key_points": [
+      "stand in the shoes of 意为“站在……立场上”",
+      "the degree to which 译为“在多大程度上”",
+      "emerge from 译为“源于”",
+      "sheer mental stamina 译为“纯粹的精神耐力”"
+    ],
+    "year": 2026,
+    "page": 10,
+    "source": "阅读B",
+    "en": "Stand in the shoes of scientists and witness the degree to which breakthroughs emerge from accidents, conflict and sheer mental stamina.",
+    "pool": "en_to_zh",
+    "word_count": 21
+  },
+  "s0340": {
+    "id": "s0340",
+    "zh": "两个世纪前，保护自然而非开发自然的想法对许多美国定居者来说还是新奇的。",
+    "en_chunks": [
+      "Two centuries ago,",
+      "the idea of preserving nature, rather than exploiting it,",
+      "was a novel one",
+      "to many US settlers."
+    ],
+    "zh_chunks": [
+      "两个世纪前",
+      "保护自然而非开发自然的想法",
+      "对许多美国定居者来说",
+      "还是新奇的"
+    ],
+    "en_distractors": [
+      "the concept of destroying nature, instead of protecting it,",
+      "was an old one"
+    ],
+    "zh_distractors": [
+      "破坏自然而非保护自然的想法",
+      "是古老的"
+    ],
+    "key_points": [
+      "preserving nature 与 exploiting it 的对比",
+      "rather than 译为“而非”",
+      "novel 此处意为“新奇的”",
+      "to many US settlers 译为“对许多美国定居者来说”"
+    ],
+    "year": 2023,
+    "page": 10,
+    "source": "阅读B",
+    "en": "Two centuries ago, the idea of preserving nature, rather than exploiting it, was a novel one to many US settlers.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0424": {
+    "id": "s0424",
+    "zh": "它们不能与为出售而生产的艺术品相比，这些艺术品可以通过购买而手手相传、处处流传。",
+    "en_chunks": [
+      "They cannot be compared to works of art",
+      "produced for sale",
+      "which can be passed from hand to hand",
+      "and place to place by purchase."
+    ],
+    "zh_chunks": [
+      "它们不能与为出售而生产的艺术品相比",
+      "这些艺术品可以通过购买",
+      "而手手相传、处处流传"
+    ],
+    "en_distractors": [
+      "They can be compared to works of art",
+      "which can be passed from mind to mind"
+    ],
+    "zh_distractors": [
+      "它们可以与艺术品相比",
+      "这些艺术品可以通过思想相传"
+    ],
+    "key_points": [
+      "be compared to 译为“与……相比”",
+      "produced for sale 作后置定语，译为“为出售而生产的”",
+      "from hand to hand and place to place 译为“手手相传、处处流传”",
+      "by purchase 译为“通过购买”"
+    ],
+    "year": 2024,
+    "page": 11,
+    "source": "阅读B",
+    "en": "They cannot be compared to works of art produced for sale which can be passed from hand to hand and place to place by purchase.",
+    "pool": "en_to_zh",
+    "word_count": 25
+  },
+  "s0210": {
+    "id": "s0210",
+    "zh": "光是艺术家和科学家都感兴趣的东西，因此可以成为合作的基础。",
+    "en_chunks": [
+      "Light was something",
+      "that both artists and scientists had an interest in,",
+      "and therefore could form the basis of collaboration."
+    ],
+    "zh_chunks": [
+      "光是艺术家和科学家都感兴趣的东西",
+      "因此可以成为合作的基础"
+    ],
+    "en_distractors": [
+      "that neither artists nor scientists had an interest in,",
+      "and therefore could break the basis of collaboration."
+    ],
+    "zh_distractors": [
+      "是艺术家和科学家都不感兴趣的东西",
+      "因此可能破坏合作的基础"
+    ],
+    "key_points": [
+      "had an interest in 译为“对……感兴趣”",
+      "therefore 译为“因此”",
+      "form the basis of 译为“成为……的基础”"
+    ],
+    "year": 2022,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Light was something that both artists and scientists had an interest in, and therefore could form the basis of collaboration.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0126": {
+    "id": "s0126",
+    "zh": "然而，美国联邦通信委员会也结束了对宽带提供商的调查，这些提供商对其竞争对手的流媒体服务施加数据上限，而不对自己的服务施加。",
+    "en_chunks": [
+      "Yet the FCC also ended the investigations",
+      "of broadband providers",
+      "that imposed data caps",
+      "on their rivals' streaming services",
+      "but not their own."
+    ],
+    "zh_chunks": [
+      "然而，美国联邦通信委员会也结束了对宽带提供商的调查",
+      "这些提供商对其竞争对手的流媒体服务施加数据上限",
+      "而不对自己的服务施加"
+    ],
+    "en_distractors": [
+      "Yet the FCC also started the investigations",
+      "that removed data caps"
+    ],
+    "zh_distractors": [
+      "然而，美国联邦通信委员会也开始了调查",
+      "这些提供商取消了数据上限"
+    ],
+    "key_points": [
+      "FCC 译为“美国联邦通信委员会”",
+      "ended the investigations 译为“结束调查”",
+      "imposed data caps on 译为“对……施加数据上限”",
+      "but not their own 省略了 imposed data caps，译为“而不对自己的服务施加”"
+    ],
+    "year": 2021,
+    "page": 10,
+    "source": "阅读A",
+    "en": "Yet the FCC also ended the investigations of broadband providers that imposed data caps on their rivals' streaming services but not their own.",
+    "pool": "en_to_zh",
+    "word_count": 23
+  },
+  "s0270": {
+    "id": "s0270",
+    "zh": "更重要的是，许多原始的法文急件被保存在这个收藏中，我意识到这是无价的。",
+    "en_chunks": [
+      "What was more,",
+      "many original French dispatches",
+      "had been preserved in this collection,",
+      "which I realized was priceless."
+    ],
+    "zh_chunks": [
+      "更重要的是",
+      "许多原始的法文急件被保存在这个收藏中",
+      "我意识到这是无价的"
+    ],
+    "en_distractors": [
+      "What was worse,",
+      "many original English dispatches"
+    ],
+    "zh_distractors": [
+      "更糟糕的是",
+      "许多原始的英文急件"
+    ],
+    "key_points": [
+      "What was more 译为“更重要的是”",
+      "French dispatches 译为“法文急件”",
+      "had been preserved 译为“被保存”",
+      "which 引导非限制性定语从句，指代整个主句内容，译为“我意识到这是无价的”"
+    ],
+    "year": 2022,
+    "page": 11,
+    "source": "翻译C",
+    "en": "What was more, many original French dispatches had been preserved in this collection, which I realized was priceless.",
+    "pool": "en_to_zh",
+    "word_count": 18
+  },
+  "s0032": {
+    "id": "s0032",
+    "zh": "但这类政策往往是一种虚伪的表明美德的行为，只惠及最特权的人，对帮助普通人几乎不起作用。",
+    "en_chunks": [
+      "But all too often such policies",
+      "are an insincere form of virtue-signaling",
+      "that benefits only the most privileged",
+      "and does little to help average people."
+    ],
+    "zh_chunks": [
+      "但这类政策往往是一种虚伪的表明美德的行为",
+      "只惠及最特权的人",
+      "对帮助普通人几乎不起作用"
+    ],
+    "en_distractors": [
+      "are a sincere form of virtue-signaling",
+      "that benefits everyone"
+    ],
+    "zh_distractors": [
+      "是一种真诚的表明美德的行为",
+      "惠及所有人"
+    ],
+    "key_points": [
+      "all too often 译为“往往”",
+      "virtue-signaling 译为“表明美德的行为”",
+      "insincere 译为“虚伪的”",
+      "does little to help 译为“对帮助……几乎不起作用”"
+    ],
+    "year": 2020,
+    "page": 8,
+    "source": "阅读A",
+    "en": "But all too often such policies are an insincere form of virtue-signaling that benefits only the most privileged and does little to help average people.",
+    "pool": "en_to_zh",
+    "word_count": 25
+  },
+  "s0291": {
+    "id": "s0291",
+    "zh": "然而，当地房地产经纪人协会的首席执行官瑞安·卡斯尔指出，短期租赁也为游客提供了住房。",
+    "en_chunks": [
+      "However, short-term rentals also provide housing for tourists,",
+      "pointed out Ryan Castle,",
+      "CEO of a local association of realtors."
+    ],
+    "zh_chunks": [
+      "然而，短期租赁也为游客提供了住房",
+      "当地房地产经纪人协会的首席执行官瑞安·卡斯尔指出"
+    ],
+    "en_distractors": [
+      "However, long-term rentals also provide housing for tourists,",
+      "pointed out Ryan Castle, a tourist"
+    ],
+    "zh_distractors": [
+      "然而，长期租赁也为游客提供了住房",
+      "游客瑞安·卡斯尔指出"
+    ],
+    "key_points": [
+      "short-term rentals 译为“短期租赁”",
+      "provide housing for 译为“为……提供住房”",
+      "pointed out 译为“指出”",
+      "CEO of a local association of realtors 译为“当地房地产经纪人协会的首席执行官”"
+    ],
+    "year": 2023,
+    "page": 5,
+    "source": "阅读A",
+    "en": "However, short-term rentals also provide housing for tourists, pointed out Ryan Castle, CEO of a local association of realtors.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0655": {
+    "id": "s0655",
+    "zh": "毫无疑问，只工作不玩耍确实会使杰克或吉尔变得迟钝。",
+    "en_chunks": [
+      "It is undoubtedly true",
+      "that all work and no play",
+      "really does make Jack, or Jill, dull."
+    ],
+    "zh_chunks": [
+      "毫无疑问",
+      "只工作不玩耍确实会使杰克或吉尔变得迟钝"
+    ],
+    "en_distractors": [
+      "It is doubtful",
+      "that all play and no work"
+    ],
+    "zh_distractors": [
+      "值得怀疑的是",
+      "只玩耍不工作"
+    ],
+    "key_points": [
+      "It is undoubtedly true that 译为“毫无疑问”",
+      "all work and no play 译为“只工作不玩耍”",
+      "make...dull 译为“使……变得迟钝”",
+      "Jack or Jill 泛指男孩或女孩"
+    ],
+    "year": 2026,
+    "page": 10,
+    "source": "阅读B",
+    "en": "It is undoubtedly true that all work and no play really does make Jack, or Jill, dull.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0289": {
+    "id": "s0289",
+    "zh": "我们正处于租赁住房供应危机的水平，大西沃克劳动力住房联盟执行董事尼克·泰勒说。",
+    "en_chunks": [
+      "We are at a crisis level on the supply of rental housing,",
+      "said Nick Taylor,",
+      "executive director of the Workforce Housing Coalition of the Greater Seacoast."
+    ],
+    "zh_chunks": [
+      "我们正处于租赁住房供应危机的水平",
+      "大西沃克劳动力住房联盟执行董事尼克·泰勒说"
+    ],
+    "en_distractors": [
+      "We are at a normal level on the supply of rental housing,",
+      "said Nick Taylor, a resident"
+    ],
+    "zh_distractors": [
+      "我们处于租赁住房供应的正常水平",
+      "居民尼克·泰勒说"
+    ],
+    "key_points": [
+      "at a crisis level 译为“处于危机水平”",
+      "on the supply of rental housing 译为“关于租赁住房供应”",
+      "executive director 译为“执行董事”",
+      "Workforce Housing Coalition of the Greater Seacoast 译为“大西沃克劳动力住房联盟”"
+    ],
+    "year": 2023,
+    "page": 4,
+    "source": "阅读A",
+    "en": "We are at a crisis level on the supply of rental housing, said Nick Taylor, executive director of the Workforce Housing Coalition of the Greater Seacoast.",
+    "pool": "en_to_zh",
+    "word_count": 26
+  },
+  "s0603": {
+    "id": "s0603",
+    "zh": "本周开幕的、由比阿特丽斯·鲁本斯在牛津大学博德利图书馆策划的一场展览和一本书记录了无线电如何从1922年到1939年改变了日常生活。",
+    "en_chunks": [
+      "Opening this week,",
+      "a book and exhibition curated by Beatty Rubens at the Bodleian in Oxford",
+      "records how radio changed everyday life from 1922 to 1939."
+    ],
+    "zh_chunks": [
+      "本周开幕的",
+      "一场展览和一本由比阿特丽斯·鲁本斯在牛津大学博德利图书馆策划的书",
+      "记录了无线电如何从1922年到1939年改变了日常生活。"
+    ],
+    "en_distractors": [
+      "Opening next month,",
+      "a book and exhibition organized by Beatty Rubens at the British Library in London"
+    ],
+    "zh_distractors": [
+      "下周开幕的",
+      "一场展览和一本由比阿特丽斯·鲁本斯在伦敦大英图书馆策划的书"
+    ],
+    "key_points": [
+      "分词短语作状语，注意时间状语的位置",
+      "curated by 的定语后置",
+      "record 的宾语从句"
+    ],
+    "year": 2026,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Opening this week, a book and exhibition curated by Beatty Rubens at the Bodleian in Oxford records how radio changed everyday life from 1922 to 1939.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0427": {
+    "id": "s0427",
+    "zh": "任何展品的背景对我来说都比所展示的物品是2000年前的还是2个月前的更重要。",
+    "en_chunks": [
+      "The context of any exhibit",
+      "is more important to me",
+      "than whether the object being displayed",
+      "is 2000 years old or 2 months old."
+    ],
+    "zh_chunks": [
+      "任何展品的背景",
+      "对我来说更重要",
+      "比所展示的物品是2000年前的还是2个月前的"
+    ],
+    "en_distractors": [
+      "The content of any exhibit",
+      "is less important to me"
+    ],
+    "zh_distractors": [
+      "任何展品的内容",
+      "对我来说不那么重要"
+    ],
+    "key_points": [
+      "比较结构 more...than",
+      "whether 引导的宾语从句",
+      "being displayed 作后置定语"
+    ],
+    "year": 2024,
+    "page": 11,
+    "source": "阅读B",
+    "en": "The context of any exhibit is more important to me than whether the object being displayed is 2000 years old or 2 months old.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0103": {
+    "id": "s0103",
+    "zh": "事实上，扶贫和环境保护常常被视为相互冲突的目标，约翰斯·霍普金斯大学经济学家保罗·费拉罗说。",
+    "en_chunks": [
+      "In fact,",
+      "poverty alleviation and environmental protection",
+      "are often viewed as conflicting goals,",
+      "says Paul Ferraro,",
+      "an economist at Johns Hopkins University."
+    ],
+    "zh_chunks": [
+      "事实上，",
+      "扶贫和环境保护",
+      "常常被视为相互冲突的目标，",
+      "约翰斯·霍普金斯大学经济学家保罗·费拉罗说。"
+    ],
+    "en_distractors": [
+      "In addition,",
+      "poverty reduction and environmental conservation"
+    ],
+    "zh_distractors": [
+      "此外，",
+      "减贫和环境保护"
+    ],
+    "key_points": [
+      "被动语态 be viewed as",
+      "同位语 an economist",
+      "倒装结构 says Paul Ferraro"
+    ],
+    "year": 2021,
+    "page": 6,
+    "source": "阅读A",
+    "en": "In fact, poverty alleviation and environmental protection are often viewed as conflicting goals, says Paul Ferraro, an economist at Johns Hopkins University.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0564": {
+    "id": "s0564",
+    "zh": "那么，是时候把培养皿从实验室带到车库了吗？",
+    "en_chunks": [
+      "So",
+      "is it time",
+      "to take the Petri dish out of the laboratory",
+      "and into the garage?"
+    ],
+    "zh_chunks": [
+      "那么，",
+      "是时候",
+      "把培养皿从实验室带出来",
+      "并带到车库了吗？"
+    ],
+    "en_distractors": [
+      "However",
+      "is it necessary"
+    ],
+    "zh_distractors": [
+      "然而，",
+      "有必要"
+    ],
+    "key_points": [
+      "it is time to do 句型",
+      "take...out of...and into... 结构",
+      "疑问句语序"
+    ],
+    "year": 2025,
+    "page": 13,
+    "source": "翻译C",
+    "en": "So is it time to take the Petri dish out of the laboratory and into the garage?",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0560": {
+    "id": "s0560",
+    "zh": "公民科学的兴起与世界各地自己动手的生物学实验室的兴起同步发展。",
+    "en_chunks": [
+      "The rise of citizen science",
+      "has grown alongside",
+      "the rise of do-it-yourself biology laboratories",
+      "around the world."
+    ],
+    "zh_chunks": [
+      "公民科学的兴起",
+      "与……同步发展",
+      "世界各地自己动手的生物学实验室的兴起"
+    ],
+    "en_distractors": [
+      "The decline of citizen science",
+      "has grown before"
+    ],
+    "zh_distractors": [
+      "公民科学的衰落",
+      "先于……发展"
+    ],
+    "key_points": [
+      "alongside 表示伴随",
+      "do-it-yourself 复合形容词",
+      "around the world 后置定语"
+    ],
+    "year": 2025,
+    "page": 13,
+    "source": "翻译C",
+    "en": "The rise of citizen science has grown alongside the rise of do-it-yourself biology laboratories around the world.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0413": {
+    "id": "s0413",
+    "zh": "监管范围的缩小是建筑商、采矿运营商和其他经常与环境法规相冲突的商业利益方的胜利。",
+    "en_chunks": [
+      "This narrowing of the regulatory scope",
+      "was a victory for builders, mining operators and other commercial interests",
+      "often at odds with environmental rules."
+    ],
+    "zh_chunks": [
+      "监管范围的缩小",
+      "是建筑商、采矿运营商和其他商业利益方的胜利",
+      "这些利益方经常与环境法规相冲突。"
+    ],
+    "en_distractors": [
+      "This expansion of the regulatory scope",
+      "was a defeat for builders, mining operators and other commercial interests"
+    ],
+    "zh_distractors": [
+      "监管范围的扩大",
+      "是建筑商、采矿运营商和其他商业利益方的失败"
+    ],
+    "key_points": [
+      "narrowing 名词化",
+      "at odds with 短语",
+      "后置定语 often at odds..."
+    ],
+    "year": 2024,
+    "page": 9,
+    "source": "阅读A",
+    "en": "This narrowing of the regulatory scope was a victory for builders, mining operators and other commercial interests often at odds with environmental rules.",
+    "pool": "en_to_zh",
+    "word_count": 23
+  },
+  "s0444": {
+    "id": "s0444",
+    "zh": "非洲草原象，也被称为非洲丛林象，分布在37个非洲国家。",
+    "en_chunks": [
+      "The African savanna elephant,",
+      "also known as the African bush elephant,",
+      "is distributed across 37 African countries."
+    ],
+    "zh_chunks": [
+      "非洲草原象，",
+      "也被称为非洲丛林象，",
+      "分布在37个非洲国家。"
+    ],
+    "en_distractors": [
+      "The African forest elephant,",
+      "also known as the African pygmy elephant,"
+    ],
+    "zh_distractors": [
+      "非洲森林象，",
+      "也被称为非洲侏儒象，"
+    ],
+    "key_points": [
+      "插入语 also known as",
+      "被动语态 is distributed",
+      "across 表示范围"
+    ],
+    "year": 2024,
+    "page": 13,
+    "source": "阅读B",
+    "en": "The African savanna elephant, also known as the African bush elephant, is distributed across 37 African countries.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0105": {
+    "id": "s0105",
+    "zh": "在那里，随着人们获得更多钱，他们中的一些人可能清理了更多土地来养牛以获取肉类，费拉罗说。",
+    "en_chunks": [
+      "There,",
+      "as people got more money,",
+      "some of them may have more cleared land for cattle to raise for meat,",
+      "Ferraro says."
+    ],
+    "zh_chunks": [
+      "在那里，",
+      "随着人们获得更多钱，",
+      "他们中的一些人可能清理了更多土地来养牛以获取肉类，",
+      "费拉罗说。"
+    ],
+    "en_distractors": [
+      "Here,",
+      "as people earned less money,"
+    ],
+    "zh_distractors": [
+      "在这里，",
+      "随着人们挣得更少钱，"
+    ],
+    "key_points": [
+      "as 引导时间状语从句",
+      "may have done 表示推测",
+      "cleared land for cattle to raise for meat 目的状语"
+    ],
+    "year": 2021,
+    "page": 6,
+    "source": "阅读A",
+    "en": "There, as people got more money, some of them may have more cleared land for cattle to raise for meat, Ferraro says.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0582": {
+    "id": "s0582",
+    "zh": "看着这些DNA序列，我们得到了这些动物所生活的环境和它们所经历的生存考验的生物学证明。",
+    "en_chunks": [
+      "Looking at these DNA sequences,",
+      "we get a biological testimony",
+      "to the environment these animals lived in",
+      "and the experiences they survived."
+    ],
+    "zh_chunks": [
+      "看着这些DNA序列，",
+      "我们得到了生物学证明",
+      "关于这些动物所生活的环境",
+      "以及它们所经历的生存考验。"
+    ],
+    "en_distractors": [
+      "Ignoring these DNA sequences,",
+      "we lose a biological testimony"
+    ],
+    "zh_distractors": [
+      "忽略这些DNA序列，",
+      "我们失去了生物学证明"
+    ],
+    "key_points": [
+      "现在分词作状语",
+      "testimony to 搭配",
+      "定语从句 these animals lived in 和 they survived"
+    ],
+    "year": 2026,
+    "page": 4,
+    "source": "阅读A",
+    "en": "Looking at these DNA sequences, we get a biological testimony to the environment these animals lived in and the experiences they survived.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0590": {
+    "id": "s0590",
+    "zh": "这些动物可以从更多研究中受益：目前，还没有来自非洲赤道以南的驴的已发表基因组。",
+    "en_chunks": [
+      "The animals could benefit from more research:",
+      "Currently,",
+      "there are no published genomes",
+      "from donkeys located south of the Equator in Africa."
+    ],
+    "zh_chunks": [
+      "这些动物可以从更多研究中受益：",
+      "目前，",
+      "还没有已发表的基因组",
+      "来自位于非洲赤道以南的驴。"
+    ],
+    "en_distractors": [
+      "The animals could suffer from more research:",
+      "Eventually,"
+    ],
+    "zh_distractors": [
+      "这些动物可能因更多研究而受害：",
+      "最终，"
+    ],
+    "key_points": [
+      "benefit from 短语",
+      "there be 否定",
+      "located 过去分词作后置定语"
+    ],
+    "year": 2026,
+    "page": 4,
+    "source": "阅读A",
+    "en": "The animals could benefit from more research: Currently, there are no published genomes from donkeys located south of the Equator in Africa.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0127": {
+    "id": "s0127",
+    "zh": "周二，上诉法院一致维持了2017年解除对宽带提供商管制的命令，援引了最高法院2005年的一项裁决，该裁决支持了类似的放松管制的举措。",
+    "en_chunks": [
+      "On Tuesday, the appeals court unanimously upheld the 2017 order deregulating broadband providers,",
+      "citing a Supreme Court ruling from 2005",
+      "that upheld a similarly deregulatory move."
+    ],
+    "zh_chunks": [
+      "周二，上诉法院一致维持了2017年解除对宽带提供商管制的命令，",
+      "援引了最高法院2005年的一项裁决，",
+      "该裁决支持了类似的放松管制的举措。"
+    ],
+    "en_distractors": [
+      "the appeals court unanimously rejected the 2017 order",
+      "citing a Supreme Court ruling from 2015"
+    ],
+    "zh_distractors": [
+      "上诉法院一致否决了2017年解除管制的命令",
+      "援引了最高法院2015年的一项裁决"
+    ],
+    "key_points": [
+      "unanimously upheld 一致维持",
+      "deregulating 解除管制",
+      "citing 援引",
+      "similarly deregulatory move 类似的放松管制举措"
+    ],
+    "year": 2021,
+    "page": 10,
+    "source": "阅读A",
+    "en": "On Tuesday, the appeals court unanimously upheld the 2017 order deregulating broadband providers, citing a Supreme Court ruling from 2005 that upheld a similarly deregulatory move.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0272": {
+    "id": "s0272",
+    "zh": "他关于自我提升和努力工作的故事本身就可以写成一部引人入胜的传记，但其所代表的含义远不止于此。",
+    "en_chunks": [
+      "His tale of self-improvement and hard work",
+      "would make a fascinating biography in its own right,",
+      "but represents something more than that."
+    ],
+    "zh_chunks": [
+      "他关于自我提升和努力工作的故事",
+      "本身就可以写成一部引人入胜的传记，",
+      "但其所代表的含义远不止于此。"
+    ],
+    "en_distractors": [
+      "would make a boring biography in its own right",
+      "but represents something less than that"
+    ],
+    "zh_distractors": [
+      "本身就可以写成一部乏味的传记",
+      "但其所代表的含义远不及此"
+    ],
+    "key_points": [
+      "tale 故事",
+      "in its own right 本身",
+      "fascinating biography 引人入胜的传记",
+      "more than that 不止于此"
+    ],
+    "year": 2022,
+    "page": 11,
+    "source": "翻译C",
+    "en": "His tale of self-improvement and hard work would make a fascinating biography in its own right, but represents something more than that.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0670": {
+    "id": "s0670",
+    "zh": "基于科学的分析方法在搜寻大西洋中的德国潜艇方面被证明非常成功。",
+    "en_chunks": [
+      "Science-based analytical approaches",
+      "proved remarkably successful",
+      "in the hunt for German submarines in the Atlantic Ocean."
+    ],
+    "zh_chunks": [
+      "基于科学的分析方法",
+      "被证明非常成功",
+      "在搜寻大西洋中的德国潜艇方面。"
+    ],
+    "en_distractors": [
+      "proved remarkably unsuccessful",
+      "in the hunt for British submarines in the Pacific Ocean"
+    ],
+    "zh_distractors": [
+      "被证明非常不成功",
+      "在搜寻太平洋中的英国潜艇方面"
+    ],
+    "key_points": [
+      "Science-based 基于科学的",
+      "proved remarkably successful 被证明非常成功",
+      "in the hunt for 在搜寻...方面"
+    ],
+    "year": 2026,
+    "page": 11,
+    "source": "翻译C",
+    "en": "Science-based analytical approaches proved remarkably successful in the hunt for German submarines in the Atlantic Ocean.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0296": {
+    "id": "s0296",
+    "zh": "该法案要求每位租赁房东向州政府登记，强制他们购买保险，并在新的州税之上开辟了征收地方税的可能性。",
+    "en_chunks": [
+      "The bill requires every rental host to register with the state,",
+      "mandates they carry insurance,",
+      "and opens the potential for local taxes on top of a new state levy."
+    ],
+    "zh_chunks": [
+      "该法案要求每位租赁房东向州政府登记，",
+      "强制他们购买保险，",
+      "并在新的州税之上开辟了征收地方税的可能性。"
+    ],
+    "en_distractors": [
+      "requires every rental host to register with the federal government",
+      "and closes the potential for local taxes"
+    ],
+    "zh_distractors": [
+      "要求每位租赁房东向联邦政府登记",
+      "并关闭了征收地方税的可能性"
+    ],
+    "key_points": [
+      "register with the state 向州政府登记",
+      "mandates 强制",
+      "opens the potential 开辟可能性",
+      "on top of 在...之上"
+    ],
+    "year": 2023,
+    "page": 5,
+    "source": "阅读A",
+    "en": "The bill requires every rental host to register with the state, mandates they carry insurance, and opens the potential for local taxes on top of a new state levy.",
+    "pool": "en_to_zh",
+    "word_count": 29
+  },
+  "s0205": {
+    "id": "s0205",
+    "zh": "然而，回应《自然》杂志调查的艺术家比科学家少，几位受访者指出，艺术家不仅仅是协助科学家满足他们的沟通需求。",
+    "en_chunks": [
+      "Fewer artists than scientists responded to the Nature poll,",
+      "however, several respondents noted that",
+      "artists do not simply assist scientists with their communication requirements."
+    ],
+    "zh_chunks": [
+      "然而，回应《自然》杂志调查的艺术家比科学家少，",
+      "几位受访者指出，",
+      "艺术家不仅仅是协助科学家满足他们的沟通需求。"
+    ],
+    "en_distractors": [
+      "More artists than scientists responded to the Nature poll",
+      "artists do simply assist scientists with their communication requirements"
+    ],
+    "zh_distractors": [
+      "回应《自然》杂志调查的艺术家比科学家多",
+      "艺术家仅仅是协助科学家满足他们的沟通需求"
+    ],
+    "key_points": [
+      "Fewer...than... 比...少",
+      "responded to the Nature poll 回应《自然》杂志调查",
+      "do not simply 不仅仅是",
+      "communication requirements 沟通需求"
+    ],
+    "year": 2022,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Fewer artists than scientists responded to the Nature poll, however, several respondents noted that artists do not simply assist scientists with their communication requirements.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0188": {
+    "id": "s0188",
+    "zh": "如今，英国有28%的毕业生从事非毕业生岗位，这一比例是经合组织国家平均水平的两倍。",
+    "en_chunks": [
+      "Today, 28 per cent of graduates in the UK are in non-graduate roles,",
+      "a percentage which is double the average among the OECD countries."
+    ],
+    "zh_chunks": [
+      "如今，英国有28%的毕业生从事非毕业生岗位，",
+      "这一比例是经合组织国家平均水平的两倍。"
+    ],
+    "en_distractors": [
+      "28 per cent of graduates in the UK are in graduate roles",
+      "a percentage which is half the average among the OECD countries"
+    ],
+    "zh_distractors": [
+      "英国有28%的毕业生从事毕业生岗位",
+      "这一比例是经合组织国家平均水平的一半"
+    ],
+    "key_points": [
+      "non-graduate roles 非毕业生岗位",
+      "double the average 平均水平的两倍",
+      "OECD countries 经合组织国家"
+    ],
+    "year": 2022,
+    "page": 4,
+    "source": "阅读A",
+    "en": "Today, 28 per cent of graduates in the UK are in non-graduate roles, a percentage which is double the average among the OECD countries.",
+    "pool": "en_to_zh",
+    "word_count": 23
+  },
+  "s0292": {
+    "id": "s0292",
+    "zh": "短期租赁本身并不是问题的核心，经济适用房政策专家凯伦·霍姆说。",
+    "en_chunks": [
+      "Short-term rentals themselves are not the crux of the issue,",
+      "said Keren Hom, an expert on affordable housing policy."
+    ],
+    "zh_chunks": [
+      "短期租赁本身并不是问题的核心，",
+      "经济适用房政策专家凯伦·霍姆说。"
+    ],
+    "en_distractors": [
+      "Short-term rentals themselves are the crux of the issue",
+      "said Keren Hom, an expert on expensive housing policy"
+    ],
+    "zh_distractors": [
+      "短期租赁本身是问题的核心",
+      "经济适用房政策专家凯伦·霍姆说"
+    ],
+    "key_points": [
+      "crux 核心",
+      "affordable housing policy 经济适用房政策",
+      "said ... 说（倒装）"
+    ],
+    "year": 2023,
+    "page": 5,
+    "source": "阅读A",
+    "en": "Short-term rentals themselves are not the crux of the issue, said Keren Hom, an expert on affordable housing policy.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0096": {
+    "id": "s0096",
+    "zh": "政府已承诺修改法律，引入最低服务要求，以便即使发生罢工，服务也能继续运作。",
+    "en_chunks": [
+      "The Government has pledged to change the law",
+      "to introduce a minimum service requirement",
+      "so that, even when strikes occur, services can continue to operate."
+    ],
+    "zh_chunks": [
+      "政府已承诺修改法律",
+      "引入最低服务要求，",
+      "以便即使发生罢工，服务也能继续运作。"
+    ],
+    "en_distractors": [
+      "The Government has refused to change the law",
+      "so that, even when strikes occur, services can stop operating"
+    ],
+    "zh_distractors": [
+      "政府已拒绝修改法律",
+      "以便即使发生罢工，服务也能停止运作"
+    ],
+    "key_points": [
+      "pledged to 承诺",
+      "minimum service requirement 最低服务要求",
+      "so that 以便",
+      "continue to operate 继续运作"
+    ],
+    "year": 2021,
+    "page": 4,
+    "source": "阅读A",
+    "en": "The Government has pledged to change the law to introduce a minimum service requirement so that, even when strikes occur, services can continue to operate.",
+    "pool": "en_to_zh",
+    "word_count": 25
+  },
+  "s0298": {
+    "id": "s0298",
+    "zh": "这两本书都将于下周由企鹅兰登书屋出版，该公司目前正与沃特斯通陷入僵局。",
+    "en_chunks": [
+      "Both of these books are published next week by Penguin Random House (PRH),",
+      "a company currently involved in a stand-off with Waterstones."
+    ],
+    "zh_chunks": [
+      "这两本书都将于下周由企鹅兰登书屋出版，",
+      "该公司目前正与沃特斯通陷入僵局。"
+    ],
+    "en_distractors": [
+      "Both of these books are published last week by Penguin Random House (PRH)",
+      "a company currently involved in a partnership with Waterstones"
+    ],
+    "zh_distractors": [
+      "这两本书都将于上周由企鹅兰登书屋出版",
+      "该公司目前正与沃特斯通合作"
+    ],
+    "key_points": [
+      "published next week 下周出版",
+      "Penguin Random House 企鹅兰登书屋",
+      "stand-off 僵局"
+    ],
+    "year": 2023,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Both of these books are published next week by Penguin Random House (PRH), a company currently involved in a stand-off with Waterstones.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0401": {
+    "id": "s0401",
+    "zh": "鲁特科夫斯基起初感到惊讶，但认为这可能是接触新受众的好方法。",
+    "en_chunks": [
+      "Rutkowski was initially surprised",
+      "but thought it might be a good way to reach new audiences."
+    ],
+    "zh_chunks": [
+      "鲁特科夫斯基起初感到惊讶，",
+      "但认为这可能是接触新受众的好方法。"
+    ],
+    "en_distractors": [
+      "Rutkowski was initially excited",
+      "but thought it might be a bad way to reach new audiences"
+    ],
+    "zh_distractors": [
+      "鲁特科夫斯基起初感到兴奋",
+      "但认为这可能是接触新受众的坏方法"
+    ],
+    "key_points": [
+      "initially surprised 起初惊讶",
+      "reach new audiences 接触新受众"
+    ],
+    "year": 2024,
+    "page": 7,
+    "source": "阅读A",
+    "en": "Rutkowski was initially surprised but thought it might be a good way to reach new audiences.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0397": {
+    "id": "s0397",
+    "zh": "该工具以及其他流行的图像生成AI模型，允许任何人根据文本提示创建令人印象深刻的图像。",
+    "en_chunks": [
+      "The tool, along with other popular image-generation AI models,",
+      "allows anyone to create impressive images",
+      "based on text prompts."
+    ],
+    "zh_chunks": [
+      "该工具以及其他流行的图像生成AI模型，",
+      "允许任何人创建令人印象深刻的图像",
+      "根据文本提示。"
+    ],
+    "en_distractors": [
+      "despite other popular image-generation AI models",
+      "but other popular image-generation AI models"
+    ],
+    "zh_distractors": [
+      "尽管其他流行的图像生成AI模型",
+      "但是其他流行的图像生成AI模型"
+    ],
+    "key_points": [
+      "along with 的插入语处理",
+      "allows anyone to create 的翻译",
+      "based on 引导的方式状语"
+    ],
+    "year": 2024,
+    "page": 7,
+    "source": "阅读A",
+    "en": "The tool, along with other popular image-generation AI models, allows anyone to create impressive images based on text prompts.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0035": {
+    "id": "s0035",
+    "zh": "为了确保精英女性有更多这样的机会，她们提议实行政府配额。",
+    "en_chunks": [
+      "In order to ensure that elite women have more such opportunities,",
+      "they have proposed",
+      "imposing government quotas."
+    ],
+    "zh_chunks": [
+      "为了确保精英女性有更多这样的机会，",
+      "她们提议",
+      "实行政府配额。"
+    ],
+    "en_distractors": [
+      "so that elite women have more such opportunities",
+      "they have suggested to impose government quotas"
+    ],
+    "zh_distractors": [
+      "以便精英女性有更多这样的机会",
+      "她们建议实行政府配额"
+    ],
+    "key_points": [
+      "In order to 目的状语",
+      "have proposed doing 的用法",
+      "imposing government quotas 的翻译"
+    ],
+    "year": 2020,
+    "page": 8,
+    "source": "阅读A",
+    "en": "In order to ensure that elite women have more such opportunities, they have proposed imposing government quotas.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0207": {
+    "id": "s0207",
+    "zh": "这种方法既能促进新的研究，也能产生强大的艺术。",
+    "en_chunks": [
+      "Such an approach",
+      "can both prompt new research",
+      "as well as result in powerful art."
+    ],
+    "zh_chunks": [
+      "这种方法",
+      "既能促进新的研究，",
+      "也能产生强大的艺术。"
+    ],
+    "en_distractors": [
+      "can either prompt new research",
+      "as well as result in powerful arts"
+    ],
+    "zh_distractors": [
+      "这种方法要么促进新的研究",
+      "也能产生强大的艺术效果"
+    ],
+    "key_points": [
+      "both...as well as 的并列结构",
+      "prompt 的翻译",
+      "result in 的翻译"
+    ],
+    "year": 2022,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Such an approach can both prompt new research as well as result in powerful art.",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0387": {
+    "id": "s0387",
+    "zh": "另一项措施可能是鼓励不同年级的儿童之间的友谊，以模仿狩猎采集社区中无监督的混合年龄游戏群体。",
+    "en_chunks": [
+      "Another measure could be encouraging friendships",
+      "between children in different school years,",
+      "to mirror the unsupervised mixed-age playgroups",
+      "in hunter-gatherer communities."
+    ],
+    "zh_chunks": [
+      "另一项措施可能是鼓励友谊",
+      "在不同年级的儿童之间，",
+      "以模仿无监督的混合年龄游戏群体",
+      "在狩猎采集社区中。"
+    ],
+    "en_distractors": [
+      "Another measure could encourage friendships",
+      "to reflect the unsupervised mixed-age playgroups"
+    ],
+    "zh_distractors": [
+      "另一项措施可能鼓励友谊",
+      "以反映无监督的混合年龄游戏群体"
+    ],
+    "key_points": [
+      "could be encouraging 的翻译",
+      "between... 后置定语",
+      "to mirror 目的状语",
+      "hunter-gatherer communities 的翻译"
+    ],
+    "year": 2024,
+    "page": 5,
+    "source": "阅读A",
+    "en": "Another measure could be encouraging friendships between children in different school years, to mirror the unsupervised mixed-age playgroups in hunter-gatherer communities.",
+    "pool": "en_to_zh",
+    "word_count": 21
+  },
+  "s0443": {
+    "id": "s0443",
+    "zh": "哪些内在因素使西方成为这些文物的合适家园，却阻止它们被原籍国保存和展示？",
+    "en_chunks": [
+      "What intrinsic factors",
+      "make the West a suitable home for these artifacts",
+      "but preclude them from being preserved and displayed",
+      "by their countries of origin?"
+    ],
+    "zh_chunks": [
+      "哪些内在因素",
+      "使西方成为这些文物的合适家园，",
+      "却阻止它们被保存和展示",
+      "由它们的原籍国？"
+    ],
+    "en_distractors": [
+      "What internal factors",
+      "but prevent them from being preserved and displayed"
+    ],
+    "zh_distractors": [
+      "哪些内部因素",
+      "但阻止它们被保存和展示"
+    ],
+    "key_points": [
+      "intrinsic factors 的翻译",
+      "make...home 的翻译",
+      "preclude...from 的翻译",
+      "被动语态的处理"
+    ],
+    "year": 2024,
+    "page": 12,
+    "source": "阅读B",
+    "en": "What intrinsic factors make the West a suitable home for these artifacts but preclude them from being preserved and displayed by their countries of origin?",
+    "pool": "en_to_zh",
+    "word_count": 25
+  },
+  "s0604": {
+    "id": "s0604",
+    "zh": "她借鉴了信件、日记和小说，以及温妮弗雷德·吉尔1939年的一本关于观众研究的逐字记录实地笔记本。",
+    "en_chunks": [
+      "She draws on letters, diaries and fiction,",
+      "and a 1939 field notebook",
+      "of verbatim audience research",
+      "by Winifred Gill."
+    ],
+    "zh_chunks": [
+      "她借鉴了信件、日记和小说，",
+      "以及一本1939年的实地笔记本",
+      "关于逐字观众研究",
+      "由温妮弗雷德·吉尔。"
+    ],
+    "en_distractors": [
+      "She draws from letters, diaries and fiction",
+      "and a 1939 field notebook of verbatim audience research"
+    ],
+    "zh_distractors": [
+      "她利用了信件、日记和小说",
+      "以及一本1939年的实地笔记本"
+    ],
+    "key_points": [
+      "draws on 的翻译",
+      "field notebook 的翻译",
+      "verbatim 的翻译",
+      "by 引导的定语"
+    ],
+    "year": 2026,
+    "page": 6,
+    "source": "阅读A",
+    "en": "She draws on letters, diaries and fiction, and a 1939 field notebook of verbatim audience research by Winifred Gill.",
+    "pool": "en_to_zh",
+    "word_count": 18
+  },
+  "s0080": {
+    "id": "s0080",
+    "zh": "这一事实本身就体现了17世纪大部分时间席卷欧洲的新思维方式。",
+    "en_chunks": [
+      "This very fact",
+      "embodied the new ways of thinking",
+      "that swept through Europe",
+      "during most of the 17th century."
+    ],
+    "zh_chunks": [
+      "这一事实本身",
+      "体现了新的思维方式",
+      "席卷欧洲的",
+      "在17世纪大部分时间。"
+    ],
+    "en_distractors": [
+      "This exact fact",
+      "embodied the new ways of thinking which swept through Europe"
+    ],
+    "zh_distractors": [
+      "这一确切事实",
+      "体现了席卷欧洲的新思维方式"
+    ],
+    "key_points": [
+      "very 强调用法",
+      "embodied 的翻译",
+      "定语从句的处理",
+      "时间状语的位置"
+    ],
+    "year": 2020,
+    "page": 15,
+    "source": "翻译C",
+    "en": "This very fact embodied the new ways of thinking that swept through Europe during most of the 17th century.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0404": {
+    "id": "s0404",
+    "zh": "除了鲁特科夫斯基，其他艺术家也对他们的作品在文本到图像生成器中的明显受欢迎感到惊讶，一些人现在正在反击。",
+    "en_chunks": [
+      "Other artists besides Rutkowski",
+      "have been surprised by the apparent popularity of their work",
+      "in text-to-image generators—",
+      "and some are now fighting back."
+    ],
+    "zh_chunks": [
+      "除了鲁特科夫斯基的其他艺术家",
+      "对明显受欢迎感到惊讶",
+      "他们的作品在文本到图像生成器中——",
+      "一些人现在正在反击。"
+    ],
+    "en_distractors": [
+      "Other artists except Rutkowski",
+      "have been surprised by the apparent popularity of their works"
+    ],
+    "zh_distractors": [
+      "除了鲁特科夫斯基以外的其他艺术家",
+      "对明显受欢迎感到惊讶"
+    ],
+    "key_points": [
+      "besides 的翻译",
+      "被动语态的处理",
+      "text-to-image generators 的翻译",
+      "fighting back 的翻译"
+    ],
+    "year": 2024,
+    "page": 7,
+    "source": "阅读A",
+    "en": "Other artists besides Rutkowski have been surprised by the apparent popularity of their work in text-to-image generators—and some are now fighting back.",
+    "pool": "en_to_zh",
+    "word_count": 23
+  },
+  "s0111": {
+    "id": "s0111",
+    "zh": "费拉罗表示，由于种植水稻的重要性和市场准入等共同点，这些结果可能会转移到亚洲其他地区。",
+    "en_chunks": [
+      "Ferraro suggests",
+      "the results may transfer to other parts of Asia,",
+      "due to commonalities",
+      "such as the importance of growing rice and market access."
+    ],
+    "zh_chunks": [
+      "费拉罗表示，",
+      "这些结果可能会转移到亚洲其他地区，",
+      "由于共同点",
+      "例如种植水稻的重要性和市场准入。"
+    ],
+    "en_distractors": [
+      "Ferraro suggests that",
+      "the results may transfer to other parts of Asia due to commonalities"
+    ],
+    "zh_distractors": [
+      "费拉罗认为，",
+      "这些结果可能转移到亚洲其他地区"
+    ],
+    "key_points": [
+      "suggests 的翻译",
+      "transfer to 的翻译",
+      "due to 原因状语",
+      "such as 举例"
+    ],
+    "year": 2021,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Ferraro suggests the results may transfer to other parts of Asia, due to commonalities such as the importance of growing rice and market access.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0381": {
+    "id": "s0381",
+    "zh": "研究人员提出，从非洲狩猎采集者那里获得的育儿技巧可能是养育更满足的孩子的关键。",
+    "en_chunks": [
+      "Parenting tips obtained from hunter-gatherers in Africa",
+      "may be the key",
+      "to bringing up more contented children,",
+      "researchers have suggested."
+    ],
+    "zh_chunks": [
+      "从非洲狩猎采集者那里获得的育儿技巧",
+      "可能是关键",
+      "养育更满足的孩子，",
+      "研究人员提出。"
+    ],
+    "en_distractors": [
+      "Parenting tips obtained from hunter-gatherers in Africa may be the key",
+      "to bringing up more content children"
+    ],
+    "zh_distractors": [
+      "从非洲狩猎采集者那里获得的育儿技巧可能是关键",
+      "养育更满足的孩子"
+    ],
+    "key_points": [
+      "obtained 过去分词作定语",
+      "the key to 的用法",
+      "contented 的翻译",
+      "researchers have suggested 的插入语处理"
+    ],
+    "year": 2024,
+    "page": 5,
+    "source": "阅读A",
+    "en": "Parenting tips obtained from hunter-gatherers in Africa may be the key to bringing up more contented children, researchers have suggested.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0352": {
+    "id": "s0352",
+    "zh": "也许最重要的是，这些图像提供了记录性证据，这些证据后来传到了政府官员手中。",
+    "en_chunks": [
+      "Perhaps most importantly,",
+      "these images provided documentary evidence",
+      "that later made its way to government officials."
+    ],
+    "zh_chunks": [
+      "也许最重要的是，",
+      "这些图像提供了记录性证据，",
+      "这些证据后来传到了政府官员手中。"
+    ],
+    "en_distractors": [
+      "that later made its way to the public",
+      "that later was ignored by officials"
+    ],
+    "zh_distractors": [
+      "这些证据后来被公众所忽视",
+      "这些证据后来被官员们否认"
+    ],
+    "key_points": [
+      "documentary evidence 译为“记录性证据”或“纪实证据”",
+      "made its way to 表示“传到、到达”，需意译",
+      "later 修饰 made its way，注意时间顺序"
+    ],
+    "year": 2023,
+    "page": 11,
+    "source": "阅读B",
+    "en": "Perhaps most importantly, these images provided documentary evidence that later made its way to government officials.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0246": {
+    "id": "s0246",
+    "zh": "这些大多是学生，他们小时候没有机会去荒野地区、野生动物保护区或国家公园。",
+    "en_chunks": [
+      "These are mostly students",
+      "who had no opportunity as children",
+      "to travel to wilderness areas, wildlife refuges or national parks."
+    ],
+    "zh_chunks": [
+      "这些大多是学生，",
+      "他们小时候没有机会",
+      "去荒野地区、野生动物保护区或国家公园。"
+    ],
+    "en_distractors": [
+      "who had no chance as adults",
+      "to visit museums or art galleries"
+    ],
+    "zh_distractors": [
+      "他们成年后没有机会",
+      "去博物馆或艺术画廊"
+    ],
+    "key_points": [
+      "as children 作时间状语，译为“小时候”",
+      "wilderness areas, wildlife refuges or national parks 列举需准确",
+      "定语从句较长，可拆分为独立句"
+    ],
+    "year": 2022,
+    "page": 9,
+    "source": "阅读B",
+    "en": "These are mostly students who had no opportunity as children to travel to wilderness areas, wildlife refuges or national parks.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0614": {
+    "id": "s0614",
+    "zh": "有些人会说有声书热潮使它复兴，尽管我想你随后可能会担心阅读的衰落。",
+    "en_chunks": [
+      "Some will say",
+      "the audiobook boom revives it,",
+      "though I suppose",
+      "you can then worry about the decline of reading."
+    ],
+    "zh_chunks": [
+      "有些人会说",
+      "有声书热潮使它复兴，",
+      "尽管我想",
+      "你随后可能会担心阅读的衰落。"
+    ],
+    "en_distractors": [
+      "the audiobook boom destroys it",
+      "though I doubt"
+    ],
+    "zh_distractors": [
+      "有声书热潮使它衰落",
+      "尽管我怀疑"
+    ],
+    "key_points": [
+      "revives it 中 it 指代上文提到的某种形式，需根据语境理解",
+      "though 引导让步状语从句",
+      "suppose 译为“想、认为”"
+    ],
+    "year": 2026,
+    "page": 7,
+    "source": "阅读A",
+    "en": "Some will say the audiobook boom revives it, though I suppose you can then worry about the decline of reading.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0326": {
+    "id": "s0326",
+    "zh": "事实上，在 Scopus 中被收录似乎成为这类引用操纵中要瞄准的一个标准。",
+    "en_chunks": [
+      "In fact,",
+      "a listing in Scopus",
+      "seems to be a criterion",
+      "to be targeted in this type of citation manipulation."
+    ],
+    "zh_chunks": [
+      "事实上，",
+      "在 Scopus 中被收录",
+      "似乎成为这类引用操纵中",
+      "要瞄准的一个标准。"
+    ],
+    "en_distractors": [
+      "a listing in Google Scholar",
+      "to be avoided in this type of citation manipulation"
+    ],
+    "zh_distractors": [
+      "在谷歌学术中被收录",
+      "在这类引用操纵中要避免的一个标准"
+    ],
+    "key_points": [
+      "a listing in Scopus 译为“在 Scopus 中被收录”",
+      "criterion 译为“标准”",
+      "to be targeted 表示“被瞄准、作为目标”"
+    ],
+    "year": 2023,
+    "page": 8,
+    "source": "阅读A",
+    "en": "In fact, a listing in Scopus seems to be a criterion to be targeted in this type of citation manipulation.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0451": {
+    "id": "s0451",
+    "zh": "尽管非洲象用于远距离导航的线索尚未被了解，但嗅觉很可能发挥了作用。",
+    "en_chunks": [
+      "Although the cues used by African elephants for long-distance navigation",
+      "are not yet understood,",
+      "smell may well play a part."
+    ],
+    "zh_chunks": [
+      "尽管非洲象用于远距离导航的线索",
+      "尚未被了解，",
+      "但嗅觉很可能发挥了作用。"
+    ],
+    "en_distractors": [
+      "Although the cues used by Asian elephants",
+      "sight may well play a part"
+    ],
+    "zh_distractors": [
+      "尽管亚洲象用于远距离导航的线索",
+      "但视觉很可能发挥了作用"
+    ],
+    "key_points": [
+      "Although 引导让步状语从句，译为“尽管”",
+      "used by... 过去分词短语作定语",
+      "may well 表示“很可能”"
+    ],
+    "year": 2024,
+    "page": 13,
+    "source": "阅读B",
+    "en": "Although the cues used by African elephants for long-distance navigation are not yet understood, smell may well play a part.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0436": {
+    "id": "s0436",
+    "zh": "无论如何，在外国展示的古代艺术品都应该归还给原属国。",
+    "en_chunks": [
+      "Ancient art",
+      "that is displayed in foreign countries",
+      "by all means",
+      "should be returned to the original country."
+    ],
+    "zh_chunks": [
+      "古代艺术品",
+      "在外国展示的",
+      "无论如何",
+      "都应该归还给原属国。"
+    ],
+    "en_distractors": [
+      "that is created in foreign countries",
+      "by no means"
+    ],
+    "zh_distractors": [
+      "在外国创作的",
+      "绝不"
+    ],
+    "key_points": [
+      "by all means 译为“无论如何、务必”",
+      "that 引导定语从句修饰 Ancient art",
+      "original country 译为“原属国”"
+    ],
+    "year": 2024,
+    "page": 12,
+    "source": "阅读B",
+    "en": "Ancient art that is displayed in foreign countries by all means should be returned to the original country.",
+    "pool": "en_to_zh",
+    "word_count": 18
+  },
+  "s0586": {
+    "id": "s0586",
+    "zh": "然后他们追踪了这些动物如何在大约2500年后传播到大陆其他地区，进入欧洲和亚洲。",
+    "en_chunks": [
+      "They then traced",
+      "how the animals spread across the rest of the continent",
+      "into Europe and Asia",
+      "about 2,500 years later."
+    ],
+    "zh_chunks": [
+      "然后他们追踪了",
+      "这些动物如何传播到大陆其他地区，",
+      "进入欧洲和亚洲，",
+      "大约在2500年后。"
+    ],
+    "en_distractors": [
+      "how the animals migrated within the continent",
+      "about 2,500 years earlier"
+    ],
+    "zh_distractors": [
+      "这些动物如何在大陆内部迁徙",
+      "大约在2500年前"
+    ],
+    "key_points": [
+      "traced 译为“追踪”",
+      "spread across 译为“传播到”",
+      "about 2,500 years later 作时间状语，注意位置"
+    ],
+    "year": 2026,
+    "page": 4,
+    "source": "阅读A",
+    "en": "They then traced how the animals spread across the rest of the continent into Europe and Asia about 2,500 years later.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0501": {
+    "id": "s0501",
+    "zh": "2017年，该协会成立了娱乐与创意联盟（ACE），这是一个由约100名侦探组成的执法工作组，他们在全球各地帮助当地政府逮捕流媒体盗版者。",
+    "en_chunks": [
+      "In 2017",
+      "the association formed the Alliance for Creativity and Entertainment (ACE),",
+      "an enforcement task force of about 100 detectives",
+      "circling the globe",
+      "to help local authorities arrest streaming pirates."
+    ],
+    "zh_chunks": [
+      "2017年，",
+      "该协会成立了娱乐与创意联盟（ACE），",
+      "这是一个由约100名侦探组成的执法工作组，",
+      "他们在全球各地",
+      "帮助当地政府逮捕流媒体盗版者。"
+    ],
+    "en_distractors": [
+      "the association joined the Alliance for Creativity and Entertainment",
+      "to help local authorities arrest online shoppers"
+    ],
+    "zh_distractors": [
+      "该协会加入了娱乐与创意联盟",
+      "帮助当地政府逮捕网络购物者"
+    ],
+    "key_points": [
+      "formed 译为“成立”",
+      "an enforcement task force 是同位语，解释 ACE",
+      "circling the globe 现在分词作定语",
+      "streaming pirates 译为“流媒体盗版者”"
+    ],
+    "year": 2025,
+    "page": 7,
+    "source": "阅读A",
+    "en": "In 2017 the association formed the Alliance for Creativity and Entertainment (ACE), an enforcement task force of about 100 detectives circling the globe to help local authorities arrest streaming pirates.",
+    "pool": "en_to_zh",
+    "word_count": 28
+  },
+  "s0599": {
+    "id": "s0599",
+    "zh": "这些机构和其他政府部门应该大幅改善激励措施，以留住我们现有的节目，并吸引新的制作到洛杉矶。",
+    "en_chunks": [
+      "These agencies and other government bodies",
+      "should dramatically improve incentives",
+      "to keep our current shows",
+      "and attract new productions to Los Angeles."
+    ],
+    "zh_chunks": [
+      "这些机构和其他政府部门",
+      "应该大幅改善激励措施，",
+      "以留住我们现有的节目，",
+      "并吸引新的制作到洛杉矶。"
+    ],
+    "en_distractors": [
+      "should slightly improve incentives",
+      "to cancel our current shows"
+    ],
+    "zh_distractors": [
+      "应该略微改善激励措施",
+      "以取消我们现有的节目"
+    ],
+    "key_points": [
+      "dramatically 译为“大幅地”",
+      "incentives 译为“激励措施”",
+      "keep 译为“留住”",
+      "attract...to 译为“吸引……到”"
+    ],
+    "year": 2026,
+    "page": 6,
+    "source": "阅读A",
+    "en": "These agencies and other government bodies should dramatically improve incentives to keep our current shows and attract new productions to Los Angeles.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0345": {
+    "id": "s0345",
+    "zh": "虽然之前探险队的退伍军人详细描写了令人惊叹的景色，但这些生动的照片完全是另一回事。",
+    "en_chunks": [
+      "While veterans of previous expeditions",
+      "had written at length about stunning sights,",
+      "these vivid photographs",
+      "were another thing entirely."
+    ],
+    "zh_chunks": [
+      "虽然之前探险队的退伍军人",
+      "详细描写了令人惊叹的景色，",
+      "但这些生动的照片",
+      "完全是另一回事。"
+    ],
+    "en_distractors": [
+      "While members of previous expeditions",
+      "had written briefly about stunning sights"
+    ],
+    "zh_distractors": [
+      "虽然之前探险队的成员",
+      "简略描写了令人惊叹的景色"
+    ],
+    "key_points": [
+      "veterans 此处指“老手、经验丰富者”，但结合语境可译为“退伍军人”或“老队员”",
+      "at length 译为“详细地”",
+      "another thing entirely 译为“完全是另一回事”"
+    ],
+    "year": 2023,
+    "page": 10,
+    "source": "阅读B",
+    "en": "While veterans of previous expeditions had written at length about stunning sights, these vivid photographs were another thing entirely.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0079": {
+    "id": "s0079",
+    "zh": "正是伴随着这些伟大的启示，一种基于理性的新哲学诞生了。",
+    "en_chunks": [
+      "It was with these great revelations",
+      "that a new kind of philosophy",
+      "founded in reason",
+      "was born"
+    ],
+    "zh_chunks": [
+      "正是伴随着这些伟大的启示",
+      "一种新哲学",
+      "基于理性的",
+      "诞生了"
+    ],
+    "en_distractors": [
+      "that a new kind of philosophy was discovered",
+      "founded on emotion"
+    ],
+    "zh_distractors": [
+      "一种新哲学被发现了",
+      "基于情感的"
+    ],
+    "key_points": [
+      "强调句型的翻译",
+      "过去分词短语作后置定语",
+      "被动语态的处理"
+    ],
+    "year": 2020,
+    "page": 15,
+    "source": "翻译C",
+    "en": "It was with these great revelations that a new kind of philosophy founded in reason was born.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0406": {
+    "id": "s0406",
+    "zh": "奥尔蒂斯说，艺术家行业内正在形成一个联盟，以研究如何应对或缓解这一问题。",
+    "en_chunks": [
+      "There is a coalition growing within artist industries",
+      "to figure out how to tackle or mitigate this",
+      "says Ortiz"
+    ],
+    "zh_chunks": [
+      "艺术家行业内正在形成一个联盟",
+      "以研究如何应对或缓解这一问题",
+      "奥尔蒂斯说"
+    ],
+    "en_distractors": [
+      "to figure out how to tackle or mitigate that",
+      "says Ortiz and others"
+    ],
+    "zh_distractors": [
+      "以研究如何应对或缓解那个问题",
+      "奥尔蒂斯和其他人说"
+    ],
+    "key_points": [
+      "there be 句型与现在分词作定语",
+      "不定式表目的",
+      "直接引语中主谓倒装"
+    ],
+    "year": 2024,
+    "page": 7,
+    "source": "阅读A",
+    "en": "There is a coalition growing within artist industries to figure out how to tackle or mitigate this, says Ortiz.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0271": {
+    "id": "s0271",
+    "zh": "拿破仑战争期间可能有许多间谍和情报官员，但通常极难找到他们实际提供或研究过的材料。",
+    "en_chunks": [
+      "There may have been many spies and intelligence officers",
+      "during the Napoleonic Wars",
+      "but it is usually extremely difficult",
+      "to find the material they actually provided or worked on"
+    ],
+    "zh_chunks": [
+      "可能有许多间谍和情报官员",
+      "在拿破仑战争期间",
+      "但通常极难",
+      "找到他们实际提供或研究过的材料"
+    ],
+    "en_distractors": [
+      "There may have been many spies and intelligence officers during the Napoleonic Wars",
+      "but it is usually extremely difficult to find the material they actually provided or worked on"
+    ],
+    "zh_distractors": [
+      "在拿破仑战争期间可能有许多间谍和情报官员",
+      "但通常极难找到他们实际提供或研究过的材料"
+    ],
+    "key_points": [
+      "there be 句型的完成时",
+      "it 作形式主语",
+      "定语从句的翻译"
+    ],
+    "year": 2022,
+    "page": 11,
+    "source": "翻译C",
+    "en": "There may have been many spies and intelligence officers during the Napoleonic Wars, but it is usually extremely difficult to find the material they actually provided or worked on.",
+    "pool": "en_to_zh",
+    "word_count": 29
+  },
+  "s0019": {
+    "id": "s0019",
+    "zh": "科学出版商通常报告其运营利润率接近40%，而此时出版业的其他部分正陷入生存危机。",
+    "en_chunks": [
+      "Scientific publishers routinely report profit margins approaching 40%",
+      "on their operations",
+      "at a time when the rest of the publishing industry is in an existential crisis"
+    ],
+    "zh_chunks": [
+      "科学出版商通常报告利润率接近40%",
+      "在其运营上",
+      "而此时出版业的其他部分正陷入生存危机"
+    ],
+    "en_distractors": [
+      "Scientific publishers routinely report profit margins approaching 40% on their operations",
+      "at a time when the rest of the publishing industry is in a financial crisis"
+    ],
+    "zh_distractors": [
+      "科学出版商通常报告其运营利润率接近40%",
+      "而此时出版业的其他部分正陷入金融危机"
+    ],
+    "key_points": [
+      "现在分词作定语",
+      "at a time when 引导的定语从句",
+      "existential crisis 的翻译"
+    ],
+    "year": 2020,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Scientific publishers routinely report profit margins approaching 40% on their operations, at a time when the rest of the publishing industry is in an existential crisis.",
+    "pool": "en_to_zh",
+    "word_count": 25
+  },
+  "s0037": {
+    "id": "s0037",
+    "zh": "这些法案类似于加利福尼亚州最近通过的一项措施，该州去年成为第一个要求私营公司实行性别配额的州。",
+    "en_chunks": [
+      "The bills are similar to a measure recently adopted in California",
+      "which last year became the first state",
+      "to require gender quotas for private companies"
+    ],
+    "zh_chunks": [
+      "这些法案类似于加利福尼亚州最近通过的一项措施",
+      "该州去年成为第一个州",
+      "要求私营公司实行性别配额"
+    ],
+    "en_distractors": [
+      "The bills are similar to a measure recently adopted in California",
+      "which last year became the first state to require gender quotas for public companies"
+    ],
+    "zh_distractors": [
+      "这些法案类似于加利福尼亚州最近通过的一项措施",
+      "该州去年成为第一个要求私营公司实行性别配额的州"
+    ],
+    "key_points": [
+      "过去分词作后置定语",
+      "非限制性定语从句",
+      "不定式作后置定语"
+    ],
+    "year": 2020,
+    "page": 8,
+    "source": "阅读A",
+    "en": "The bills are similar to a measure recently adopted in California, which last year became the first state to require gender quotas for private companies.",
+    "pool": "en_to_zh",
+    "word_count": 25
+  },
+  "s0419": {
+    "id": "s0419",
+    "zh": "因此，我们呼吁从里士满到奥尔巴尼的州议员们考虑重新审视他们自己的湿地保护措施，并亲眼看看其中涉及的重大利害关系。",
+    "en_chunks": [
+      "And so we would call on state lawmakers from Richmond to Albany",
+      "to consider reviewing their own wetlands protections",
+      "and see for themselves the enormous stakes involved"
+    ],
+    "zh_chunks": [
+      "因此，我们呼吁从里士满到奥尔巴尼的州议员们",
+      "考虑重新审视他们自己的湿地保护措施",
+      "并亲眼看看其中涉及的重大利害关系"
+    ],
+    "en_distractors": [
+      "And so we would call on state lawmakers from Richmond to Albany",
+      "to consider reviewing their own wetlands protections and see for themselves the enormous stakes involved"
+    ],
+    "zh_distractors": [
+      "因此，我们呼吁从里士满到奥尔巴尼的州议员们",
+      "考虑重新审视他们自己的湿地保护措施并亲眼看看其中涉及的重大利害关系"
+    ],
+    "key_points": [
+      "call on sb. to do sth. 的翻译",
+      "from...to... 的翻译",
+      "involved 作后置定语"
+    ],
+    "year": 2024,
+    "page": 9,
+    "source": "阅读A",
+    "en": "And so we would call on state lawmakers from Richmond to Albany to consider reviewing their own wetlands protections and see for themselves the enormous stakes involved.",
+    "pool": "en_to_zh",
+    "word_count": 27
+  },
+  "s0156": {
+    "id": "s0156",
+    "zh": "例如，高增长率对现有的治理结构、行政结构，尤其是社会化结构造成了巨大压力。",
+    "en_chunks": [
+      "For example, a high growth rate placed great strains",
+      "on the existing structures of governance, of administration, and above all of socialization"
+    ],
+    "zh_chunks": [
+      "例如，高增长率造成了巨大压力",
+      "对现有的治理结构、行政结构，尤其是社会化结构"
+    ],
+    "en_distractors": [
+      "For example, a high growth rate placed great strains on the existing structures of governance, of administration, and above all of socialization",
+      "on the existing structures of governance, of administration, and above all of education"
+    ],
+    "zh_distractors": [
+      "例如，高增长率对现有的治理结构、行政结构，尤其是社会化结构造成了巨大压力",
+      "对现有的治理结构、行政结构，尤其是教育结构"
+    ],
+    "key_points": [
+      "place strains on 的翻译",
+      "并列结构的处理",
+      "above all 的翻译"
+    ],
+    "year": 2021,
+    "page": 14,
+    "source": "翻译C",
+    "en": "For example, a high growth rate placed great strains on the existing structures of governance, of administration, and above all of socialization.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0480": {
+    "id": "s0480",
+    "zh": "他们说，危机就在这里，我们需要削减我们能源密集型的建模。",
+    "en_chunks": [
+      "The crisis is here, they said",
+      "and we need to cut back on our energy-intensive modelling"
+    ],
+    "zh_chunks": [
+      "他们说，危机就在这里",
+      "我们需要削减我们能源密集型的建模"
+    ],
+    "en_distractors": [
+      "The crisis is here, they said, and we need to cut back on our energy-intensive modelling",
+      "and we need to cut back on our energy-intensive production"
+    ],
+    "zh_distractors": [
+      "他们说，危机就在这里，我们需要削减我们能源密集型的建模",
+      "我们需要削减我们能源密集型的生产"
+    ],
+    "key_points": [
+      "插入语 they said 的处理",
+      "cut back on 的翻译",
+      "energy-intensive 的翻译"
+    ],
+    "year": 2025,
+    "page": 5,
+    "source": "阅读A",
+    "en": "The crisis is here, they said, and we need to cut back on our energy-intensive modelling.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0423": {
+    "id": "s0423",
+    "zh": "它们在美国或其他地方的博物馆里除了作为奇特的物品外，没有任何用途。",
+    "en_chunks": [
+      "They serve no purpose in a museum in the United States or elsewhere",
+      "except as curious objects"
+    ],
+    "zh_chunks": [
+      "它们在美国或其他地方的博物馆里没有任何用途",
+      "除了作为奇特的物品外"
+    ],
+    "en_distractors": [
+      "They serve no purpose in a museum in the United States or elsewhere except as curious objects",
+      "except as valuable objects"
+    ],
+    "zh_distractors": [
+      "它们在美国或其他地方的博物馆里除了作为奇特的物品外，没有任何用途",
+      "除了作为有价值的物品外"
+    ],
+    "key_points": [
+      "serve no purpose 的翻译",
+      "except as 的翻译",
+      "curious 的词义选择"
+    ],
+    "year": 2024,
+    "page": 11,
+    "source": "阅读B",
+    "en": "They serve no purpose in a museum in the United States or elsewhere except as curious objects.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0295": {
+    "id": "s0295",
+    "zh": "2018年底，马萨诸塞州州长查理·贝克签署了一项法案，以遏制那些潜在的投资者买家。",
+    "en_chunks": [
+      "At the end of 2018, Governor Charlie Baker of Massachusetts signed a bill",
+      "to rein in those potential investor-buyers"
+    ],
+    "zh_chunks": [
+      "2018年底，马萨诸塞州州长查理·贝克签署了一项法案",
+      "以遏制那些潜在的投资者买家"
+    ],
+    "en_distractors": [
+      "At the end of 2018, Governor Charlie Baker of Massachusetts signed a bill to rein in those potential investor-buyers",
+      "to rein in those potential investor-sellers"
+    ],
+    "zh_distractors": [
+      "2018年底，马萨诸塞州州长查理·贝克签署了一项法案以遏制那些潜在的投资者买家",
+      "以遏制那些潜在的投资者卖家"
+    ],
+    "key_points": [
+      "时间状语的翻译",
+      "不定式表目的",
+      "rein in 的翻译"
+    ],
+    "year": 2023,
+    "page": 5,
+    "source": "阅读A",
+    "en": "At the end of 2018, Governor Charlie Baker of Massachusetts signed a bill to rein in those potential investor-buyers.",
+    "pool": "en_to_zh",
+    "word_count": 18
+  },
+  "s0396": {
+    "id": "s0396",
+    "zh": "他独特的风格现在是新的开源AI艺术生成器Stable Diffusion中最常用的提示之一。",
+    "en_chunks": [
+      "His distinctive style",
+      "is now one of the most commonly used prompts",
+      "in the new open-source AI art generator Stable Diffusion."
+    ],
+    "zh_chunks": [
+      "他独特的风格",
+      "现在是……中最常用的提示之一",
+      "在新的开源AI艺术生成器Stable Diffusion中"
+    ],
+    "en_distractors": [
+      "His unique style is now one of the most common prompts",
+      "His distinctive style is now the most commonly used prompt"
+    ],
+    "zh_distractors": [
+      "他独特的风格现在是新的开源AI艺术生成器Stable Diffusion中最常用的提示。",
+      "他独特的风格现在是新的开源AI艺术生成器Stable Diffusion中唯一常用的提示。"
+    ],
+    "key_points": [
+      "distinctive style 译为“独特的风格”",
+      "one of the most commonly used prompts 译为“最常用的提示之一”",
+      "open-source AI art generator 译为“开源AI艺术生成器”"
+    ],
+    "year": 2024,
+    "page": 7,
+    "source": "阅读A",
+    "en": "His distinctive style is now one of the most commonly used prompts in the new open-source AI art generator Stable Diffusion.",
+    "pool": "en_to_zh",
+    "word_count": 21
+  },
+  "s0546": {
+    "id": "s0546",
+    "zh": "在成功的手术切除癌症后，他康复期间迅速沉迷于此。",
+    "en_chunks": [
+      "It swiftly became an obsession",
+      "as he recovered from a successful operation",
+      "to remove the cancer."
+    ],
+    "zh_chunks": [
+      "它迅速成为一种痴迷",
+      "在他从成功的手术中恢复时",
+      "以去除癌症"
+    ],
+    "en_distractors": [
+      "It quickly became an obsession as he recovered from a successful operation to remove the cancer.",
+      "It swiftly became an obsession after he recovered from a successful operation to remove the cancer."
+    ],
+    "zh_distractors": [
+      "它迅速成为一种痴迷，因为他从成功的手术中恢复以去除癌症。",
+      "它迅速成为一种痴迷，在他成功手术后恢复期间去除癌症。"
+    ],
+    "key_points": [
+      "swiftly became an obsession 译为“迅速成为痴迷”",
+      "as he recovered 表示“在他康复期间”",
+      "successful operation to remove the cancer 译为“成功切除癌症的手术”"
+    ],
+    "year": 2025,
+    "page": 12,
+    "source": "阅读B",
+    "en": "It swiftly became an obsession as he recovered from a successful operation to remove the cancer.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0438": {
+    "id": "s0438",
+    "zh": "我会要求外国和原籍国讨论转移条款。",
+    "en_chunks": [
+      "I would ask",
+      "that the foreign nations and the original country",
+      "discuss the terms of transfer."
+    ],
+    "zh_chunks": [
+      "我会要求",
+      "外国和原籍国",
+      "讨论转移条款"
+    ],
+    "en_distractors": [
+      "I would ask that the foreign nations and the original country discuss the terms of the transfer agreement.",
+      "I would ask that the foreign nations and the original country discuss the terms of transferring."
+    ],
+    "zh_distractors": [
+      "我会要求外国和原籍国讨论转移的条款。",
+      "我会要求外国和原籍国讨论转移的期限。"
+    ],
+    "key_points": [
+      "foreign nations 和 original country 分别译为“外国”和“原籍国”",
+      "terms of transfer 译为“转移条款”",
+      "would ask 表示委婉请求，译为“会要求”"
+    ],
+    "year": 2024,
+    "page": 12,
+    "source": "阅读B",
+    "en": "I would ask that the foreign nations and the original country discuss the terms of transfer.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0057": {
+    "id": "s0057",
+    "zh": "换句话说，他们都认为国际税收制度未能跟上当前经济的步伐。",
+    "en_chunks": [
+      "In other words,",
+      "they all share a view",
+      "that the international tax system has failed to keep up with the current economy."
+    ],
+    "zh_chunks": [
+      "换句话说，",
+      "他们都持有一种观点",
+      "即国际税收制度未能跟上当前经济"
+    ],
+    "en_distractors": [
+      "In other words, they all share a view that the international tax system has failed to keep up with the modern economy.",
+      "In other words, they all agree that the international tax system has failed to keep up with the current economy."
+    ],
+    "zh_distractors": [
+      "换句话说，他们都认为国际税收制度未能跟上当前经济。",
+      "换句话说，他们都认为国际税收制度未能适应现代经济。"
+    ],
+    "key_points": [
+      "In other words 译为“换句话说”",
+      "share a view 译为“持有相同观点”",
+      "failed to keep up with 译为“未能跟上”"
+    ],
+    "year": 2020,
+    "page": 10,
+    "source": "阅读A",
+    "en": "In other words, they all share a view that the international tax system has failed to keep up with the current economy.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0621": {
+    "id": "s0621",
+    "zh": "2022年，斯韦特南和其他科学家合作编制了一个来自整个大陆的火灾疤痕树木数据库。",
+    "en_chunks": [
+      "In 2022,",
+      "Swetnam and other scientists teamed up",
+      "to compile a database of fire-scarred trees",
+      "from across the continent."
+    ],
+    "zh_chunks": [
+      "2022年，",
+      "斯韦特南和其他科学家合作",
+      "编制了一个数据库",
+      "包含来自整个大陆的火灾疤痕树木"
+    ],
+    "en_distractors": [
+      "In 2022, Swetnam and other scientists worked together to compile a database of fire-scarred trees from across the continent.",
+      "In 2022, Swetnam and other scientists teamed up to compile a database of fire-damaged trees from across the continent."
+    ],
+    "zh_distractors": [
+      "2022年，斯韦特南和其他科学家合作编制了一个来自整个大陆的火灾疤痕树木的数据库。",
+      "2022年，斯韦特南和其他科学家合作编制了一个覆盖整个大陆的火灾疤痕树木的数据库。"
+    ],
+    "key_points": [
+      "teamed up 译为“合作”",
+      "compile a database 译为“编制数据库”",
+      "fire-scarred trees 译为“火灾疤痕树木”",
+      "from across the continent 译为“来自整个大陆”"
+    ],
+    "year": 2026,
+    "page": 8,
+    "source": "阅读A",
+    "en": "In 2022, Swetnam and other scientists teamed up to compile a database of fire-scarred trees from across the continent.",
+    "pool": "en_to_zh",
+    "word_count": 18
+  },
+  "s0104": {
+    "id": "s0104",
+    "zh": "之前唯一一项基于墨西哥某地区已实施CCTs的因果分析研究支持了传统观点。",
+    "en_chunks": [
+      "The only previous study analyzing causality,",
+      "based on an area in Mexico that had instituted CCTs,",
+      "supported the traditional view."
+    ],
+    "zh_chunks": [
+      "之前唯一一项分析因果关系的研究",
+      "基于墨西哥一个已实施CCTs的地区",
+      "支持了传统观点"
+    ],
+    "en_distractors": [
+      "The only previous study analyzing causality, based on an area in Mexico that had instituted CCTs, supported the traditional view.",
+      "The only previous study analyzing causality, based on an area in Mexico that had implemented CCTs, supported the traditional view."
+    ],
+    "zh_distractors": [
+      "之前唯一一项基于墨西哥某地区已实施CCTs的因果分析研究支持了传统观点。",
+      "之前唯一一项基于墨西哥某地区已实施CCTs的因果分析研究支持了传统看法。"
+    ],
+    "key_points": [
+      "analyzing causality 译为“分析因果关系”",
+      "based on an area in Mexico that had instituted CCTs 译为“基于墨西哥一个已实施CCTs的地区”",
+      "supported the traditional view 译为“支持了传统观点”"
+    ],
+    "year": 2021,
+    "page": 6,
+    "source": "阅读A",
+    "en": "The only previous study analyzing causality, based on an area in Mexico that had instituted CCTs, supported the traditional view.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0520": {
+    "id": "s0520",
+    "zh": "你是否曾无助地盯着ZIP磁盘，心想：我怎样才能把文件从里面弄出来？",
+    "en_chunks": [
+      "Have you ever stared helplessly at a ZIP disk,",
+      "thinking:",
+      "how do I get the files off this?"
+    ],
+    "zh_chunks": [
+      "你是否曾无助地盯着ZIP磁盘，",
+      "心想：",
+      "我怎样才能把文件从里面弄出来？"
+    ],
+    "en_distractors": [
+      "Have you ever stared helplessly at a ZIP disk, thinking: how do I get the files off of this?",
+      "Have you ever stared helplessly at a ZIP disk, thinking: how can I get the files off this?"
+    ],
+    "zh_distractors": [
+      "你是否曾无助地盯着ZIP磁盘，心想：我怎样才能把文件从里面取出来？",
+      "你是否曾无助地盯着ZIP磁盘，思考：我如何从里面取出文件？"
+    ],
+    "key_points": [
+      "stared helplessly 译为“无助地盯着”",
+      "thinking 译为“心想”",
+      "get the files off this 译为“把文件从里面弄出来”"
+    ],
+    "year": 2025,
+    "page": 9,
+    "source": "阅读A",
+    "en": "Have you ever stared helplessly at a ZIP disk, thinking: how do I get the files off this?",
+    "pool": "en_to_zh",
+    "word_count": 18
+  },
+  "s0220": {
+    "id": "s0220",
+    "zh": "正如无数董事会和业主所证明的那样，限制公司解雇表现不佳、高薪的管理者，是提高生产力和整体绩效的障碍。",
+    "en_chunks": [
+      "As countless boards and business owners will attest,",
+      "constraining firms from firing poorly performing, high-earning managers",
+      "is a handbrake on boosting productivity and overall performance."
+    ],
+    "zh_chunks": [
+      "正如无数董事会和业主所证明的那样，",
+      "限制公司解雇表现不佳、高薪的管理者",
+      "是提高生产力和整体绩效的障碍"
+    ],
+    "en_distractors": [
+      "As countless boards and business owners will attest, constraining firms from firing poorly performing, high-earning managers is a handbrake on boosting productivity and overall performance.",
+      "As countless boards and business owners will testify, constraining firms from firing poorly performing, high-earning managers is a handbrake on boosting productivity and overall performance."
+    ],
+    "zh_distractors": [
+      "正如无数董事会和业主所证明的那样，限制公司解雇表现不佳、高薪的管理者，是提高生产力和整体绩效的障碍。",
+      "正如无数董事会和业主所证明的那样，限制公司解雇表现不佳、高薪的管理者，是提高生产力和整体绩效的刹车。"
+    ],
+    "key_points": [
+      "As countless boards and business owners will attest 译为“正如无数董事会和业主所证明的那样”",
+      "constraining firms from firing 译为“限制公司解雇”",
+      "poorly performing, high-earning managers 译为“表现不佳、高薪的管理者”",
+      "handbrake 比喻“障碍”"
+    ],
+    "year": 2022,
+    "page": 8,
+    "source": "阅读A",
+    "en": "As countless boards and business owners will attest, constraining firms from firing poorly performing, high-earning managers is a handbrake on boosting productivity and overall performance.",
+    "pool": "en_to_zh",
+    "word_count": 25
+  },
+  "s0011": {
+    "id": "s0011",
+    "zh": "它们改变了居住在那里的人们的愿望；它们将城市的自我形象推向更大胆、更乐观的方向。",
+    "en_chunks": [
+      "They transform the aspirations of the people who live there;",
+      "they nudge the self-image of the city",
+      "into a bolder and more optimistic light."
+    ],
+    "zh_chunks": [
+      "它们改变了居住在那里的人们的愿望；",
+      "它们推动城市的自我形象",
+      "进入更大胆、更乐观的境地"
+    ],
+    "en_distractors": [
+      "They transform the aspirations of the people who live there; they nudge the self-image of the city into a bolder and more optimistic light.",
+      "They transform the aspirations of the people living there; they nudge the self-image of the city into a bolder and more optimistic light."
+    ],
+    "zh_distractors": [
+      "它们改变了居住在那里的人们的愿望；它们将城市的自我形象推向更大胆、更乐观的方向。",
+      "它们改变了居住在那里的人们的愿望；它们将城市的自我形象推向更大胆、更乐观的光明。"
+    ],
+    "key_points": [
+      "transform the aspirations 译为“改变愿望”",
+      "nudge ... into a bolder and more optimistic light 译为“将……推向更大胆、更乐观的方向”",
+      "self-image 译为“自我形象”"
+    ],
+    "year": 2020,
+    "page": 4,
+    "source": "阅读A",
+    "en": "They transform the aspirations of the people who live there; they nudge the self-image of the city into a bolder and more optimistic light.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0318": {
+    "id": "s0318",
+    "zh": "电子出版的出现和作者寻找论文发表渠道的需求导致了数千种新期刊的产生。",
+    "en_chunks": [
+      "The advent of electronic publishing",
+      "and authors' need to find outlets for their papers",
+      "resulted in thousands of new journals."
+    ],
+    "zh_chunks": [
+      "电子出版的出现",
+      "以及作者寻找论文发表渠道的需求",
+      "导致了数千种新期刊的产生"
+    ],
+    "en_distractors": [
+      "The advent of electronic publishing and authors' need to find outlets for their papers resulted in thousands of new journals.",
+      "The advent of electronic publishing and authors' need to find outlets for their papers led to thousands of new journals."
+    ],
+    "zh_distractors": [
+      "电子出版的出现和作者寻找论文发表渠道的需求导致了数千种新期刊的产生。",
+      "电子出版的出现和作者寻找论文发表渠道的需求导致了数千种新期刊的创建。"
+    ],
+    "key_points": [
+      "advent 译为“出现”",
+      "find outlets for their papers 译为“寻找论文发表渠道”",
+      "resulted in 译为“导致”"
+    ],
+    "year": 2023,
+    "page": 8,
+    "source": "阅读A",
+    "en": "The advent of electronic publishing and authors' need to find outlets for their papers resulted in thousands of new journals.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0353": {
+    "id": "s0353",
+    "zh": "例如，人工智能可以通过分析大数据揭示趋势和偏好的信息，从而被用来分析什么样的广告内容或文案适合与特定的目标客户群体沟通。",
+    "en_chunks": [
+      "For example,",
+      "AI can be used to analyse",
+      "what type of advertising content or copy",
+      "would be appropriate to speak to",
+      "a specific target customer group",
+      "by revealing information about trends and preferences",
+      "through the analysis of big data."
+    ],
+    "zh_chunks": [
+      "例如，",
+      "人工智能可以被用来分析",
+      "什么样的广告内容或文案",
+      "适合与",
+      "特定的目标客户群体",
+      "沟通",
+      "通过揭示趋势和偏好的信息",
+      "通过分析大数据。"
+    ],
+    "en_distractors": [
+      "what type of advertising content or copy would be inappropriate",
+      "by hiding information about trends and preferences"
+    ],
+    "zh_distractors": [
+      "什么样的广告内容或文案不适合",
+      "通过隐藏趋势和偏好的信息"
+    ],
+    "key_points": [
+      "被动语态 can be used to analyse 的翻译",
+      "what 引导的宾语从句",
+      "by revealing... 方式状语的处理",
+      "through the analysis of big data 的翻译"
+    ],
+    "year": 2023,
+    "page": 12,
+    "source": "翻译C",
+    "en": "For example, AI can be used to analyse what type of advertising content or copy would be appropriate to speak to a specific target customer group by revealing information about trends and preferences through the analysis of big data.",
+    "pool": "en_to_zh",
+    "word_count": 39
+  },
+  "s0512": {
+    "id": "s0512",
+    "zh": "图书馆和档案馆传统上承担着组织、保存和获取信息的责任。",
+    "en_chunks": [
+      "Libraries and archives",
+      "have traditionally shouldered",
+      "the responsibility of",
+      "organization, preservation, and access to information."
+    ],
+    "zh_chunks": [
+      "图书馆和档案馆",
+      "传统上承担着",
+      "组织、保存和获取信息的",
+      "责任。"
+    ],
+    "en_distractors": [
+      "have traditionally avoided",
+      "the responsibility for organizing, preserving, and accessing information"
+    ],
+    "zh_distractors": [
+      "传统上回避了",
+      "组织、保存和获取信息的责任"
+    ],
+    "key_points": [
+      "shoulder 的比喻用法",
+      "responsibility of 后接并列名词",
+      "access to information 的翻译"
+    ],
+    "year": 2025,
+    "page": 9,
+    "source": "阅读A",
+    "en": "Libraries and archives have traditionally shouldered the responsibility of organization, preservation, and access to information.",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0452": {
+    "id": "s0452",
+    "zh": "大象是非常挑剔的食客，但直到最近，人们对它们如何选择食物知之甚少。",
+    "en_chunks": [
+      "Elephants are very choosy eaters,",
+      "but until recently",
+      "little was known about",
+      "how they selected their food."
+    ],
+    "zh_chunks": [
+      "大象是非常挑剔的食客，",
+      "但直到最近，",
+      "人们对它们如何选择食物",
+      "知之甚少。"
+    ],
+    "en_distractors": [
+      "but until recently much was known about",
+      "how they digested their food."
+    ],
+    "zh_distractors": [
+      "但直到最近，人们对它们如何选择食物了解很多。",
+      "它们如何消化食物。"
+    ],
+    "key_points": [
+      "choosy eaters 的翻译",
+      "little was known about 的否定含义",
+      "how 引导的宾语从句"
+    ],
+    "year": 2024,
+    "page": 13,
+    "source": "阅读B",
+    "en": "Elephants are very choosy eaters, but until recently little was known about how they selected their food.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0483": {
+    "id": "s0483",
+    "zh": "技术研究产生的碳排放是值得的：最终这项研究将保护我们地球的未来。",
+    "en_chunks": [
+      "The carbon emissions from technological research",
+      "are well spent:",
+      "ultimately this research",
+      "will safeguard the future of our planet."
+    ],
+    "zh_chunks": [
+      "技术研究产生的碳排放",
+      "是值得的：",
+      "最终这项研究",
+      "将保护我们地球的未来。"
+    ],
+    "en_distractors": [
+      "are wasted:",
+      "will endanger the future of our planet."
+    ],
+    "zh_distractors": [
+      "是浪费的：",
+      "将危及我们地球的未来。"
+    ],
+    "key_points": [
+      "well spent 的翻译",
+      "冒号表示解释说明",
+      "safeguard 的翻译"
+    ],
+    "year": 2025,
+    "page": 5,
+    "source": "阅读A",
+    "en": "The carbon emissions from technological research are well spent: ultimately this research will safeguard the future of our planet.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0620": {
+    "id": "s0620",
+    "zh": "它们清除了森林中枯死和患病的树木，减少了竞争，并遏制了疾病的传播。",
+    "en_chunks": [
+      "They rid the forest of dead and sick trees,",
+      "reducing competition",
+      "and curbing the spread of disease."
+    ],
+    "zh_chunks": [
+      "它们清除了森林中枯死和患病的树木，",
+      "减少了竞争，",
+      "并遏制了疾病的传播。"
+    ],
+    "en_distractors": [
+      "They added dead and sick trees to the forest,",
+      "increasing competition and spreading disease."
+    ],
+    "zh_distractors": [
+      "它们向森林中添加了枯死和患病的树木，",
+      "增加了竞争并传播了疾病。"
+    ],
+    "key_points": [
+      "rid...of... 的用法",
+      "现在分词作结果状语",
+      "curb 的翻译"
+    ],
+    "year": 2026,
+    "page": 8,
+    "source": "阅读A",
+    "en": "They rid the forest of dead and sick trees, reducing competition and curbing the spread of disease.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0219": {
+    "id": "s0219",
+    "zh": "但这些规定在适用于高薪经理和高管时，给企业带来了困难。",
+    "en_chunks": [
+      "But these provisions",
+      "create difficulties for businesses",
+      "when applied to",
+      "highly paid managers and executives."
+    ],
+    "zh_chunks": [
+      "但这些规定",
+      "给企业带来了困难",
+      "当适用于",
+      "高薪经理和高管时。"
+    ],
+    "en_distractors": [
+      "But these provisions remove difficulties for businesses",
+      "when applied to low-paid workers"
+    ],
+    "zh_distractors": [
+      "但这些规定为企业消除了困难",
+      "当适用于低薪工人时"
+    ],
+    "key_points": [
+      "provisions 的翻译",
+      "create difficulties for 的翻译",
+      "when applied to 的省略结构"
+    ],
+    "year": 2022,
+    "page": 8,
+    "source": "阅读A",
+    "en": "But these provisions create difficulties for businesses when applied to highly paid managers and executives.",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0610": {
+    "id": "s0610",
+    "zh": "在我自己关于广播的书中，我记录了一次驾车途中：我了解了新闻，学到了一些17世纪的历史，并且被一个关于听诊器历史的朴实节目惊人地教育了。",
+    "en_chunks": [
+      "In my own book about radio",
+      "I recorded how, on one drive:",
+      "I caught up with the news,",
+      "learnt some 17th-century history,",
+      "and was startlingly educated by",
+      "an unpretentious programme on the history of the stethoscope."
+    ],
+    "zh_chunks": [
+      "在我自己关于广播的书中，",
+      "我记录了一次驾车途中：",
+      "我了解了新闻，",
+      "学到了一些17世纪的历史，",
+      "并且被惊人地教育了",
+      "通过一个关于听诊器历史的朴实节目。"
+    ],
+    "en_distractors": [
+      "I missed the news,",
+      "and was bored by an unpretentious programme"
+    ],
+    "zh_distractors": [
+      "我错过了新闻，",
+      "并且被一个朴实的节目无聊地教育了"
+    ],
+    "key_points": [
+      "recorded how 的翻译",
+      "冒号后的并列结构",
+      "startlingly educated 的翻译",
+      "unpretentious 的翻译"
+    ],
+    "year": 2026,
+    "page": 7,
+    "source": "阅读A",
+    "en": "In my own book about radio I recorded how, on one drive: I caught up with the news, learnt some 17th-century history, and was startlingly educated by an unpretentious programme on the history of the stethoscope.",
+    "pool": "en_to_zh",
+    "word_count": 36
+  },
+  "s0117": {
+    "id": "s0117",
+    "zh": "想到在相机执行其神奇职责时保持固定的笑容，这太难以想象了，因此，不置可否的茫然凝视成了常态。",
+    "en_chunks": [
+      "The thought of holding a fixed grin",
+      "as the camera performed its magical duties",
+      "was too much to contemplate,",
+      "and so",
+      "non-committal blank stare became the norm."
+    ],
+    "zh_chunks": [
+      "想到保持固定的笑容",
+      "当相机执行其神奇职责时",
+      "这太难以想象了，",
+      "因此，",
+      "不置可否的茫然凝视成了常态。"
+    ],
+    "en_distractors": [
+      "The thought of holding a fixed frown",
+      "was too much to bear, and so a cheerful smile became the norm."
+    ],
+    "zh_distractors": [
+      "想到保持固定的皱眉",
+      "这太难以忍受了，因此，愉快的微笑成了常态。"
+    ],
+    "key_points": [
+      "The thought of... 的翻译",
+      "as 引导的时间状语从句",
+      "too...to... 结构",
+      "non-committal blank stare 的翻译"
+    ],
+    "year": 2021,
+    "page": 8,
+    "source": "阅读A",
+    "en": "The thought of holding a fixed grin as the camera performed its magical duties was too much to contemplate, and so non-committal blank stare became the norm.",
+    "pool": "en_to_zh",
+    "word_count": 27
+  },
+  "s0651": {
+    "id": "s0651",
+    "zh": "阅读会让你更好地了解世界，但它也能提高我们被科技破坏的专注力。",
+    "en_chunks": [
+      "Reading will keep you better informed about the world",
+      "but it can also improve",
+      "our tech-shattered ability to concentrate."
+    ],
+    "zh_chunks": [
+      "阅读会让你更好地了解世界，",
+      "但它也能提高",
+      "我们被科技破坏的专注力。"
+    ],
+    "en_distractors": [
+      "Reading will keep you worse informed about the world",
+      "but it can also worsen our tech-shattered ability to concentrate."
+    ],
+    "zh_distractors": [
+      "阅读会让你更不了解世界，",
+      "但它也能降低我们被科技破坏的专注力。"
+    ],
+    "key_points": [
+      "keep you better informed 的翻译",
+      "tech-shattered 的翻译",
+      "ability to concentrate 的翻译"
+    ],
+    "year": 2026,
+    "page": 10,
+    "source": "阅读B",
+    "en": "Reading will keep you better informed about the world but it can also improve our tech-shattered ability to concentrate.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0718": {
+    "id": "s0718",
+    "zh": "它们最初是作为一种新奇功能出现的，但随着它们的使用增长，它们的好处已经在我们技术先进的世界中扩展。",
+    "en_chunks": [
+      "They started out as a novelty feature,",
+      "but as their use has grown,",
+      "their benefits have extended",
+      "within our technologically advanced world."
+    ],
+    "zh_chunks": [
+      "它们最初是作为一种新奇功能出现的，",
+      "但随着它们的使用增长，",
+      "它们的好处已经扩展",
+      "在我们技术先进的世界中。"
+    ],
+    "en_distractors": [
+      "They started out as a common feature,",
+      "but as their use has declined, their benefits have diminished"
+    ],
+    "zh_distractors": [
+      "它们最初是作为一种普通功能出现的，",
+      "但随着它们的使用减少，它们的好处已经减少"
+    ],
+    "key_points": [
+      "started out as 的翻译",
+      "novelty feature 的翻译",
+      "as their use has grown 的翻译",
+      "technologically advanced world 的翻译"
+    ],
+    "year": 2024,
+    "page": 1,
+    "source": "完形重建",
+    "en": "They started out as a novelty feature, but as their use has grown, their benefits have extended within our technologically advanced world.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0320": {
+    "id": "s0320",
+    "zh": "在某些情况下，文章内容与引文之间完全没有关系。",
+    "en_chunks": [
+      "In some instances",
+      "there is absolutely no relationship",
+      "between the content of the article and the citations."
+    ],
+    "zh_chunks": [
+      "在某些情况下",
+      "文章内容与引文之间",
+      "完全没有关系"
+    ],
+    "en_distractors": [
+      "there is no relationship at all",
+      "between the citations and the article content"
+    ],
+    "zh_distractors": [
+      "文章内容与引文之间有一定联系",
+      "在某些情况下，引文与文章内容完全一致"
+    ],
+    "key_points": [
+      "absolutely no relationship 的强调语气",
+      "between...and... 连接两个对象",
+      "in some instances 的状语位置"
+    ],
+    "year": 2023,
+    "page": 8,
+    "source": "阅读A",
+    "en": "In some instances, there is absolutely no relationship between the content of the article and the citations.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0310": {
+    "id": "s0310",
+    "zh": "毕竟，近年来许多最有趣的书都来自小型出版社。",
+    "en_chunks": [
+      "After all",
+      "many of the most interesting books in recent years",
+      "have come from small publishers."
+    ],
+    "zh_chunks": [
+      "毕竟",
+      "近年来许多最有趣的书",
+      "都来自小型出版社"
+    ],
+    "en_distractors": [
+      "many interesting books in recent years",
+      "have come from large publishers"
+    ],
+    "zh_distractors": [
+      "近年来许多最无聊的书",
+      "都来自大型出版社"
+    ],
+    "key_points": [
+      "After all 的语篇衔接",
+      "many of the most interesting 的限定",
+      "come from 表示来源"
+    ],
+    "year": 2023,
+    "page": 7,
+    "source": "阅读A",
+    "en": "After all, many of the most interesting books in recent years have come from small publishers.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0661": {
+    "id": "s0661",
+    "zh": "如果像大多数商务人士那样，你的生活就是在办公室、飞机、火车、家、会议室和洗手间之间奔波，那么你真正需要做的是多待在家里，坐下来——读一本书。",
+    "en_chunks": [
+      "If, like most business people,",
+      "you spend your life dashing from office to plane, train to home, boardroom to washroom,",
+      "what you really need to do",
+      "is stay in more, sit down — and read a book."
+    ],
+    "zh_chunks": [
+      "如果像大多数商务人士那样",
+      "你的生活就是在办公室、飞机、火车、家、会议室和洗手间之间奔波",
+      "那么你真正需要做的是",
+      "多待在家里，坐下来——读一本书"
+    ],
+    "en_distractors": [
+      "you spend your life traveling from office to home",
+      "what you need to do is go out more"
+    ],
+    "zh_distractors": [
+      "你的生活就是在办公室和家之间往返",
+      "那么你真正需要做的是多出去走走"
+    ],
+    "key_points": [
+      "dashing from...to... 的连续动作",
+      "what you really need to do is 强调结构",
+      "破折号后的补充说明"
+    ],
+    "year": 2026,
+    "page": 10,
+    "source": "阅读B",
+    "en": "If, like most business people, you spend your life dashing from office to plane, train to home, boardroom to washroom, what you really need to do is stay in more, sit down — and read a book.",
+    "pool": "en_to_zh",
+    "word_count": 36
+  },
+  "s0190": {
+    "id": "s0190",
+    "zh": "雇主们一直认为雇佣离校生有好处，这些离校生往往比大学毕业生更忠诚、更敬业。",
+    "en_chunks": [
+      "Employers have long seen the advantages of hiring school leavers",
+      "who often prove themselves to be more committed and loyal employees than graduates."
+    ],
+    "zh_chunks": [
+      "雇主们一直认为雇佣离校生有好处",
+      "这些离校生往往比大学毕业生更忠诚、更敬业"
+    ],
+    "en_distractors": [
+      "Employers have long seen the disadvantages of hiring school leavers",
+      "who often prove to be less committed than graduates"
+    ],
+    "zh_distractors": [
+      "雇主们一直认为雇佣离校生有坏处",
+      "这些离校生往往比大学毕业生更不忠诚"
+    ],
+    "key_points": [
+      "have long seen 的完成时态",
+      "school leavers 与 graduates 的对比",
+      "who 引导的定语从句"
+    ],
+    "year": 2022,
+    "page": 5,
+    "source": "阅读A",
+    "en": "Employers have long seen the advantages of hiring school leavers who often prove themselves to be more committed and loyal employees than graduates.",
+    "pool": "en_to_zh",
+    "word_count": 23
+  },
+  "s0200": {
+    "id": "s0200",
+    "zh": "在参与一项附带调查的大约350人中，近40%的人表示他们曾与艺术家合作过；而且几乎所有的人都表示将来会考虑这样做。",
+    "en_chunks": [
+      "Nearly 40% of the roughly 350 people who responded to an accompanying poll",
+      "said",
+      "they had collaborated with artists;",
+      "and almost all said they would consider doing so in future."
+    ],
+    "zh_chunks": [
+      "在参与一项附带调查的大约350人中",
+      "近40%的人表示",
+      "他们曾与艺术家合作过；",
+      "而且几乎所有的人都表示将来会考虑这样做"
+    ],
+    "en_distractors": [
+      "Nearly 40% of the roughly 350 people who responded to a survey",
+      "they had collaborated with musicians"
+    ],
+    "zh_distractors": [
+      "在参与一项主要调查的大约350人中",
+      "他们曾与音乐家合作过"
+    ],
+    "key_points": [
+      "who responded to 定语从句",
+      "had collaborated 的过去完成时",
+      "doing so 的指代"
+    ],
+    "year": 2022,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Nearly 40% of the roughly 350 people who responded to an accompanying poll said, they had collaborated with artists; and almost all said they would consider doing so in future.",
+    "pool": "en_to_zh",
+    "word_count": 28
+  },
+  "s0074": {
+    "id": "s0074",
+    "zh": "在文艺复兴时期，尼古拉·哥白尼、约翰内斯·开普勒和伽利略·伽利莱这些伟大的人物展示了科学研究和发现的威力。",
+    "en_chunks": [
+      "During the Renaissance",
+      "the great minds of Nicolaus Copernicus, Johannes Kepler and Galileo Galilei",
+      "demonstrated the power of scientific study and discovery."
+    ],
+    "zh_chunks": [
+      "在文艺复兴时期",
+      "尼古拉·哥白尼、约翰内斯·开普勒和伽利略·伽利莱这些伟大的人物",
+      "展示了科学研究和发现的威力"
+    ],
+    "en_distractors": [
+      "the great minds of Isaac Newton and Albert Einstein",
+      "demonstrated the power of artistic creation"
+    ],
+    "zh_distractors": [
+      "艾萨克·牛顿和阿尔伯特·爱因斯坦这些伟大的人物",
+      "展示了艺术创作的威力"
+    ],
+    "key_points": [
+      "the great minds 的比喻用法",
+      "人名列举的翻译",
+      "scientific study and discovery 的并列结构"
+    ],
+    "year": 2020,
+    "page": 15,
+    "source": "翻译C",
+    "en": "During the Renaissance, the great minds of Nicolaus Copernicus, Johannes Kepler and Galileo Galilei demonstrated the power of scientific study and discovery.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0343": {
+    "id": "s0343",
+    "zh": "这种粗糙的技术需要对曝光时间进行有根据的猜测，并且涉及沉重、笨重的设备——需要几个人协助搬运。",
+    "en_chunks": [
+      "The crude technique required educated guesses on exposure times",
+      "and involved heavy, awkward equipment",
+      "—several men had to assist in its transportation."
+    ],
+    "zh_chunks": [
+      "这种粗糙的技术需要对曝光时间进行有根据的猜测",
+      "并且涉及沉重、笨重的设备",
+      "——需要几个人协助搬运"
+    ],
+    "en_distractors": [
+      "The advanced technique required precise calculations",
+      "and involved light, portable equipment"
+    ],
+    "zh_distractors": [
+      "这种先进的技术需要对曝光时间进行精确计算",
+      "并且涉及轻便的设备"
+    ],
+    "key_points": [
+      "crude 与 educated guesses 的对比",
+      "heavy, awkward equipment 的并列形容词",
+      "破折号后的补充说明"
+    ],
+    "year": 2023,
+    "page": 10,
+    "source": "阅读B",
+    "en": "The crude technique required educated guesses on exposure times, and involved heavy, awkward equipment—several men had to assist in its transportation.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0347": {
+    "id": "s0347",
+    "zh": "在将近四个月的时间里，几十个人骑马进入蒙大拿州，沿着黄石河行进，并绕黄石湖而行。",
+    "en_chunks": [
+      "Over nearly four months",
+      "dozens of men made their way on horseback into Montana",
+      "and traversed along the Yellowstone River and around Yellowstone Lake."
+    ],
+    "zh_chunks": [
+      "在将近四个月的时间里",
+      "几十个人骑马进入蒙大拿州",
+      "沿着黄石河行进，并绕黄石湖而行"
+    ],
+    "en_distractors": [
+      "Over nearly four years",
+      "dozens of men walked into Montana",
+      "and traveled along the Missouri River"
+    ],
+    "zh_distractors": [
+      "在将近四年的时间里",
+      "几十个人步行进入蒙大拿州",
+      "沿着密苏里河行进"
+    ],
+    "key_points": [
+      "made their way on horseback 的翻译",
+      "traverse along and around 的方位",
+      "时间状语 Over nearly four months"
+    ],
+    "year": 2023,
+    "page": 10,
+    "source": "阅读B",
+    "en": "Over nearly four months, dozens of men made their way on horseback into Montana and traversed along the Yellowstone River and around Yellowstone Lake.",
+    "pool": "en_to_zh",
+    "word_count": 24
+  },
+  "s0192": {
+    "id": "s0192",
+    "zh": "对于那些认为学位是理想途径的人来说，要考虑到这很可能是众多学位中的第一个。",
+    "en_chunks": [
+      "For those for whom a degree is the desired route",
+      "consider that this may well be the first of many."
+    ],
+    "zh_chunks": [
+      "对于那些认为学位是理想途径的人来说",
+      "要考虑到这很可能是众多学位中的第一个"
+    ],
+    "en_distractors": [
+      "For those who think a degree is unnecessary",
+      "consider that this may be the last of many"
+    ],
+    "zh_distractors": [
+      "对于那些认为学位没有必要的人来说",
+      "要考虑到这很可能是众多学位中的最后一个"
+    ],
+    "key_points": [
+      "for whom 的定语从句",
+      "the desired route 的翻译",
+      "may well be 的强调语气"
+    ],
+    "year": 2022,
+    "page": 5,
+    "source": "阅读A",
+    "en": "For those for whom a degree is the desired route, consider that this may well be the first of many.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0380": {
+    "id": "s0380",
+    "zh": "太阳能电池板在变得便宜之前几乎没有小众用途；现在它们正在改变全球能源体系。",
+    "en_chunks": [
+      "Solar panels had few niche uses until they became cheap;",
+      "now they are transforming the global energy system."
+    ],
+    "zh_chunks": [
+      "太阳能电池板在变得便宜之前几乎没有小众用途；",
+      "现在它们正在改变全球能源体系"
+    ],
+    "en_distractors": [
+      "Solar panels had many niche uses until they became expensive;",
+      "now they are destroying the global energy system"
+    ],
+    "zh_distractors": [
+      "太阳能电池板在变得昂贵之前有许多小众用途；",
+      "现在它们正在破坏全球能源体系"
+    ],
+    "key_points": [
+      "had few niche uses 的否定表达",
+      "until 引导的时间状语",
+      "transforming 的进行时态"
+    ],
+    "year": 2024,
+    "page": 3,
+    "source": "阅读A",
+    "en": "Solar panels had few niche uses until they became cheap; now they are transforming the global energy system.",
+    "pool": "en_to_zh",
+    "word_count": 18
+  },
+  "s0232": {
+    "id": "s0232",
+    "zh": "然而，所提出的机制笨重不便，该法案在当年晚些时候政府更迭后被否决。",
+    "en_chunks": [
+      "However",
+      "the mechanisms proposed",
+      "were unwieldy",
+      "and the Bill was voted down",
+      "following the change in government",
+      "later that year"
+    ],
+    "zh_chunks": [
+      "然而",
+      "所提出的机制",
+      "笨重不便",
+      "该法案被否决",
+      "在政府更迭后",
+      "当年晚些时候"
+    ],
+    "en_distractors": [
+      "the mechanisms were proposed",
+      "the Bill was voted for"
+    ],
+    "zh_distractors": [
+      "所提议的机制",
+      "该法案被通过"
+    ],
+    "key_points": [
+      "被动语态的处理",
+      "时间状语的位置",
+      "逻辑关系词的理解"
+    ],
+    "year": 2022,
+    "page": 8,
+    "source": "阅读A",
+    "en": "However, the mechanisms proposed were unwieldy and the Bill was voted down following the change in government later that year.",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0669": {
+    "id": "s0669",
+    "zh": "战斗越来越依赖于新的军事技术，如雷达和近炸引信。",
+    "en_chunks": [
+      "Battles increasingly depended on",
+      "new military technologies",
+      "such as radar and the proximity fuze"
+    ],
+    "zh_chunks": [
+      "战斗越来越依赖于",
+      "新的军事技术",
+      "如雷达和近炸引信"
+    ],
+    "en_distractors": [
+      "Battles depended increasingly on",
+      "such as radar and the proximity fuse"
+    ],
+    "zh_distractors": [
+      "战斗逐渐依赖于",
+      "例如雷达和近炸引信"
+    ],
+    "key_points": [
+      "副词位置",
+      "举例的翻译",
+      "术语准确性"
+    ],
+    "year": 2026,
+    "page": 11,
+    "source": "翻译C",
+    "en": "Battles increasingly depended on new military technologies such as radar and the proximity fuze.",
+    "pool": "en_to_zh",
+    "word_count": 14
+  },
+  "s0109": {
+    "id": "s0109",
+    "zh": "通常，如果降雨推迟，人们可能会清理土地以种植更多水稻来补充收成。",
+    "en_chunks": [
+      "Typically",
+      "if rains are delayed",
+      "people may clear land",
+      "to plant more rice",
+      "to supplement their harvests"
+    ],
+    "zh_chunks": [
+      "通常",
+      "如果降雨推迟",
+      "人们可能会清理土地",
+      "以种植更多水稻",
+      "来补充收成"
+    ],
+    "en_distractors": [
+      "if rains are late",
+      "people may clear land to plant rice"
+    ],
+    "zh_distractors": [
+      "如果雨水延迟",
+      "人们可能清理土地以种植水稻"
+    ],
+    "key_points": [
+      "条件状语从句",
+      "目的状语",
+      "动词短语"
+    ],
+    "year": 2021,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Typically, if rains are delayed, people may clear land to plant more rice to supplement their harvests.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0159": {
+    "id": "s0159",
+    "zh": "高增长率增加了学术创新的机会；它们也削弱了在稳定或缓慢增长时期师生被接纳进学者共同体的形式和过程。",
+    "en_chunks": [
+      "High growth rates increased the chances for academic innovation",
+      "they also weakened the forms and processes",
+      "by which teachers and students are admitted into a community of scholars",
+      "during periods of stability or slow growth"
+    ],
+    "zh_chunks": [
+      "高增长率增加了学术创新的机会",
+      "它们也削弱了形式和过程",
+      "通过这些形式和过程师生被接纳进学者共同体",
+      "在稳定或缓慢增长时期"
+    ],
+    "en_distractors": [
+      "High growth rates increased the chances of academic innovation",
+      "they also strengthened the forms and processes"
+    ],
+    "zh_distractors": [
+      "高增长率提高了学术创新的可能性",
+      "它们也加强了形式和过程"
+    ],
+    "key_points": [
+      "分号连接并列句",
+      "定语从句的翻译",
+      "被动语态",
+      "时间状语"
+    ],
+    "year": 2021,
+    "page": 14,
+    "source": "翻译C",
+    "en": "High growth rates increased the chances for academic innovation; they also weakened the forms and processes by which teachers and students are admitted into a community of scholars during periods of stability or slow growth.",
+    "pool": "en_to_zh",
+    "word_count": 35
+  },
+  "s0613": {
+    "id": "s0613",
+    "zh": "距马可尼和里思一百年后，仅仅倾听的艺术是否受到威胁？",
+    "en_chunks": [
+      "A hundred years on from Marconi and Reith",
+      "is the art of mere listening endangered?"
+    ],
+    "zh_chunks": [
+      "距马可尼和里思一百年后",
+      "仅仅倾听的艺术是否受到威胁？"
+    ],
+    "en_distractors": [
+      "A hundred years after Marconi and Reith",
+      "is the art of listening merely endangered?"
+    ],
+    "zh_distractors": [
+      "马可尼和里思一百年后",
+      "仅仅倾听的艺术是否濒危？"
+    ],
+    "key_points": [
+      "时间状语",
+      "疑问句",
+      "词义辨析"
+    ],
+    "year": 2026,
+    "page": 7,
+    "source": "阅读A",
+    "en": "A hundred years on from Marconi and Reith, is the art of mere listening endangered?",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0124": {
+    "id": "s0124",
+    "zh": "一家联邦上诉法院周二再次介入，但并未提供急需的解决方案，反而延长了争斗。",
+    "en_chunks": [
+      "A federal appeals court weighed in again Tuesday",
+      "but instead of providing a badly needed resolution",
+      "it only prolonged the fight"
+    ],
+    "zh_chunks": [
+      "一家联邦上诉法院周二再次介入",
+      "但并未提供急需的解决方案",
+      "反而延长了争斗"
+    ],
+    "en_distractors": [
+      "A federal appeals court weighed in again on Tuesday",
+      "but instead of providing a needed resolution"
+    ],
+    "zh_distractors": [
+      "一家联邦上诉法院周二再次权衡",
+      "但并未提供急需的解决办法"
+    ],
+    "key_points": [
+      "短语动词",
+      "转折关系",
+      "代词指代"
+    ],
+    "year": 2021,
+    "page": 10,
+    "source": "阅读A",
+    "en": "A federal appeals court weighed in again Tuesday, but instead of providing a badly needed resolution, it only prolonged the fight.",
+    "pool": "en_to_zh",
+    "word_count": 21
+  },
+  "s0081": {
+    "id": "s0081",
+    "zh": "当许多人承担起将推理和科学哲学融入世界的责任时，文艺复兴已经结束，是时候迎来一个新时代——理性时代。",
+    "en_chunks": [
+      "As many took on the duty of trying to integrate reasoning and scientific philosophies into the world",
+      "the Renaissance was over",
+      "and it was time for a new era",
+      "- the Age of Reason"
+    ],
+    "zh_chunks": [
+      "当许多人承担起将推理和科学哲学融入世界的责任时",
+      "文艺复兴已经结束",
+      "是时候迎来一个新时代",
+      "——理性时代"
+    ],
+    "en_distractors": [
+      "As many took the duty of trying to integrate reasoning and scientific philosophies into the world",
+      "the Renaissance was finished"
+    ],
+    "zh_distractors": [
+      "当许多人承担将推理和科学哲学融入世界的责任时",
+      "文艺复兴已经完成"
+    ],
+    "key_points": [
+      "时间状语从句",
+      "固定搭配",
+      "破折号解释"
+    ],
+    "year": 2020,
+    "page": 15,
+    "source": "翻译C",
+    "en": "As many took on the duty of trying to integrate reasoning and scientific philosophies into the world, the Renaissance was over and it was time for a new era - the Age of Reason.",
+    "pool": "en_to_zh",
+    "word_count": 33
+  },
+  "s0611": {
+    "id": "s0611",
+    "zh": "拥有多个网络和无数播客，智能手机用户选择听什么以及何时听。",
+    "en_chunks": [
+      "With multiple networks and countless podcasts",
+      "a smartphone user selects what to hear and when"
+    ],
+    "zh_chunks": [
+      "拥有多个网络和无数播客",
+      "智能手机用户选择听什么以及何时听"
+    ],
+    "en_distractors": [
+      "With multiple networks and countless podcasts",
+      "a smartphone user selects what to hear and when to hear"
+    ],
+    "zh_distractors": [
+      "通过多个网络和无数播客",
+      "智能手机用户选择听什么和何时"
+    ],
+    "key_points": [
+      "with结构",
+      "宾语从句",
+      "省略"
+    ],
+    "year": 2026,
+    "page": 7,
+    "source": "阅读A",
+    "en": "With multiple networks and countless podcasts, a smartphone user selects what to hear and when.",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0431": {
+    "id": "s0431",
+    "zh": "参观巴尔的摩艺术博物馆时，我偶然发现一件宏伟的15世纪中国雕塑。",
+    "en_chunks": [
+      "When visiting the Baltimore Museum of Art",
+      "I came across",
+      "a magnificent 15th-century Chinese sculpture"
+    ],
+    "zh_chunks": [
+      "参观巴尔的摩艺术博物馆时",
+      "我偶然发现",
+      "一件宏伟的15世纪中国雕塑"
+    ],
+    "en_distractors": [
+      "When I visited the Baltimore Museum of Art",
+      "I came about"
+    ],
+    "zh_distractors": [
+      "当参观巴尔的摩艺术博物馆时",
+      "我遇到"
+    ],
+    "key_points": [
+      "省略结构",
+      "短语动词",
+      "形容词顺序"
+    ],
+    "year": 2024,
+    "page": 11,
+    "source": "阅读B",
+    "en": "When visiting the Baltimore Museum of Art, I came across a magnificent 15th-century Chinese sculpture.",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0016": {
+    "id": "s0016",
+    "zh": "其他科学家也免费进行专业的同行评审工作，因为这是获得地位和产生科学知识的核心要素。",
+    "en_chunks": [
+      "Other scientists perform the specialised work of peer review also for free",
+      "because it is a central element",
+      "in the acquisition of status and the production of scientific knowledge"
+    ],
+    "zh_chunks": [
+      "其他科学家也免费进行专业的同行评审工作",
+      "因为这是核心要素",
+      "在获得地位和产生科学知识方面"
+    ],
+    "en_distractors": [
+      "Other scientists perform the specialised work of peer review for free",
+      "because it is a central element in the acquisition of status and the production of scientific knowledge"
+    ],
+    "zh_distractors": [
+      "其他科学家也免费执行专业的同行评审工作",
+      "因为这是获得地位和产生科学知识的核心部分"
+    ],
+    "key_points": [
+      "also的位置",
+      "原因状语从句",
+      "介词短语"
+    ],
+    "year": 2020,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Other scientists perform the specialised work of peer review also for free, because it is a central element in the acquisition of status and the production of scientific knowledge.",
+    "pool": "en_to_zh",
+    "word_count": 29
+  },
+  "s0445": {
+    "id": "s0445",
+    "zh": "它们在多种栖息地之间移动，包括森林、草原、林地、湿地和农田。",
+    "en_chunks": [
+      "They move between a variety of habitats",
+      "including forests, grasslands, woodlands, wetlands and agricultural land."
+    ],
+    "zh_chunks": [
+      "它们在多种栖息地之间移动",
+      "包括森林、草原、林地、湿地和农田。"
+    ],
+    "en_distractors": [
+      "They move among a variety of habitats",
+      "including forests, grasslands, woodlands, wetlands and agricultural land."
+    ],
+    "zh_distractors": [
+      "它们在多种栖息地之间移动",
+      "包括森林、草原、林地、湿地和农田。"
+    ],
+    "key_points": [
+      "habitats 译为“栖息地”",
+      "including 引导的列举需准确",
+      "a variety of 译为“多种”"
+    ],
+    "year": 2024,
+    "page": 13,
+    "source": "阅读B",
+    "en": "They move between a variety of habitats, including forests, grasslands, woodlands, wetlands and agricultural land.",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0028": {
+    "id": "s0028",
+    "zh": "去年的一份报告指出，订阅费用和文章准备费用都以高于通货膨胀率的速度持续上涨。",
+    "en_chunks": [
+      "A report last year pointed out",
+      "that the costs both of subscriptions and of these article preparation costs",
+      "had been steadily rising at a rate above inflation."
+    ],
+    "zh_chunks": [
+      "去年的一份报告指出",
+      "订阅费用和文章准备费用",
+      "都以高于通货膨胀率的速度持续上涨。"
+    ],
+    "en_distractors": [
+      "A report last year pointed out",
+      "that the costs of subscriptions and article preparation",
+      "had been steadily rising at a rate above inflation."
+    ],
+    "zh_distractors": [
+      "去年的一份报告指出",
+      "订阅费用和文章准备费用",
+      "都以高于通货膨胀率的速度持续上涨。"
+    ],
+    "key_points": [
+      "pointed out 译为“指出”",
+      "both...and... 结构需译出",
+      "steadily rising 译为“持续上涨”",
+      "above inflation 译为“高于通货膨胀率”"
+    ],
+    "year": 2020,
+    "page": 6,
+    "source": "阅读A",
+    "en": "A report last year pointed out that the costs both of subscriptions and of these article preparation costs had been steadily rising at a rate above inflation.",
+    "pool": "en_to_zh",
+    "word_count": 27
+  },
+  "s0026": {
+    "id": "s0026",
+    "zh": "出版商已经回应了让读者免费阅读其产品的需求，通过向作者收取费用来支付文章准备的成本。",
+    "en_chunks": [
+      "Publishers have responded to the demand",
+      "that they make their product free to readers",
+      "by charging their writers fees",
+      "to cover the costs of preparing an article."
+    ],
+    "zh_chunks": [
+      "出版商已经回应了让读者免费阅读其产品的需求",
+      "通过向作者收取费用",
+      "来支付文章准备的成本。"
+    ],
+    "en_distractors": [
+      "Publishers have responded to the demand",
+      "that they make their product free to readers",
+      "by charging their writers fees",
+      "to cover the costs of preparing an article."
+    ],
+    "zh_distractors": [
+      "出版商已经回应了让读者免费阅读其产品的需求",
+      "通过向作者收取费用",
+      "来支付文章准备的成本。"
+    ],
+    "key_points": [
+      "respond to 译为“回应”",
+      "demand 后 that 从句为同位语",
+      "by charging 表示方式",
+      "cover the costs 译为“支付成本”"
+    ],
+    "year": 2020,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Publishers have responded to the demand that they make their product free to readers by charging their writers fees to cover the costs of preparing an article.",
+    "pool": "en_to_zh",
+    "word_count": 27
+  },
+  "s0368": {
+    "id": "s0368",
+    "zh": "这批钉子是在1960年发现于一个四米深的坑中，坑上覆盖着两米厚的砾石。",
+    "en_chunks": [
+      "The nail hoard was discovered in 1960",
+      "in a four-metre-deep pit",
+      "covered by two metres of gravel."
+    ],
+    "zh_chunks": [
+      "这批钉子是在1960年发现于一个四米深的坑中",
+      "坑上覆盖着两米厚的砾石。"
+    ],
+    "en_distractors": [
+      "The nail hoard was discovered in 1960",
+      "in a four-metre-deep pit",
+      "covered by two metres of gravel."
+    ],
+    "zh_distractors": [
+      "这批钉子是在1960年发现于一个四米深的坑中",
+      "坑上覆盖着两米厚的砾石。"
+    ],
+    "key_points": [
+      "hoard 译为“一批”或“窖藏”",
+      "four-metre-deep 译为“四米深的”",
+      "covered by 译为“覆盖着”"
+    ],
+    "year": 2024,
+    "page": 3,
+    "source": "阅读A",
+    "en": "The nail hoard was discovered in 1960 in a four-metre-deep pit covered by two metres of gravel.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0377": {
+    "id": "s0377",
+    "zh": "我毫不抱歉地痴迷于这些物品的一个特定特征：它们的价格。",
+    "en_chunks": [
+      "I make no apology",
+      "for being obsessed by a particular feature of these objects:",
+      "their price."
+    ],
+    "zh_chunks": [
+      "我毫不抱歉地痴迷于这些物品的一个特定特征：",
+      "它们的价格。"
+    ],
+    "en_distractors": [
+      "I make no apology",
+      "for being obsessed by a particular feature of these objects:",
+      "their price."
+    ],
+    "zh_distractors": [
+      "我毫不抱歉地痴迷于这些物品的一个特定特征：",
+      "它们的价格。"
+    ],
+    "key_points": [
+      "make no apology 译为“毫不抱歉”",
+      "obsessed by 译为“痴迷于”",
+      "particular feature 译为“特定特征”"
+    ],
+    "year": 2024,
+    "page": 3,
+    "source": "阅读A",
+    "en": "I make no apology for being obsessed by a particular feature of these objects: their price.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0113": {
+    "id": "s0113",
+    "zh": "人们惊讶地看到证据表明维多利亚时代的人也有乐趣，并且能够、也确实会笑。",
+    "en_chunks": [
+      "People have been surprised to see evidence",
+      "that Victorians had fun",
+      "and could, and did, laugh."
+    ],
+    "zh_chunks": [
+      "人们惊讶地看到证据表明",
+      "维多利亚时代的人也有乐趣",
+      "并且能够、也确实会笑。"
+    ],
+    "en_distractors": [
+      "People have been surprised to see evidence",
+      "that Victorians had fun",
+      "and could, and did, laugh."
+    ],
+    "zh_distractors": [
+      "人们惊讶地看到证据表明",
+      "维多利亚时代的人也有乐趣",
+      "并且能够、也确实会笑。"
+    ],
+    "key_points": [
+      "surprised to see 译为“惊讶地看到”",
+      "evidence that 译为“证据表明”",
+      "had fun 译为“有乐趣”",
+      "could, and did, laugh 译为“能够、也确实会笑”"
+    ],
+    "year": 2021,
+    "page": 8,
+    "source": "阅读A",
+    "en": "People have been surprised to see evidence that Victorians had fun and could, and did, laugh.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0036": {
+    "id": "s0036",
+    "zh": "如果这些法案成为法律，州委员会和委员会将被要求在2022年前为女性预留50%的席位。",
+    "en_chunks": [
+      "If the bills become law",
+      "state boards and commissions will be required",
+      "to set aside 50 percent of board seats for women by 2022."
+    ],
+    "zh_chunks": [
+      "如果这些法案成为法律",
+      "州委员会和委员会将被要求",
+      "在2022年前为女性预留50%的席位。"
+    ],
+    "en_distractors": [
+      "If the bills become law",
+      "state boards and commissions will be required",
+      "to set aside 50 percent of board seats for women by 2022."
+    ],
+    "zh_distractors": [
+      "如果这些法案成为法律",
+      "州委员会和委员会将被要求",
+      "在2022年前为女性预留50%的席位。"
+    ],
+    "key_points": [
+      "bills 译为“法案”",
+      "state boards and commissions 译为“州委员会和委员会”",
+      "set aside 译为“预留”",
+      "by 2022 译为“在2022年前”"
+    ],
+    "year": 2020,
+    "page": 8,
+    "source": "阅读A",
+    "en": "If the bills become law, state boards and commissions will be required to set aside 50 percent of board seats for women by 2022.",
+    "pool": "en_to_zh",
+    "word_count": 22
+  },
+  "s0622": {
+    "id": "s0622",
+    "zh": "他们的北美树木年轮火灾疤痕网络（NAFSN）为上月发表的一项研究提供了基础。",
+    "en_chunks": [
+      "Their North American tree-ring fire-scar network (NAFSN)",
+      "provided the basis for a study",
+      "published last month."
+    ],
+    "zh_chunks": [
+      "他们的北美树木年轮火灾疤痕网络（NAFSN）",
+      "为上月发表的一项研究提供了基础。"
+    ],
+    "en_distractors": [
+      "Their North American tree-ring fire-scar network (NAFSN)",
+      "provided the basis for a study",
+      "published last month."
+    ],
+    "zh_distractors": [
+      "他们的北美树木年轮火灾疤痕网络（NAFSN）",
+      "为上月发表的一项研究提供了基础。"
+    ],
+    "key_points": [
+      "tree-ring fire-scar network 译为“树木年轮火灾疤痕网络”",
+      "provided the basis for 译为“为...提供了基础”",
+      "published last month 译为“上月发表的”"
+    ],
+    "year": 2026,
+    "page": 8,
+    "source": "阅读A",
+    "en": "Their North American tree-ring fire-scar network (NAFSN) provided the basis for a study published last month.",
+    "pool": "en_to_zh",
+    "word_count": 16
+  },
+  "s0152": {
+    "id": "s0152",
+    "zh": "高等教育的发展至少以三种截然不同的方式表现出来，而这些方式又引发了不同的问题。",
+    "en_chunks": [
+      "The growth of higher education manifests itself",
+      "in at least three quite different ways",
+      "and these in turn have given rise to different sets of problems."
+    ],
+    "zh_chunks": [
+      "高等教育的发展至少以三种截然不同的方式表现出来",
+      "而这些方式又引发了不同的问题。"
+    ],
+    "en_distractors": [
+      "The growth of higher education manifests itself",
+      "in at least three quite different ways",
+      "and these in turn have given rise to different sets of problems."
+    ],
+    "zh_distractors": [
+      "高等教育的发展至少以三种截然不同的方式表现出来",
+      "而这些方式又引发了不同的问题。"
+    ],
+    "key_points": [
+      "manifests itself 译为“表现出来”",
+      "in at least three quite different ways 译为“至少以三种截然不同的方式”",
+      "in turn 译为“又”",
+      "given rise to 译为“引发”"
+    ],
+    "year": 2021,
+    "page": 14,
+    "source": "翻译C",
+    "en": "The growth of higher education manifests itself in at least three quite different ways, and these in turn have given rise to different sets of problems.",
+    "pool": "en_to_zh",
+    "word_count": 26
+  },
+  "s0015": {
+    "id": "s0015",
+    "zh": "科学家需要期刊来发表他们的研究，因此他们会无偿提供文章。",
+    "en_chunks": [
+      "Scientists need journals",
+      "in which to publish their research",
+      "so they will supply the articles without monetary reward."
+    ],
+    "zh_chunks": [
+      "科学家需要期刊来发表他们的研究",
+      "因此他们会无偿提供文章。"
+    ],
+    "en_distractors": [
+      "Scientists need journals",
+      "in which to publish their research",
+      "so they will supply the articles without monetary reward."
+    ],
+    "zh_distractors": [
+      "科学家需要期刊来发表他们的研究",
+      "因此他们会无偿提供文章。"
+    ],
+    "key_points": [
+      "in which to publish 译为“用来发表”",
+      "so 表示因果关系，译为“因此”",
+      "without monetary reward 译为“无偿”"
+    ],
+    "year": 2020,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Scientists need journals in which to publish their research, so they will supply the articles without monetary reward.",
+    "pool": "en_to_zh",
+    "word_count": 18
+  },
+  "s0178": {
+    "id": "s0178",
+    "zh": "她感到自豪的是，几件雕塑甚至已经重新展出，尽管有时是在保护罩下。",
+    "en_chunks": [
+      "She is proud",
+      "that several sculptures have even gone on display again,",
+      "albeit sometimes beneath protective cases."
+    ],
+    "zh_chunks": [
+      "她感到自豪的是，",
+      "几件雕塑甚至已经重新展出，",
+      "尽管有时是在保护罩下。"
+    ],
+    "en_distractors": [
+      "that several sculptures have even gone on display again, albeit sometimes beneath protective cases.",
+      "that several sculptures have even gone on display again, albeit sometimes beneath protective cases."
+    ],
+    "zh_distractors": [
+      "尽管有时是在保护罩下，她感到自豪的是，几件雕塑甚至已经重新展出。",
+      "她感到自豪的是，尽管有时是在保护罩下，几件雕塑甚至已经重新展出。"
+    ],
+    "key_points": [
+      "be proud that 引导的宾语从句",
+      "albeit 表示让步，译为“尽管”",
+      "beneath protective cases 译为“在保护罩下”"
+    ],
+    "year": 2022,
+    "page": 3,
+    "source": "阅读A",
+    "en": "She is proud that several sculptures have even gone on display again, albeit sometimes beneath protective cases.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0128": {
+    "id": "s0128",
+    "zh": "但法官帕特里夏·米莱特在协同意见书中正确地指出，这一结果与现代宽带服务的现实脱节，并表示国会或最高法院可以介入，以避免将互联网监管困在技术上的时代错误中。",
+    "en_chunks": [
+      "But Judge Patricia Millett rightly argued in a concurring opinion",
+      "that the result is unhinged from the realities of modern broadband service,",
+      "and said Congress or the Supreme Court could intervene",
+      "to avoid trapping Internet regulation in technological anachronism."
+    ],
+    "zh_chunks": [
+      "但法官帕特里夏·米莱特在协同意见书中正确地指出，",
+      "这一结果与现代宽带服务的现实脱节，",
+      "并表示国会或最高法院可以介入，",
+      "以避免将互联网监管困在技术上的时代错误中。"
+    ],
+    "en_distractors": [
+      "that the result is unhinged from the realities of modern broadband service, and said Congress or the Supreme Court could intervene to avoid trapping Internet regulation in technological anachronism.",
+      "that the result is unhinged from the realities of modern broadband service, and said Congress or the Supreme Court could intervene to avoid trapping Internet regulation in technological anachronism."
+    ],
+    "zh_distractors": [
+      "但法官帕特里夏·米莱特在协同意见书中正确地指出，这一结果与现代宽带服务的现实脱节，并表示国会或最高法院可以介入，以避免将互联网监管困在技术上的时代错误中。",
+      "但法官帕特里夏·米莱特在协同意见书中正确地指出，这一结果与现代宽带服务的现实脱节，并表示国会或最高法院可以介入，以避免将互联网监管困在技术上的时代错误中。"
+    ],
+    "key_points": [
+      "rightly argued 译为“正确地指出”",
+      "unhinged from 译为“与……脱节”",
+      "concurring opinion 译为“协同意见书”",
+      "technological anachronism 译为“技术上的时代错误”"
+    ],
+    "year": 2021,
+    "page": 10,
+    "source": "阅读A",
+    "en": "But Judge Patricia Millett rightly argued in a concurring opinion that the result is unhinged from the realities of modern broadband service, and said Congress or the Supreme Court could intervene to avoid trapping Internet regulation in technological anachronism.",
+    "pool": "en_to_zh",
+    "word_count": 39
+  },
+  "s0500": {
+    "id": "s0500",
+    "zh": "里夫金于2017年加入美国电影协会，此前该组织在五年前未能促成好莱坞与硅谷之间达成共识，以推动国会通过旨在阻止网络盗版的立法。",
+    "en_chunks": [
+      "Rivkin joined the MPA in 2017",
+      "after the organization failed five years earlier",
+      "to build consensus between Hollywood and Silicon Valley",
+      "to win passage of legislation in Congress",
+      "aimed at stopping online piracy."
+    ],
+    "zh_chunks": [
+      "里夫金于2017年加入美国电影协会，",
+      "此前该组织在五年前未能",
+      "促成好莱坞与硅谷之间达成共识，",
+      "以推动国会通过立法，",
+      "旨在阻止网络盗版。"
+    ],
+    "en_distractors": [
+      "after the organization failed five years earlier to build consensus between Hollywood and Silicon Valley to win passage of legislation in Congress aimed at stopping online piracy.",
+      "after the organization failed five years earlier to build consensus between Hollywood and Silicon Valley to win passage of legislation in Congress aimed at stopping online piracy."
+    ],
+    "zh_distractors": [
+      "里夫金于2017年加入美国电影协会，此前该组织在五年前未能促成好莱坞与硅谷之间达成共识，以推动国会通过旨在阻止网络盗版的立法。",
+      "里夫金于2017年加入美国电影协会，此前该组织在五年前未能促成好莱坞与硅谷之间达成共识，以推动国会通过旨在阻止网络盗版的立法。"
+    ],
+    "key_points": [
+      "MPA 译为“美国电影协会”",
+      "failed to do 译为“未能做某事”",
+      "build consensus 译为“达成共识”",
+      "aimed at 译为“旨在”"
+    ],
+    "year": 2025,
+    "page": 7,
+    "source": "阅读A",
+    "en": "Rivkin joined the MPA in 2017 after the organization failed five years earlier to build consensus between Hollywood and Silicon Valley to win passage of legislation in Congress aimed at stopping online piracy.",
+    "pool": "en_to_zh",
+    "word_count": 32
+  },
+  "s0136": {
+    "id": "s0136",
+    "zh": "英国的一家公司Phrasee声称，在电子邮件打开率方面，他们的软件表现能比人类高出多达10%。",
+    "en_chunks": [
+      "One company in the UK, Phrasee,",
+      "claims their software can outperform humans",
+      "by up to 10 percent",
+      "when it comes to email open rates."
+    ],
+    "zh_chunks": [
+      "英国的一家公司Phrasee",
+      "声称他们的软件能比人类表现更优，",
+      "高出多达10%，",
+      "在电子邮件打开率方面。"
+    ],
+    "en_distractors": [
+      "claims their software can outperform humans by up to 10 percent when it comes to email open rates.",
+      "claims their software can outperform humans by up to 10 percent when it comes to email open rates."
+    ],
+    "zh_distractors": [
+      "英国的一家公司Phrasee声称，在电子邮件打开率方面，他们的软件表现能比人类高出多达10%。",
+      "英国的一家公司Phrasee声称，在电子邮件打开率方面，他们的软件表现能比人类高出多达10%。"
+    ],
+    "key_points": [
+      "outperform 译为“表现优于”",
+      "by up to 10 percent 译为“高出多达10%”",
+      "when it comes to 译为“在……方面”"
+    ],
+    "year": 2021,
+    "page": 12,
+    "source": "阅读B",
+    "en": "One company in the UK, Phrasee, claims their software can outperform humans by up to 10 percent when it comes to email open rates.",
+    "pool": "en_to_zh",
+    "word_count": 23
+  },
+  "s0199": {
+    "id": "s0199",
+    "zh": "这些是《自然》杂志的读者在关于艺术家与研究人员合作的一系列文章中用来描述他们艺术与科学合作体验的一些词语。",
+    "en_chunks": [
+      "These were some of the words",
+      "that Nature readers used to describe their experience of art-science collaborations",
+      "in a series of articles on partnerships between artists and researchers."
+    ],
+    "zh_chunks": [
+      "这些是《自然》杂志的读者用来描述他们艺术与科学合作体验的一些词语，",
+      "在一系列关于艺术家与研究人员合作的文章中。"
+    ],
+    "en_distractors": [
+      "that Nature readers used to describe their experience of art-science collaborations in a series of articles on partnerships between artists and researchers.",
+      "that Nature readers used to describe their experience of art-science collaborations in a series of articles on partnerships between artists and researchers."
+    ],
+    "zh_distractors": [
+      "这些是《自然》杂志的读者在关于艺术家与研究人员合作的一系列文章中用来描述他们艺术与科学合作体验的一些词语。",
+      "这些是《自然》杂志的读者在关于艺术家与研究人员合作的一系列文章中用来描述他们艺术与科学合作体验的一些词语。"
+    ],
+    "key_points": [
+      "Nature 译为《自然》杂志",
+      "art-science collaborations 译为“艺术与科学合作”",
+      "partnerships 译为“合作”"
+    ],
+    "year": 2022,
+    "page": 6,
+    "source": "阅读A",
+    "en": "These were some of the words that Nature readers used to describe their experience of art-science collaborations in a series of articles on partnerships between artists and researchers.",
+    "pool": "en_to_zh",
+    "word_count": 28
+  },
+  "s0454": {
+    "id": "s0454",
+    "zh": "植物产生的挥发性化学物质可以被携带到很远的地方，而且它们非常具有特征性：每种植物或树都有自己独特的气味特征。",
+    "en_chunks": [
+      "The volatile chemicals produced by plants can be carried a long way,",
+      "and they are very characteristic:",
+      "Each plant or tree has its own particular odor signature."
+    ],
+    "zh_chunks": [
+      "植物产生的挥发性化学物质可以被携带到很远的地方，",
+      "而且它们非常具有特征性：",
+      "每种植物或树都有自己独特的气味特征。"
+    ],
+    "en_distractors": [
+      "The volatile chemicals produced by plants can be carried a long way, and they are very characteristic: Each plant or tree has its own particular odor signature.",
+      "The volatile chemicals produced by plants can be carried a long way, and they are very characteristic: Each plant or tree has its own particular odor signature."
+    ],
+    "zh_distractors": [
+      "植物产生的挥发性化学物质可以被携带到很远的地方，而且它们非常具有特征性：每种植物或树都有自己独特的气味特征。",
+      "植物产生的挥发性化学物质可以被携带到很远的地方，而且它们非常具有特征性：每种植物或树都有自己独特的气味特征。"
+    ],
+    "key_points": [
+      "volatile chemicals 译为“挥发性化学物质”",
+      "carried a long way 译为“被携带到很远的地方”",
+      "characteristic 译为“具有特征性”",
+      "odor signature 译为“气味特征”"
+    ],
+    "year": 2024,
+    "page": 13,
+    "source": "阅读B",
+    "en": "The volatile chemicals produced by plants can be carried a long way, and they are very characteristic: Each plant or tree has its own particular odor signature.",
+    "pool": "en_to_zh",
+    "word_count": 27
+  },
+  "s0293": {
+    "id": "s0293",
+    "zh": "我认为个人能够出租他们的第二套住房是一件好事。",
+    "en_chunks": [
+      "I think",
+      "individuals being able to rent out their second home",
+      "is a good thing."
+    ],
+    "zh_chunks": [
+      "我认为",
+      "个人能够出租他们的第二套住房",
+      "是一件好事。"
+    ],
+    "en_distractors": [
+      "individuals being able to rent out their second home is a good thing.",
+      "individuals being able to rent out their second home is a good thing."
+    ],
+    "zh_distractors": [
+      "我认为个人能够出租他们的第二套住房是一件好事。",
+      "我认为个人能够出租他们的第二套住房是一件好事。"
+    ],
+    "key_points": [
+      "I think 后接宾语从句",
+      "being able to 译为“能够”",
+      "rent out 译为“出租”",
+      "second home 译为“第二套住房”"
+    ],
+    "year": 2023,
+    "page": 5,
+    "source": "阅读A",
+    "en": "I think individuals being able to rent out their second home is a good thing.",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0328": {
+    "id": "s0328",
+    "zh": "危险信号包括一篇文章在第一年内被大量引用。",
+    "en_chunks": [
+      "Red flags include",
+      "a large number of citations to an article",
+      "within the first year."
+    ],
+    "zh_chunks": [
+      "危险信号包括",
+      "一篇文章被大量引用",
+      "在第一年内。"
+    ],
+    "en_distractors": [
+      "Red flags include a large number of citations to an article within the first year.",
+      "Red flags include a large number of citations to an article within the first year."
+    ],
+    "zh_distractors": [
+      "危险信号包括一篇文章在第一年内被大量引用。",
+      "危险信号包括一篇文章在第一年内被大量引用。"
+    ],
+    "key_points": [
+      "red flags 译为“危险信号”",
+      "citations 译为“引用”",
+      "within the first year 译为“在第一年内”"
+    ],
+    "year": 2023,
+    "page": 8,
+    "source": "阅读A",
+    "en": "Red flags include a large number of citations to an article within the first year.",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0154": {
+    "id": "s0154",
+    "zh": "第三，增长反映在相关年龄段人口中接受高等教育机构注册比例的变化上。",
+    "en_chunks": [
+      "And third,",
+      "growth was reflected in changes",
+      "in the proportion of the relevant age group",
+      "enrolled in institutions of higher education."
+    ],
+    "zh_chunks": [
+      "第三，",
+      "增长反映在变化上，",
+      "即相关年龄段人口的比例变化，",
+      "这些人口注册在高等教育机构中。"
+    ],
+    "en_distractors": [
+      "growth was reflected in changes in the proportion of the relevant age group enrolled in institutions of higher education.",
+      "growth was reflected in changes in the proportion of the relevant age group enrolled in institutions of higher education."
+    ],
+    "zh_distractors": [
+      "第三，增长反映在相关年龄段人口中接受高等教育机构注册比例的变化上。",
+      "第三，增长反映在相关年龄段人口中接受高等教育机构注册比例的变化上。"
+    ],
+    "key_points": [
+      "be reflected in 译为“反映在”",
+      "the relevant age group 译为“相关年龄段人口”",
+      "enrolled in 译为“注册于”",
+      "institutions of higher education 译为“高等教育机构”"
+    ],
+    "year": 2021,
+    "page": 14,
+    "source": "翻译C",
+    "en": "And third, growth was reflected in changes in the proportion of the relevant age group enrolled in institutions of higher education.",
+    "pool": "en_to_zh",
+    "word_count": 21
+  },
+  "s0529": {
+    "id": "s0529",
+    "zh": "他拍摄的格伦维尔豹纹蝶从怀特岛康普顿湾白垩悬崖旁的海石竹丛中飞起的照片尤其壮观。",
+    "en_chunks": [
+      "His pictures of a Glanville fritillary",
+      "rising from the sea-pinks",
+      "beside the chalk cliffs of Compton Bay on the Isle of Wight",
+      "are particularly glorious."
+    ],
+    "zh_chunks": [
+      "他拍摄的格伦维尔豹纹蝶的照片",
+      "从海石竹丛中飞起",
+      "在怀特岛康普顿湾的白垩悬崖旁",
+      "尤其壮观。"
+    ],
+    "en_distractors": [
+      "His pictures of a Glanville fritillary rising from the sea-pinks beside the chalk cliffs of Compton Bay on the Isle of Wight are particularly glorious.",
+      "His pictures of a Glanville fritillary rising from the sea-pinks beside the chalk cliffs of Compton Bay on the Isle of Wight are particularly glorious."
+    ],
+    "zh_distractors": [
+      "他拍摄的格伦维尔豹纹蝶从怀特岛康普顿湾白垩悬崖旁的海石竹丛中飞起的照片尤其壮观。",
+      "他拍摄的格伦维尔豹纹蝶从怀特岛康普顿湾白垩悬崖旁的海石竹丛中飞起的照片尤其壮观。"
+    ],
+    "key_points": [
+      "Glanville fritillary 译为“格伦维尔豹纹蝶”",
+      "sea-pinks 译为“海石竹”",
+      "chalk cliffs 译为“白垩悬崖”",
+      "particularly glorious 译为“尤其壮观”"
+    ],
+    "year": 2025,
+    "page": 11,
+    "source": "阅读B",
+    "en": "His pictures of a Glanville fritillary rising from the sea-pinks beside the chalk cliffs of Compton Bay on the Isle of Wight are particularly glorious.",
+    "pool": "en_to_zh",
+    "word_count": 25
+  },
+  "s0088": {
+    "id": "s0088",
+    "zh": "这已成为一种令人沮丧的可靠年度惯例：每年一月，火车旅行成本上升，给那些别无选择只能依靠铁路网络上班或以其他方式出行的人带来了沉重的额外负担。",
+    "en_chunks": [
+      "It has become a grimly reliable annual ritual:",
+      "every January the cost of travelling by train rises,",
+      "imposing a significant extra burden on those",
+      "who have no option but to use the rail network to get to work or otherwise."
+    ],
+    "zh_chunks": [
+      "这已成为一种令人沮丧的可靠年度惯例：",
+      "每年一月，火车旅行成本上升，",
+      "给那些人带来了沉重的额外负担，",
+      "他们别无选择，只能依靠铁路网络上班或以其他方式出行。"
+    ],
+    "en_distractors": [
+      "which has become a grimly reliable annual ritual",
+      "but every January the cost of travelling by train rises"
+    ],
+    "zh_distractors": [
+      "这已成为一种令人沮丧的不可靠年度惯例：",
+      "每年一月，火车旅行成本下降，"
+    ],
+    "key_points": [
+      "grimly reliable 的翻译，体现消极意味",
+      "imposing...burden on 的定语后置处理",
+      "who 引导的定语从句的拆分与翻译",
+      "otherwise 的准确理解（以其他方式）"
+    ],
+    "year": 2021,
+    "page": 4,
+    "source": "阅读A",
+    "en": "It has become a grimly reliable annual ritual: every January the cost of travelling by train rises, imposing a significant extra burden on those who have no option but to use the rail network to get to work or otherwise.",
+    "pool": "en_to_zh",
+    "word_count": 40
+  },
+  "s0203": {
+    "id": "s0203",
+    "zh": "一位受访者表示，艺术家帮助科学家接触更广泛的受众，并建立情感联系，从而增强学习效果。",
+    "en_chunks": [
+      "Artists help scientists reach a broader audience",
+      "and make emotional connections",
+      "that enhance learning,",
+      "one respondent said."
+    ],
+    "zh_chunks": [
+      "艺术家帮助科学家接触更广泛的受众，",
+      "并建立情感联系，",
+      "从而增强学习效果，",
+      "一位受访者表示。"
+    ],
+    "en_distractors": [
+      "Artists help scientists to reach a broader audience",
+      "and making emotional connections"
+    ],
+    "zh_distractors": [
+      "艺术家帮助科学家接触更窄的受众，",
+      "并建立理性联系，"
+    ],
+    "key_points": [
+      "help sb. do sth. 结构",
+      "that 定语从句的翻译（可后置）",
+      "one respondent said 的插入语处理",
+      "enhance learning 的准确翻译"
+    ],
+    "year": 2022,
+    "page": 6,
+    "source": "阅读A",
+    "en": "Artists help scientists reach a broader audience and make emotional connections that enhance learning, one respondent said.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0671": {
+    "id": "s0671",
+    "zh": "结果，科学家——尤其是物理学家——发现自己供不应求。",
+    "en_chunks": [
+      "As a result,",
+      "scientists — physicists in particular —",
+      "found themselves in high demand."
+    ],
+    "zh_chunks": [
+      "结果，",
+      "科学家——尤其是物理学家——",
+      "发现自己供不应求。"
+    ],
+    "en_distractors": [
+      "As a consequence,",
+      "scientists and physicists in particular"
+    ],
+    "zh_distractors": [
+      "然而，",
+      "科学家——特别是化学家——"
+    ],
+    "key_points": [
+      "As a result 的翻译",
+      "in particular 的插入语处理",
+      "found themselves in high demand 的翻译（供不应求）"
+    ],
+    "year": 2026,
+    "page": 11,
+    "source": "翻译C",
+    "en": "As a result, scientists — physicists in particular — found themselves in high demand.",
+    "pool": "en_to_zh",
+    "word_count": 12
+  },
+  "s0217": {
+    "id": "s0217",
+    "zh": "其前提是，合同普通法缺乏足够的保障措施，以防止管理层对工人进行任意行为。",
+    "en_chunks": [
+      "The premise was that",
+      "the common law of contract lacked sufficient safeguards",
+      "for workers",
+      "against arbitrary conduct by management."
+    ],
+    "zh_chunks": [
+      "其前提是，",
+      "合同普通法缺乏足够的保障措施，",
+      "以保护工人，",
+      "防止管理层任意行为。"
+    ],
+    "en_distractors": [
+      "The premise was which",
+      "the common law of contract lacked sufficient safeguards for managers"
+    ],
+    "zh_distractors": [
+      "其结论是，",
+      "合同普通法拥有足够的保障措施，"
+    ],
+    "key_points": [
+      "premise 的翻译（前提）",
+      "lacked sufficient safeguards 的翻译",
+      "for workers 和 against... 的介词短语处理",
+      "arbitrary conduct 的翻译"
+    ],
+    "year": 2022,
+    "page": 7,
+    "source": "阅读A",
+    "en": "The premise was that the common law of contract lacked sufficient safeguards for workers against arbitrary conduct by management.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0031": {
+    "id": "s0031",
+    "zh": "进步人士通常支持多样性强制要求，将其视为实现平等的途径和公平竞争的手段。",
+    "en_chunks": [
+      "Progressives often support diversity mandates",
+      "as a path to equality",
+      "and a way to level the playing field."
+    ],
+    "zh_chunks": [
+      "进步人士通常支持多样性强制要求，",
+      "将其视为实现平等的途径",
+      "和公平竞争的手段。"
+    ],
+    "en_distractors": [
+      "Progressives often oppose diversity mandates",
+      "as a path to inequality"
+    ],
+    "zh_distractors": [
+      "保守派通常支持多样性强制要求，",
+      "将其视为实现不平等的途径"
+    ],
+    "key_points": [
+      "Progressives 的翻译（进步人士）",
+      "diversity mandates 的翻译（多样性强制要求）",
+      "as...and... 并列结构的处理",
+      "level the playing field 的翻译（公平竞争）"
+    ],
+    "year": 2020,
+    "page": 8,
+    "source": "阅读A",
+    "en": "Progressives often support diversity mandates as a path to equality and a way to level the playing field.",
+    "pool": "en_to_zh",
+    "word_count": 18
+  },
+  "s0177": {
+    "id": "s0177",
+    "zh": "Van Oosten 称这些化学物质为防晒剂，因为它们的目的是防止进一步的光损伤并重建磨损的聚合物纤维。",
+    "en_chunks": [
+      "Van Oosten calls those chemicals sunscreens",
+      "because their goal was to prevent further light damage",
+      "and rebuild worn polymer fibers."
+    ],
+    "zh_chunks": [
+      "Van Oosten 称这些化学物质为防晒剂，",
+      "因为它们的目的是防止进一步的光损伤",
+      "并重建磨损的聚合物纤维。"
+    ],
+    "en_distractors": [
+      "Van Oosten calls those chemicals sunblocks",
+      "because their goal was to cause further light damage"
+    ],
+    "zh_distractors": [
+      "Van Oosten 称这些化学物质为防冻剂，",
+      "因为它们的目的是促进进一步的光损伤"
+    ],
+    "key_points": [
+      "calls...sunscreens 的翻译（称...为...）",
+      "because 原因状语从句",
+      "prevent further light damage 的翻译",
+      "rebuild worn polymer fibers 的翻译"
+    ],
+    "year": 2022,
+    "page": 3,
+    "source": "阅读A",
+    "en": "Van Oosten callsthose chemicals sunscreens because their goal was to prevent further lightdamage and rebuild worn polymer fibers.",
+    "pool": "en_to_zh",
+    "word_count": 18
+  },
+  "s0665": {
+    "id": "s0665",
+    "zh": "我们也正经历着翻译的黄金时代，所以你可以去任何时间或地点。",
+    "en_chunks": [
+      "We are living through a golden age of translation too,",
+      "so you can go anywhere in time or place."
+    ],
+    "zh_chunks": [
+      "我们也正经历着翻译的黄金时代，",
+      "所以你可以去任何时间或地点。"
+    ],
+    "en_distractors": [
+      "We are living through a golden age of interpretation too,",
+      "so you can go nowhere in time or place."
+    ],
+    "zh_distractors": [
+      "我们也正经历着翻译的黑暗时代，",
+      "所以你不能去任何时间或地点。"
+    ],
+    "key_points": [
+      "living through 的翻译（经历）",
+      "golden age 的翻译（黄金时代）",
+      "so 引导结果状语从句",
+      "anywhere in time or place 的翻译"
+    ],
+    "year": 2026,
+    "page": 10,
+    "source": "阅读B",
+    "en": "We are living through a golden age of translation too, so you can go anywhere in time or place.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0041": {
+    "id": "s0041",
+    "zh": "女性在董事会中的参与率目前可能无法反映女性在总人口中的比例，但那又怎样？",
+    "en_chunks": [
+      "Female participation on corporate boards may not currently mirror the percentage of women in the general population,",
+      "but so what?"
+    ],
+    "zh_chunks": [
+      "女性在董事会中的参与率目前可能无法反映女性在总人口中的比例，",
+      "但那又怎样？"
+    ],
+    "en_distractors": [
+      "Female participation on corporate boards may currently mirror the percentage of women in the general population,",
+      "but why not?"
+    ],
+    "zh_distractors": [
+      "男性在董事会中的参与率目前可能无法反映女性在总人口中的比例，",
+      "但那又怎样？"
+    ],
+    "key_points": [
+      "Female participation 的翻译（女性参与率）",
+      "mirror 的翻译（反映）",
+      "but so what? 的翻译（但那又怎样？）"
+    ],
+    "year": 2020,
+    "page": 8,
+    "source": "阅读A",
+    "en": "Female participation on corporate boards may not currently mirror the percentage of women in the general population, but so what?",
+    "pool": "en_to_zh",
+    "word_count": 20
+  },
+  "s0547": {
+    "id": "s0547",
+    "zh": "在最近几个夏天，他走遍了英国各地，拍摄了所有58种本土蝴蝶。",
+    "en_chunks": [
+      "In recent summers,",
+      "he has travelled the length and breadth of Britain",
+      "to photograph all 58 native species of butterfly."
+    ],
+    "zh_chunks": [
+      "在最近几个夏天，",
+      "他走遍了英国各地，",
+      "拍摄了所有58种本土蝴蝶。"
+    ],
+    "en_distractors": [
+      "In recent winters,",
+      "he has travelled the length and breadth of Europe"
+    ],
+    "zh_distractors": [
+      "在最近几个冬天，",
+      "他走遍了欧洲各地，"
+    ],
+    "key_points": [
+      "In recent summers 的翻译",
+      "travelled the length and breadth of 的翻译（走遍）",
+      "to photograph 表目的",
+      "native species 的翻译（本土物种）"
+    ],
+    "year": 2025,
+    "page": 12,
+    "source": "阅读B",
+    "en": "In recent summers, he has travelled the length and breadth of Britain to photograph all 58 native species of butterfly.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0170": {
+    "id": "s0170",
+    "zh": "面临风险的塑料制品种类令人眼花缭乱：早期收音机、前卫雕塑、迪士尼电影中的赛璐珞动画剧照、第一颗人造心脏。",
+    "en_chunks": [
+      "The variety of plastic objects at risk is dizzying:",
+      "early radios,",
+      "avant-garde sculptures,",
+      "celluloid animation stills from Disney films,",
+      "the first artificial heart."
+    ],
+    "zh_chunks": [
+      "面临风险的塑料制品种类令人眼花缭乱：",
+      "早期收音机、",
+      "前卫雕塑、",
+      "迪士尼电影中的赛璐珞动画剧照、",
+      "第一颗人造心脏。"
+    ],
+    "en_distractors": [
+      "The variety of plastic objects at risk is amazing:",
+      "late radios,"
+    ],
+    "zh_distractors": [
+      "面临风险的塑料制品种类令人沮丧：",
+      "晚期收音机、"
+    ],
+    "key_points": [
+      "at risk 的翻译（面临风险）",
+      "dizzying 的翻译（令人眼花缭乱）",
+      "冒号后列举的翻译",
+      "celluloid animation stills 的翻译（赛璐珞动画剧照）"
+    ],
+    "year": 2022,
+    "page": 3,
+    "source": "阅读A",
+    "en": "The variety of plastic objects at risk is dizzying: early radios, avant-garde sculptures, celluloid animation stills from Disney films, the first artificial heart.",
+    "pool": "en_to_zh",
+    "word_count": 23
+  },
+  "s0540": {
+    "id": "s0540",
+    "zh": "它们是脆弱生命的象征，是希望与反抗的象征，而且某种东西触动了我的灵魂。",
+    "en_chunks": [
+      "They were a symbol of fragile life,",
+      "of hope and defiance,",
+      "and something appealed to my soul."
+    ],
+    "zh_chunks": [
+      "它们是脆弱生命的象征，",
+      "是希望与反抗的象征，",
+      "而且某种东西触动了我的灵魂。"
+    ],
+    "en_distractors": [
+      "and something appealed to my heart.",
+      "and nothing appealed to my soul."
+    ],
+    "zh_distractors": [
+      "而且某种东西触动了我的心灵。",
+      "而且没有任何东西触动我的灵魂。"
+    ],
+    "key_points": [
+      "symbol of fragile life 译为“脆弱生命的象征”",
+      "hope and defiance 译为“希望与反抗”",
+      "appealed to my soul 译为“触动了我的灵魂”"
+    ],
+    "year": 2025,
+    "page": 11,
+    "source": "阅读B",
+    "en": "They were a symbol of fragile life, of hope and defiance, and something appealed to my soul.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  },
+  "s0108": {
+    "id": "s0108",
+    "zh": "费拉罗说，我们看到该项目与森林砍伐减少30%有关。",
+    "en_chunks": [
+      "We see that the program is associated with a 30 percent reduction in deforestation,",
+      "Ferraro says."
+    ],
+    "zh_chunks": [
+      "我们看到该项目与森林砍伐减少30%有关，",
+      "费拉罗说。"
+    ],
+    "en_distractors": [
+      "We see that the program is associated with a 30 percent increase in deforestation,",
+      "Ferraro says."
+    ],
+    "zh_distractors": [
+      "我们看到该项目与森林砍伐增加30%有关，",
+      "费拉罗说。"
+    ],
+    "key_points": [
+      "be associated with 译为“与……有关”",
+      "reduction in deforestation 译为“森林砍伐减少”",
+      "Ferraro says 译为“费拉罗说”"
+    ],
+    "year": 2021,
+    "page": 6,
+    "source": "阅读A",
+    "en": "We see that the program is associated with a 30 percent reduction in deforestation, Ferraro says.",
+    "pool": "en_to_zh",
+    "word_count": 15
+  },
+  "s0141": {
+    "id": "s0141",
+    "zh": "多明戈斯说，温斯顿说，改进的准确性，机器学习通常提供一种更可靠的统计形式，这使得数据更有价值。",
+    "en_chunks": [
+      "Domingos says,",
+      "Improved accuracy",
+      "Machine learning often provides a more reliable form of statistics",
+      "which makes data more valuable,",
+      "says Winston."
+    ],
+    "zh_chunks": [
+      "多明戈斯说，",
+      "改进的准确性，",
+      "机器学习通常提供一种更可靠的统计形式，",
+      "这使得数据更有价值，",
+      "温斯顿说。"
+    ],
+    "en_distractors": [
+      "Improved precision",
+      "which makes data less valuable,"
+    ],
+    "zh_distractors": [
+      "改进的精确性",
+      "这使得数据价值降低，"
+    ],
+    "key_points": [
+      "Improved accuracy 译为“改进的准确性”",
+      "a more reliable form of statistics 译为“一种更可靠的统计形式”",
+      "which makes data more valuable 译为“这使得数据更有价值”"
+    ],
+    "year": 2021,
+    "page": 12,
+    "source": "阅读B",
+    "en": "Domingos says, Improved accuracy Machine learning often provides a more reliable form of statistics which makes data more valuable, says Winston.",
+    "pool": "en_to_zh",
+    "word_count": 21
+  },
+  "s0010": {
+    "id": "s0010",
+    "zh": "真正成功的此类头衔持有者是那些做了远不止填补酒店客房、带来高规格艺术活动并为一年带来良好新闻的人。",
+    "en_chunks": [
+      "The really successful holders of such titles",
+      "are those that do a great deal more than",
+      "fill hotel bedrooms",
+      "and bring in high-profile arts events and good press for a year."
+    ],
+    "zh_chunks": [
+      "真正成功的此类头衔持有者",
+      "是那些做了远不止",
+      "填补酒店客房、",
+      "带来高规格艺术活动并为一年带来良好新闻的人。"
+    ],
+    "en_distractors": [
+      "are those that do a great deal less than",
+      "and bring in low-profile arts events and bad press for a year."
+    ],
+    "zh_distractors": [
+      "是那些做了远少于",
+      "带来低规格艺术活动并为一年带来负面新闻的人。"
+    ],
+    "key_points": [
+      "holders of such titles 译为“此类头衔的持有者”",
+      "do a great deal more than 译为“做了远不止”",
+      "fill hotel bedrooms 译为“填补酒店客房”",
+      "high-profile arts events 译为“高规格艺术活动”"
+    ],
+    "year": 2020,
+    "page": 4,
+    "source": "阅读A",
+    "en": "The really successful holders of such titles are those that do a great deal more than fill hotel bedrooms and bring in high-profile arts events and good press for a year.",
+    "pool": "en_to_zh",
+    "word_count": 31
+  },
+  "s0225": {
+    "id": "s0225",
+    "zh": "因为就业保护法使得解雇员工成本更高，雇主在招聘新员工时更加谨慎。",
+    "en_chunks": [
+      "Because employment protection laws make it costlier to fire an employee,",
+      "employers are more cautious about hiring new staff."
+    ],
+    "zh_chunks": [
+      "因为就业保护法使得解雇员工成本更高，",
+      "雇主在招聘新员工时更加谨慎。"
+    ],
+    "en_distractors": [
+      "Because employment protection laws make it cheaper to fire an employee,",
+      "employers are less cautious about hiring new staff."
+    ],
+    "zh_distractors": [
+      "因为就业保护法使得解雇员工成本更低，",
+      "雇主在招聘新员工时不太谨慎。"
+    ],
+    "key_points": [
+      "make it costlier to fire an employee 译为“使得解雇员工成本更高”",
+      "be cautious about 译为“对……谨慎”",
+      "hiring new staff 译为“招聘新员工”"
+    ],
+    "year": 2022,
+    "page": 8,
+    "source": "阅读A",
+    "en": "Because employment protection laws make it costlier to fire an employee, employers are more cautious about hiring new staff.",
+    "pool": "en_to_zh",
+    "word_count": 19
+  },
+  "s0009": {
+    "id": "s0009",
+    "zh": "一个经营糟糕的文化年像潮水一样冲刷过一个地方，带来一时的显赫，但给社区留下持久的利益。",
+    "en_chunks": [
+      "A badly run year of culture washes in and out of a place like the tide,",
+      "bringing prominence for a spell",
+      "but leaving no lasting benefits to the community."
+    ],
+    "zh_chunks": [
+      "一个经营糟糕的文化年像潮水一样冲刷过一个地方，",
+      "带来一时的显赫，",
+      "但给社区留下持久的利益。"
+    ],
+    "en_distractors": [
+      "A well run year of culture washes in and out of a place like the tide,",
+      "but leaving lasting benefits to the community."
+    ],
+    "zh_distractors": [
+      "一个经营良好的文化年像潮水一样冲刷过一个地方，",
+      "但给社区留下持久的利益。"
+    ],
+    "key_points": [
+      "badly run 译为“经营糟糕的”",
+      "washes in and out of a place like the tide 译为“像潮水一样冲刷过一个地方”",
+      "bringing prominence for a spell 译为“带来一时的显赫”",
+      "leaving no lasting benefits 译为“留下持久的利益”"
+    ],
+    "year": 2020,
+    "page": 4,
+    "source": "阅读A",
+    "en": "A badly run year of culture washes in and out of a place like the tide, bringing prominence for a spell but leaving no lasting benefits to the community.",
+    "pool": "en_to_zh",
+    "word_count": 29
+  },
+  "s0428": {
+    "id": "s0428",
+    "zh": "在许多情况下，专家们很难就什么是真正的物品、什么是赝品达成一致。",
+    "en_chunks": [
+      "In many cases",
+      "the experts have a hard time agreeing on",
+      "what is the real object and what is a forgery."
+    ],
+    "zh_chunks": [
+      "在许多情况下，",
+      "专家们很难就",
+      "什么是真正的物品、什么是赝品达成一致。"
+    ],
+    "en_distractors": [
+      "In few cases",
+      "what is the fake object and what is a real one."
+    ],
+    "zh_distractors": [
+      "在少数情况下，",
+      "什么是假物品、什么是真品达成一致。"
+    ],
+    "key_points": [
+      "In many cases 译为“在许多情况下”",
+      "have a hard time doing 译为“很难做某事”",
+      "agree on 译为“就……达成一致”",
+      "forgery 译为“赝品”"
+    ],
+    "year": 2024,
+    "page": 11,
+    "source": "阅读B",
+    "en": "In many cases the experts have a hard time agreeing on what is the real object and what is a forgery.",
+    "pool": "en_to_zh",
+    "word_count": 21
+  },
+  "s0196": {
+    "id": "s0196",
+    "zh": "据估计，这一代人由于技术的压力、个人成就的愿望和多样性的渴望，将在其工作生涯中为17个不同的雇主工作，并有五种不同的职业。",
+    "en_chunks": [
+      "It has been estimated that",
+      "this generation,",
+      "due to the pressures of technology,",
+      "the wish for personal fulfilment and desire for diversity,",
+      "will work for 17 different employers over the course of their working life",
+      "and have five different careers."
+    ],
+    "zh_chunks": [
+      "据估计，",
+      "这一代人",
+      "由于技术的压力、",
+      "个人成就的愿望和多样性的渴望，",
+      "将在其工作生涯中为17个不同的雇主工作，",
+      "并有五种不同的职业。"
+    ],
+    "en_distractors": [
+      "due to the pleasures of technology,",
+      "will work for 70 different employers over the course of their working life"
+    ],
+    "zh_distractors": [
+      "由于技术的乐趣、",
+      "将在其工作生涯中为70个不同的雇主工作"
+    ],
+    "key_points": [
+      "It has been estimated that 译为“据估计”",
+      "due to 译为“由于”",
+      "personal fulfilment 译为“个人成就”",
+      "over the course of their working life 译为“在其工作生涯中”"
+    ],
+    "year": 2022,
+    "page": 5,
+    "source": "阅读A",
+    "en": "It has been estimated that this generation, due to the pressures of technology, the wish for personal fulfilment and desire for diversity, will work for 17 different employers over the course of their working life and have five different careers.",
+    "pool": "en_to_zh",
+    "word_count": 39
+  },
+  "s0073": {
+    "id": "s0073",
+    "zh": "它背离了上帝和罗马天主教会的权威，转而支持一种更人本主义的存在方式。",
+    "en_chunks": [
+      "It turned from God and the authority of the Roman Catholic Church",
+      "and instead favoured a more humanistic approach to being."
+    ],
+    "zh_chunks": [
+      "它背离了上帝和罗马天主教会的权威，",
+      "转而支持一种更人本主义的存在方式。"
+    ],
+    "en_distractors": [
+      "It turned to God and the authority of the Roman Catholic Church",
+      "and instead favoured a more scientific approach to being."
+    ],
+    "zh_distractors": [
+      "它转向了上帝和罗马天主教会的权威，",
+      "转而支持一种更科学的存在方式。"
+    ],
+    "key_points": [
+      "turned from 译为“背离”",
+      "the authority of the Roman Catholic Church 译为“罗马天主教会的权威”",
+      "favoured 译为“支持”",
+      "a more humanistic approach to being 译为“一种更人本主义的存在方式”"
+    ],
+    "year": 2020,
+    "page": 15,
+    "source": "翻译C",
+    "en": "It turned from God and the authority of the Roman Catholic Church and instead favoured a more humanistic approach to being.",
+    "pool": "en_to_zh",
+    "word_count": 21
+  },
+  "s0034": {
+    "id": "s0034",
+    "zh": "哈达德和刘易斯担心，超过一半的州政府委员会中女性比例低于40%。",
+    "en_chunks": [
+      "Haddad and Lewis are concerned that",
+      "more than half the state-government boards",
+      "are less than 40 percent female."
+    ],
+    "zh_chunks": [
+      "哈达德和刘易斯担心，",
+      "超过一半的州政府委员会",
+      "女性比例低于40%。"
+    ],
+    "en_distractors": [
+      "Haddad and Lewis are happy that",
+      "more than half the state-government boards are more than 40 percent female."
+    ],
+    "zh_distractors": [
+      "哈达德和刘易斯高兴地看到，",
+      "超过一半的州政府委员会女性比例高于40%。"
+    ],
+    "key_points": [
+      "are concerned that 译为“担心”",
+      "state-government boards 译为“州政府委员会”",
+      "less than 40 percent female 译为“女性比例低于40%”"
+    ],
+    "year": 2020,
+    "page": 8,
+    "source": "阅读A",
+    "en": "Haddad and Lewis are concerned that more than half the state-government boards are less than 40 percent female.",
+    "pool": "en_to_zh",
+    "word_count": 17
+  }
+}
