@@ -48,6 +48,9 @@ jobs:
       - name: Build EXACT 3000 unique new-word lexicon + 100x30 schedule
         run: python scripts/build_lexicon.py cache/ecdict.csv cache/lemma.en.txt cache/wordnet_defs.json
 
+      - name: Dictionary contract self-test
+        run: python scripts/test_dictionary_contract.py
+
       - name: Validate EXACT 3000 unique new-word schedule
         run: python scripts/validate_base.py
 
@@ -104,13 +107,13 @@ jobs:
             audit/
           if-no-files-found: warn
 
-      - name: Commit validated V13 generated data
+      - name: Commit validated V14 generated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A data/generated data/checkpoints
           git diff --cached --quiet && exit 0
-          git commit -m "Publish validated V13 exact-3000 training data"
+          git commit -m "Publish validated V14 exact-3000 training data"
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
