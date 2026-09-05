@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "ready": true,
-  "release_id": "9e075715260fc0198d5a",
-  "created_utc": "2026-09-05T14:06:43+00:00",
+  "release_id": "8fcd4442e0a9a7a8da94",
+  "created_utc": "2026-09-05T14:19:33+00:00",
   "required_files": [
     "meta.json",
     "lexicon.json",
@@ -21,16 +21,16 @@
       "bytes": 877
     },
     "lexicon.json": {
-      "sha256": "f7d6b1a3f9d3cc0e76044f4090ae71958fc3039dde0eb997f32fe23a09c57bb5",
-      "bytes": 2485831
+      "sha256": "444694adb59ec293f80aafb9a84f82ebf3cc108638e3614b2bcac3473280c60e",
+      "bytes": 2484287
     },
     "lexicon_index.json": {
       "sha256": "ad5a76c7137cc90e48fe2aecc92b33880cca82a6ce62dad61e2a12a3cb9d78df",
       "bytes": 242330
     },
     "dictionary_lookup.json": {
-      "sha256": "6b3fd95e4771c2279a0ea103d4a245dba2a0869085312618516d38c5bd172775",
-      "bytes": 762967
+      "sha256": "5729a955297d8a28488613f71df91ba79d938fcd803f4aca1ecca5bdd822492b",
+      "bytes": 761653
     },
     "sentences.json": {
       "sha256": "98f50a59be20d70a4f313142eed43373fa7a5a10857789d7967657eff7f3f1b8",
@@ -41,16 +41,16 @@
       "bytes": 59504
     },
     "corpus.json": {
-      "sha256": "893c51800d193564554e478d27a52ab2b4f372fbec91db3057a3afdd2c119087",
-      "bytes": 265039
+      "sha256": "d889df0b0b63362c72564ab3965222e54dcfc446ea6c5468a2f7606e601d96c5",
+      "bytes": 265386
     },
     "analysis.json": {
       "sha256": "10bf4625c05508c85b00608f5e3a64b6c6aea37ad39516e8c720fa91e43086c9",
       "bytes": 186384
     },
     "context_translations.json": {
-      "sha256": "3c55176c8f4f33a9806b61516a1f6b77eee2dfec67db4ce0c6a74368ca22c751",
-      "bytes": 131773
+      "sha256": "00513ee3a58c9f5c1a838af9b009b8f9880e3d2e98b9a45c5fbfd80a5a6d1e60",
+      "bytes": 131723
     },
     "schedule.json": {
       "sha256": "6b1be18bcf43aa73d7f19ddf6b64dae4c67917525c28e1dabee7663a9cf12d2a",
