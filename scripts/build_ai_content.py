@@ -404,7 +404,7 @@ lex=json.loads(lexpath.read_text(encoding='utf8'))
 lex_out=json.loads(sensepath.read_text(encoding='utf8'))
 if len(lex)!=3000 or len(lex_out)!=3000:
     raise RuntimeError(f'local lexicon incomplete: lex={len(lex)} senses={len(lex_out)}')
-print('lexicon dictionary+senses 3000 / 3000 (prebuilt; no per-word AI loop in this stage)',flush=True)
+print(f'lexicon dictionary+senses {len(lex)} / {len(lex)} unique items (prebuilt; no per-word AI loop in this stage)',flush=True)
 
 # ---------- publish complete enrichment files ----------
 (WORK/'sentences.enriched.json').write_text(json.dumps(sent_out,ensure_ascii=False,indent=2),encoding='utf8')

@@ -11,18 +11,18 @@ for f in req:
     if not (TARGET/f).exists(): errors.append('missing '+f)
 if errors: print('RELEASE VALIDATION: FAIL'); print('\n'.join('- '+e for e in errors)); sys.exit(1)
 lex=load(TARGET/'lexicon.json'); dlookup=load(TARGET/'dictionary_lookup.json'); lexi=load(TARGET/'lexicon_index.json'); sent=load(TARGET/'sentences.json'); smeta=load(TARGET/'sentence_meta.json'); corpus=load(TARGET/'corpus.json'); ana=load(TARGET/'analysis.json'); ctx=load(TARGET/'context_translations.json'); sch=load(TARGET/'schedule.json')
-terms=[x.get('term') for x in lex]; ids=[x.get('item_id') for x in lex]
+N=len(lex); terms=[x.get('term') for x in lex]; ids=[x.get('item_id') for x in lex]
 def dups(xs): return [k for k,v in Counter(xs).items() if v>1][:20]
-if len(lex)!=3000: errors.append(f'lexicon != 3000: {len(lex)}')
+if N!=3000: errors.append(f'unique lexicon must be exactly 3000: {N}')
 if dups(terms): errors.append(f'duplicate lexicon terms: {dups(terms)}')
 if dups(ids): errors.append(f'duplicate lexicon ids: {dups(ids)}')
-if len(dlookup)<3000: errors.append(f'local dictionary too small: {len(dlookup)}')
-dmap={x.get('term'):x for x in dlookup}
+if len(dlookup)<N: errors.append(f'local dictionary too small: {len(dlookup)} < {N}')
+dmap={x.get('term'):x for x in dlookup if x.get('term')}
 missdict=[t for t in terms if t not in dmap]
 if missdict: errors.append(f'scheduled terms absent from local dictionary: {missdict[:20]}')
 baddict=[t for t in terms if not dmap.get(t,{}).get('dict_zh')]
 if baddict: errors.append(f'scheduled dictionary terms without Chinese meaning: {baddict[:20]}')
-if len(lexi)!=3000: errors.append(f'lexicon_index != 3000: {len(lexi)}')
+if len(lexi)!=N: errors.append(f'lexicon_index != unique lexicon: {len(lexi)} vs {N}')
 misszh=[x['term'] for x in lex if not x.get('sense_zh') or not x.get('dict_zh')]
 if misszh: errors.append(f'missing Chinese meanings: {misszh[:20]}')
 missdef=[x['term'] for x in lex if x.get('type')=='word' and not x.get('definition_en')]
@@ -46,17 +46,23 @@ if not set(corpus).issubset(set(ctx)): errors.append(f'context translations miss
 if len(ana)!=100: errors.append(f'analysis != 100: {len(ana)}')
 stages=Counter(x['stage'] for x in ana.values())
 if stages!=Counter({'precise':30,'coarse':30,'main_stem':40}): errors.append(f'bad analysis stages {dict(stages)}')
-if len(sch.get('words',[]))!=100: errors.append(f'word schedule days={len(sch.get("words",[]))}')
-for d in sch.get('words',[]):
-    if len(d.get('items',[]))!=30: errors.append(f'day {d.get("day")} has {len(d.get("items",[]))} words'); break
-word_terms=[t for d in sch.get('words',[]) for t in d.get('items',[])]
-if Counter(word_terms)!=Counter(terms):
-    missing=list((Counter(terms)-Counter(word_terms)).elements())[:20]; extra=list((Counter(word_terms)-Counter(terms)).elements())[:20]
-    errors.append(f'word schedule mismatch missing={missing} extra_or_duplicates={extra}')
+word_days=sch.get('words',[])
+if len(word_days)!=100: errors.append(f'word schedule days={len(word_days)}')
+term_band={x['term']:x.get('freq_band') for x in lex}
+word_terms=[]
+for d in word_days:
+    items=d.get('items',[])
+    if len(items)!=30: errors.append(f'day {d.get("day")} has {len(items)} words'); break
+    if Counter(term_band.get(t) for t in items)!=Counter({'high':15,'mid':9,'low':6}): errors.append(f'daily 5:3:2 broken day={d.get("day")}'); break
+    word_terms+=items
+if len(word_terms)!=3000: errors.append(f'word new-item slots !=3000: {len(word_terms)}')
+if len(set(word_terms))!=3000: errors.append(f'word schedule contains repeated new items: unique={len(set(word_terms))}')
+if set(word_terms)!=set(terms): errors.append(f'word schedule unique coverage mismatch missing={list(set(terms)-set(word_terms))[:20]} unknown={list(set(word_terms)-set(terms))[:20]}')
+if Counter(term_band[t] for t in word_terms if t in term_band)!=Counter({'high':1500,'mid':900,'low':600}): errors.append('100-day exposure band totals broken')
 if len(sch.get('sentences',[]))!=100: errors.append('sentence 100-day schedule broken')
 for d in sch.get('sentences',[]):
     if len(d.get('en_to_zh',[]))!=2 or len(d.get('zh_to_en',[]))!=2 or len(d.get('focus_ids',[]))!=2: errors.append(f'daily sentence quota broken day={d.get("day")}'); break
 if errors:
     print('RELEASE VALIDATION: FAIL'); print('\n'.join('- '+e for e in errors)); sys.exit(1)
 print('RELEASE VALIDATION: PASS')
-print('3000 unique vocab; local dictionary covers every scheduled item; all contexts resolve; 600 mutually exclusive sentences; 100 analyses; 100-day schedules exact.')
+print('3000 UNIQUE new vocab items; no review occupies the 3000 new-word slots; local dictionary covers every item; 600 mutually exclusive sentences; 100 analyses; 100-day schedules exact.')

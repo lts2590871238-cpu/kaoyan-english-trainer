@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import csv, json, re, sys, hashlib
+import csv, json, re, sys, hashlib, os
 from pathlib import Path
 from collections import defaultdict, Counter
 
@@ -179,8 +179,19 @@ for term,r in agg.items():
         proper_excluded+=1; continue
     yc=dict(sorted(r['year_counts'].items()))
     core=sum(c for y,c in yc.items() if int(y)>=2023)>0
-    if not core and int(r['count'])<5: continue
+    # Keep all clean non-core candidates that occur at least twice. Selection into the
+    # final 3000 happens later by the frozen supplement tiers: >=5 first, then >=4.
+    # This preserves the user's priority while guaranteeing exactly 3000 UNIQUE items.
+    if not core and int(r['count'])<4: continue
     r['year_counts']=yc; r['forms']=sorted(r['forms']); r['core_2023_2026']=core; r['supplement_2020_2022']=not core
+    if core:
+        r['source_tier']='core_2023_2026'
+    elif int(r['count'])>=5:
+        r['source_tier']='supp_ge5'
+    elif int(r['count'])==4:
+        r['source_tier']='supp_eq4'
+    else:
+        r['source_tier']='supp_eq4'
     entries.append(r)
 
 # Curated phrases are valid learning units even if they lack an English dictionary gloss locally.
@@ -200,7 +211,7 @@ for phrase,zh in phrases.items():
     entries.append({'term':p,'type':'phrase','count':sum(yc.values()),'year_counts':dict(sorted(yc.items())),'contexts':ctx,
         'phonetic':(prow.get('phonetic') or '').strip(),'dict_zh':zh,'match_zh':short_match_zh(zh),'definition_en':pdef,
         'pos':'phrase','collins':0,'oxford':0,'bnc':0,'frq':0,'forms':[p],'dictionary_source':'curated',
-        'definition_source':'ecdict' if pdef else '', 'needs_context_fill':False,'core_2023_2026':True,'supplement_2020_2022':False})
+        'definition_source':'ecdict' if pdef else '', 'needs_context_fill':False,'core_2023_2026':True,'supplement_2020_2022':False,'source_tier':'core_2023_2026'})
 
 # Canonical term dedupe.
 canon={}
@@ -234,24 +245,75 @@ def priority(r):
     return (-core,-freq,-dictw,-context_bonus,-complete_bonus,-corpusw,-phrase_bonus,r['term'])
 
 entries.sort(key=priority)
-if len(entries)<3000:
-    raise SystemExit(f'BASE FAIL: only {len(entries)} canonical learning candidates after source/quality filtering; need 3000')
-scheduled=entries[:3000]
-terms=[r['term'] for r in scheduled]
-if len(set(terms))!=3000: raise SystemExit('BASE FAIL: duplicate canonical terms')
-for i,r in enumerate(scheduled):
-    r['item_id']=f'v{i+1:04d}'; r['rank']=i+1; r['freq_band']='high' if i<1500 else ('mid' if i<2400 else 'low'); r['scheduled']=True
 
-high=scheduled[:1500]; mid=scheduled[1500:2400]; low=scheduled[2400:]
+# V13 FROZEN RULE: exactly 3000 UNIQUE learning items.
+# Priority order:
+# 1) all clean 2023-2026 core items;
+# 2) new 2020-2022 items with seven-year count >=5 (>4);
+# 3) if still short, count ==4 (>3).
+# The curated 2023-2026 phrase layer has been expanded with verified high-value
+# expressions from the original papers so the final library can reach exactly 3000
+# without lowering the old-year supplement threshold below four occurrences.
+# Repetition/review is handled elsewhere and NEVER occupies a new-word slot.
+core_entries=[r for r in entries if r.get('core_2023_2026')]
+supp5=[r for r in entries if not r.get('core_2023_2026') and int(r.get('count',0))>=5]
+supp4=[r for r in entries if not r.get('core_2023_2026') and int(r.get('count',0))==4]
+for arr in (core_entries,supp5,supp4): arr.sort(key=priority)
+
+scheduled=[]
+selection_counts={}
+def take(label, arr, n=None):
+    global scheduled
+    room=3000-len(scheduled)
+    if room<=0:
+        selection_counts[label]=0; return
+    k=min(room, len(arr) if n is None else min(n,len(arr)))
+    scheduled.extend(arr[:k]); selection_counts[label]=k
+
+take('core_2023_2026',core_entries)
+take('supp_ge5',supp5)
+take('supp_eq4',supp4)
+if len(scheduled)!=3000:
+    avail={
+      'core':len(core_entries),'ge5':len(supp5),'eq4':len(supp4)
+    }
+    raise SystemExit(f'BASE FAIL: only {len(scheduled)} clean unique learning items after all frozen tiers; need 3000; available={avail}')
+
+# Final deterministic order is by frequency/value within the selected set so that
+# the top 50/30/20 split forms the requested high/mid/low bands.
+scheduled.sort(key=priority)
+terms=[r['term'] for r in scheduled]
+if len(terms)!=3000 or len(set(terms))!=3000:
+    dup=[t for t,c in Counter(terms).items() if c>1]
+    raise SystemExit(f'BASE FAIL: exact unique-3000 invariant broken len={len(terms)} unique={len(set(terms))} dup={dup[:20]}')
+for i,r in enumerate(scheduled):
+    r['item_id']=f'v{i+1:04d}'; r['rank']=i+1
+    r['freq_band']='high' if i<1500 else ('mid' if i<2400 else 'low')
+    r['scheduled']=True
+
+# EXACTLY one new exposure per learning item. No review/reinforcement here.
+high=scheduled[:1500]; mid=scheduled[1500:2400]; low=scheduled[2400:3000]
 days=[]
 for d in range(100):
-    items=[]; ids=[]; hs=high[d*15:(d+1)*15]; ms=mid[d*9:(d+1)*9]; ls=low[d*6:(d+1)*6]
+    h=high[d*15:(d+1)*15]; m=mid[d*9:(d+1)*9]; l=low[d*6:(d+1)*6]
+    if len(h)!=15 or len(m)!=9 or len(l)!=6:
+        raise SystemExit(f'BASE FAIL: band slicing broken on day {d+1}')
+    items=[]; ids=[]; bands=[]
+    # Interleave 5 high + 3 mid + 2 low three times to avoid visual clumping.
     for b in range(3):
-        grp=hs[b*5:(b+1)*5]+ms[b*3:(b+1)*3]+ls[b*2:(b+1)*2]
-        items.extend(x['term'] for x in grp); ids.extend(x['item_id'] for x in grp)
-    days.append({'day':d+1,'items':items,'item_ids':ids})
+        grp=h[b*5:(b+1)*5]+m[b*3:(b+1)*3]+l[b*2:(b+1)*2]
+        for x in grp:
+            items.append(x['term']); ids.append(x['item_id']); bands.append(x['freq_band'])
+    days.append({'day':d+1,'items':items,'item_ids':ids,'bands':bands,'new_count':30,'review_count':0})
+
 flat=[t for d in days for t in d['items']]
-if len(flat)!=3000 or len(set(flat))!=3000 or set(flat)!=set(terms): raise SystemExit('BASE FAIL: schedule not bijective')
+flatids=[i for d in days for i in d['item_ids']]
+if len(flat)!=3000 or len(set(flat))!=3000 or set(flat)!=set(terms):
+    raise SystemExit(f'BASE FAIL: 100-day schedule is not 3000 unique new words: slots={len(flat)} unique={len(set(flat))}')
+if len(flatids)!=3000 or len(set(flatids))!=3000:
+    raise SystemExit('BASE FAIL: schedule item ids are not unique 3000')
+if any(Counter(d['bands'])!=Counter({'high':15,'mid':9,'low':6}) for d in days):
+    raise SystemExit('BASE FAIL: daily 5:3:2 ratio broken')
 
 # Initialize sense table from local sources. Missing fields are intentionally preserved for the LIMITED backfill stage.
 senses={}
@@ -260,7 +322,6 @@ for x in scheduled:
                       'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'example_en':'','example_zh':'',
                       'sense_source':'local_dictionary' if not x.get('missing_dictionary_fields') else 'local_partial'}
 
-# Keep all useful lookup entries, even partial; scheduled items will be made complete in backfill stage.
 lookup=[{'term':r['term'],'forms':r.get('forms',[]),'phonetic':r.get('phonetic',''),'dict_zh':r.get('dict_zh',''),
          'definition_en':r.get('definition_en',''),'pos':r.get('pos','')} for r in entries]
 lookup.sort(key=lambda x:x['term'])
@@ -273,12 +334,21 @@ missing=Counter()
 for r in scheduled:
     for k in r.get('missing_dictionary_fields',[]): missing[k]+=1
 complete=sum(not r.get('missing_dictionary_fields') for r in scheduled)
-report={'lemma_mapped_surfaces':sum(1 for w in needed if fmap.get(w,w)!=w),'eligible_unique_entries':len(entries),'scheduled_entries':3000,
+exposure_counts=Counter(flat)
+report={'eligible_unique_entries':len(entries),'unique_learning_items':3000,'scheduled_exposure_slots':3000,
+        'reinforcement_slots':0,'lemma_mapped_surfaces':sum(1 for w in needed if fmap.get(w,w)!=w),
         'scheduled_words':sum(r['type']=='word' for r in scheduled),'scheduled_phrases':sum(r['type']=='phrase' for r in scheduled),
         'proper_noun_excluded':proper_excluded,'days_with_30':100,'unique_scheduled_terms':3000,
+        'unique_band_counts':{'high':1500,'mid':900,'low':600},
+        'exposure_band_counts':{'high':1500,'mid':900,'low':600},
+        'source_tier_available':{'core_2023_2026':len(core_entries),'supp_ge5':len(supp5),'supp_eq4':len(supp4)},
+        'source_tier_selected':selection_counts,
+        'lowest_supplement_tier_used':next((k for k in ('supp_eq4','supp_ge5') if selection_counts.get(k,0)>0), 'core_only'),
         'contextless_scheduled_terms':sum(not r.get('contexts') for r in scheduled),'local_dictionary_complete_items':complete,
         'dictionary_backfill_items':3000-complete,'missing_fields':dict(missing),
         'lexicon_fingerprint':hashlib.sha256('\n'.join(terms).encode()).hexdigest()}
 (WORK/'lexicon_report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf8')
 print(json.dumps(report,ensure_ascii=False,indent=2))
-print('CANONICAL 3000 BUILD: PASS')
+print('CANONICAL LEARNING LEXICON BUILD: PASS')
+print('EXACT 3000 UNIQUE LEXICON BUILD: PASS')
+print('3000 unique new learning items = 100 days x 30; no review item occupies a new-word slot; daily high:mid:low = 15:9:6.')
