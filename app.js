@@ -2,6 +2,9 @@
   'use strict';
   const CFG = window.XUANXUAN_CONFIG || {};
   const APP_KEY = 'xuanxuan50_v6_state';
+  const BACKUP_KEY = APP_KEY + '_backup';
+  const MEMORY_DB = 'xuanxuan50_memory_db';
+  const MEMORY_STORE = 'kv';
   const INTERVALS = [1,2,4,7,15,30,60,120];
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => [...r.querySelectorAll(s)];
@@ -60,15 +63,41 @@
     prefetch(){const go=()=>this.full().catch(()=>{});if('requestIdleCallback' in window)requestIdleCallback(go,{timeout:2200});else setTimeout(go,700);}
   };
 
+  function openMemoryDB(){
+    return new Promise((resolve,reject)=>{
+      if(!('indexedDB' in window)) return reject(new Error('IndexedDB unavailable'));
+      const req=indexedDB.open(MEMORY_DB,1);
+      req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(MEMORY_STORE))db.createObjectStore(MEMORY_STORE);};
+      req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error||new Error('IndexedDB open failed'));
+    });
+  }
+  async function idbGet(key){const db=await openMemoryDB();return new Promise((resolve,reject)=>{const tx=db.transaction(MEMORY_STORE,'readonly'),r=tx.objectStore(MEMORY_STORE).get(key);r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error);tx.oncomplete=()=>db.close();});}
+  async function idbSet(key,value){const db=await openMemoryDB();return new Promise((resolve,reject)=>{const tx=db.transaction(MEMORY_STORE,'readwrite');tx.objectStore(MEMORY_STORE).put(value,key);tx.oncomplete=()=>{db.close();resolve();};tx.onerror=()=>{db.close();reject(tx.error);};});}
   const Store = {
-    state:null,
-    load(){
-      try{this.state=JSON.parse(localStorage.getItem(APP_KEY)||'null');}catch{this.state=null;}
-      if(!this.state) this.state={version:6,currentDay:1,created:todayISO(),sound:true,music:false,accent:CFG.DEFAULT_ACCENT||'en-US',plans:{},days:{},words:{},sentences:{}};
-      this.state.plans ||= {}; this.state.days ||= {}; this.state.words ||= {}; this.state.sentences ||= {};
+    state:null,saveTimer:null,persistGranted:false,
+    fresh(){return {version:7,schemaVersion:7,currentDay:1,created:todayISO(),updatedAt:Date.now(),sound:true,music:false,accent:CFG.DEFAULT_ACCENT||'en-US',plans:{},days:{},words:{},sentences:{}};},
+    parse(raw){try{const o=typeof raw==='string'?JSON.parse(raw):raw;return this.valid(o)?o:null;}catch{return null;}},
+    valid(o){return !!(o&&typeof o==='object'&&Number(o.currentDay)>=1&&o.days&&o.words&&o.sentences);},
+    normalize(o){o=this.valid(o)?o:this.fresh();o.version=7;o.schemaVersion=7;o.currentDay=Math.min(100,Math.max(1,Number(o.currentDay)||1));o.created ||= todayISO();o.updatedAt ||= Date.now();o.sound=o.sound!==false;o.music=!!o.music;o.accent ||= CFG.DEFAULT_ACCENT||'en-US';o.plans ||= {};o.days ||= {};o.words ||= {};o.sentences ||= {};return o;},
+    newest(rows){return rows.filter(x=>this.valid(x)).sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0))[0]||null;},
+    load(){const primary=this.parse(localStorage.getItem(APP_KEY)),backup=this.parse(localStorage.getItem(BACKUP_KEY));this.state=this.normalize(this.newest([primary,backup])||this.fresh());return this.state;},
+    async hydrate(){
+      let dbState=null,dbBackup=null;try{[dbState,dbBackup]=await Promise.all([idbGet('state'),idbGet('backup')]);}catch(e){console.warn('memory idb unavailable',e?.message||e);}
+      const localBackup=this.parse(localStorage.getItem(BACKUP_KEY));const best=this.newest([this.state,this.parse(dbState),this.parse(dbBackup),localBackup]);
+      if(best)this.state=this.normalize(best);
+      this.save(false);
+      try{if(navigator.storage?.persist)this.persistGranted=await navigator.storage.persist();}catch{}
       return this.state;
     },
-    save(){localStorage.setItem(APP_KEY,JSON.stringify(this.state));},
+    save(rotate=true){
+      this.state=this.normalize(this.state);this.state.updatedAt=Date.now();const json=JSON.stringify(this.state);
+      try{const prev=localStorage.getItem(APP_KEY);if(rotate&&prev&&prev!==json)localStorage.setItem(BACKUP_KEY,prev);localStorage.setItem(APP_KEY,json);}catch(e){console.warn('local memory save failed',e);}
+      clearTimeout(this.saveTimer);this.saveTimer=setTimeout(()=>this.flush(),120);
+    },
+    async flush(){
+      clearTimeout(this.saveTimer);this.saveTimer=null;const snapshot=JSON.parse(JSON.stringify(this.state));
+      try{const old=await idbGet('state');if(old&&this.valid(old)&&Number(old.updatedAt)!==Number(snapshot.updatedAt))await idbSet('backup',old);await idbSet('state',snapshot);}catch(e){console.warn('indexed memory save failed',e?.message||e);}
+    },
     day(n=this.state.currentDay){return this.state.days[n] ||= {wordsDone:[],en2zhDone:[],zh2enDone:[],focusDone:[],reviewDone:[]};},
     word(term){return this.state.words[term] ||= {attempts:0,correct:0,wrong:0,stage:0,learnedDay:null,lastSeen:null,nextReview:null,contextsUsed:[]};},
     sentence(id){return this.state.sentences[id] ||= {attempts:0,correct:0,totalScore:0,module:null,lastSeen:null};}
@@ -95,9 +124,21 @@
     setQuiet(v){this.quiet=v; if(v)this.stopMusic(); else this.startMusic();},
     toggleMusic(){Store.state.music=!Store.state.music;Store.save();Store.state.music?this.startMusic():this.stopMusic();renderTopbarState();},
     toggleSound(){Store.state.sound=!Store.state.sound;Store.save();renderTopbarState();},
-    speak(text){
-      if(!('speechSynthesis' in window))return toast('当前浏览器不支持语音朗读');
-      speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang=Store.state.accent||'en-US';u.rate=.86;u.pitch=1; speechSynthesis.speak(u);
+    audioCache:new Map(),audio:null,
+    async lookupAudio(text){
+      const key=(Store.state.accent||'en-US')+'|'+text.toLowerCase();if(this.audioCache.has(key))return this.audioCache.get(key);
+      if(!/^[A-Za-z][A-Za-z'-]*$/.test(text)){this.audioCache.set(key,'');return '';}
+      try{const ctrl=new AbortController(),tm=setTimeout(()=>ctrl.abort(),4500),r=await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(text),{signal:ctrl.signal});clearTimeout(tm);if(!r.ok)throw 0;const rows=await r.json(),audios=[];for(const row of rows||[])for(const p of row.phonetics||[])if(p.audio)audios.push(p.audio.startsWith('//')?'https:'+p.audio:p.audio);const wantGB=(Store.state.accent||'en-US')==='en-GB';const preferred=audios.find(u=>wantGB?/uk|gb/i.test(u):/us/i.test(u))||audios[0]||'';this.audioCache.set(key,preferred);return preferred;}catch{this.audioCache.set(key,'');return '';}
+    },
+    preload(words){for(const w of words||[])this.lookupAudio(String(w)).catch(()=>{});},
+    async playRemote(text){const url=await this.lookupAudio(text);if(!url)return false;try{this.audio?.pause?.();const a=new Audio(url);this.audio=a;a.playbackRate=.92;await a.play();return true;}catch{return false;}},
+    async speak(text){
+      text=String(text||'').trim();if(!text)return;
+      const canSynth='speechSynthesis' in window&&'SpeechSynthesisUtterance' in window;
+      if(canSynth){
+        try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=Store.state.accent||'en-US';u.rate=.86;u.pitch=1;let started=false,fallback=false;u.onstart=()=>{started=true;};u.onerror=async()=>{if(fallback)return;fallback=true;if(!await this.playRemote(text))toast('这个浏览器暂时无法播放该读音');};speechSynthesis.speak(u);setTimeout(async()=>{if(!started&&!fallback){fallback=true;try{speechSynthesis.cancel();}catch{}if(!await this.playRemote(text))toast('这个浏览器暂时无法播放该读音');}},1200);return;}catch{}
+      }
+      if(!await this.playRemote(text))toast('这个浏览器暂时无法播放该读音');
     }
   };
 
@@ -115,12 +156,15 @@
     if(m){m.disabled=Sound.quiet;m.title=Sound.quiet?'单词读音页面自动暂停音乐':'轻音乐';}
   }
   function exportMemory(){const blob=new Blob([JSON.stringify(Store.state,null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=`轩轩英语学习记录-${todayISO()}.json`;a.click();URL.revokeObjectURL(u);}
-  function importMemory(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!o||!o.words||!o.days)throw 0;Store.state=o;Store.save();toast('学习记录已导入');route();}catch{toast('这个记录文件无法识别');}};r.readAsText(f);}
+  function importMemory(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=async()=>{try{const o=JSON.parse(r.result);if(!Store.valid(o))throw 0;Store.state=Store.normalize(o);Store.save();await Store.flush();toast('学习记录已导入并双重保存');route();}catch{toast('这个记录文件无法识别');}};r.readAsText(f);}
   function toast(msg){document.querySelector('.toast')?.remove();const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2200);}
 
+  const AIState={health:null,checkedAt:0};
+  async function aiHealth(force=false){const base=(CFG.AI_PROXY_URL||'').replace(/\/$/,'');if(!base)return false;if(!force&&AIState.health!==null&&Date.now()-AIState.checkedAt<60000)return AIState.health;const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),6000);try{const r=await fetch(base+'/health',{cache:'no-store',signal:ctrl.signal});AIState.health=r.ok;AIState.checkedAt=Date.now();return AIState.health;}catch{AIState.health=false;AIState.checkedAt=Date.now();return false;}finally{clearTimeout(t);}}
   async function ai(path,payload){
     const base=(CFG.AI_PROXY_URL||'').replace(/\/$/,''); if(!base) throw new Error('AI未配置');
-    const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),10000); try{const r=await fetch(base+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:ctrl.signal});if(!r.ok)throw new Error('AI '+r.status);return await r.json();}finally{clearTimeout(t);}
+    if(!await aiHealth())throw new Error('AI代理未连接');
+    const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),30000); try{const r=await fetch(base+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:ctrl.signal});if(!r.ok){AIState.health=false;throw new Error('AI '+r.status);}const out=await r.json();if(out?.error)throw new Error(out.error);return out;}finally{clearTimeout(t);}
   }
 
   function moduleStats(module,total){
@@ -223,7 +267,7 @@
     const data=await readyData(true),plan=await ensurePlan(data),day=Store.day(),done=new Set(day.wordsDone),terms=plan.words;let round=Math.min(2,Math.floor([...done].filter(x=>terms.includes(x)).length/10));
     const render=()=>{
       const current=terms.slice(round*10,round*10+10),left=current.filter(t=>!done.has(t));const items=(left.length?left:current);const lmap=data.lexIndex.byTerm;const chinese=shuffle(items.map(t=>({t,zh:lmap.get(t)?.sense_zh||lmap.get(t)?.dict_zh||''})));
-      shell(`<main class="page">${head('单词连线',`<div class="module-stat">今日 ${done.size}/30 · 第 ${round+1}/3 轮<div class="thin-progress"><i style="width:${done.size/30*100}%"></i></div></div>`)}<div class="split-layout"><section class="study-card"><div class="round-row"><span>先点英文，再点中文。读音按钮可以反复听。</span><span>高 : 中 : 低 = 5 : 3 : 2</span></div><div class="match-grid"><div class="match-col">${items.map(t=>`<button class="match-item eng" data-term="${esc(t)}"><span>${esc(t)}</span><span class="speak" data-speak="${esc(t)}">🔊</span></button>`).join('')}</div><div class="match-col">${chinese.map((x,i)=>`<button class="match-item zh" data-term="${esc(x.t)}"><span>${String.fromCharCode(97+i)}. ${esc(x.zh)}</span></button>`).join('')}</div></div><div id="roundDone" class="finish-row"></div></section><aside class="illustration"><img src="assets/word-match.jpg" alt="单词连线陪伴图"></aside></div></main>`);bindMatch(items);};
+      shell(`<main class="page">${head('单词连线',`<div class="module-stat">今日 ${done.size}/30 · 第 ${round+1}/3 轮<div class="thin-progress"><i style="width:${done.size/30*100}%"></i></div></div>`)}<div class="split-layout"><section class="study-card"><div class="round-row"><span>先点英文，再点中文。读音按钮可以反复听。</span><span>高 : 中 : 低 = 5 : 3 : 2</span></div><div class="match-grid"><div class="match-col">${items.map(t=>`<button class="match-item eng" data-term="${esc(t)}"><span>${esc(t)}</span><span class="speak" data-speak="${esc(t)}">🔊</span></button>`).join('')}</div><div class="match-col">${chinese.map((x,i)=>`<button class="match-item zh" data-term="${esc(x.t)}"><span>${String.fromCharCode(97+i)}. ${esc(x.zh)}</span></button>`).join('')}</div></div><div id="roundDone" class="finish-row"></div></section><aside class="illustration"><img src="assets/word-match.jpg" alt="单词连线陪伴图"></aside></div></main>`);Sound.preload(items);bindMatch(items);};
     function bindMatch(items){let selected=null,wrongSet=new Set();$$('[data-speak]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();Sound.speak(b.dataset.speak);}));$$('.eng').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('done'))return;$$('.eng').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selected=b.dataset.term;}));$$('.zh').forEach(b=>b.addEventListener('click',()=>{if(!selected||b.classList.contains('done'))return;const e=$(`.eng[data-term="${CSS.escape(selected)}"]`);if(b.dataset.term===selected){e.classList.add('done','correct');b.classList.add('done','correct');const first=!wrongSet.has(selected);if(!done.has(selected)){done.add(selected);day.wordsDone.push(selected);updateWord(selected,first,null);Store.save();}Sound.sfx('ok');selected=null;if(items.every(t=>done.has(t))){$('#roundDone').innerHTML=round<2?'<button class="primary" id="nextRound">下一组 10 个</button>':'<button class="primary" id="backHome">今天的30个完成啦 🌷</button>';$('#nextRound')?.addEventListener('click',()=>{round++;render();});$('#backHome')?.addEventListener('click',()=>{location.hash='#home';});}}else{wrongSet.add(selected);e.classList.add('wrong');b.classList.add('wrong');Sound.sfx('bad');setTimeout(()=>{e.classList.remove('wrong');b.classList.remove('wrong');},300);}}));}
     render();
   }
@@ -243,7 +287,7 @@
     if(!rec){div.innerHTML=`<button class="close">×</button><h3>${esc(form)}</h3><div class="day-sub">本地词典没有可靠词条，因此不显示猜测释义。</div>`;}
     else if(!scheduled){div.innerHTML=`<button class="close">×</button><h3>${esc(rec.term)} <button class="speak" data-pop-speak>🔊</button></h3>${rec.phonetic?`<div class="day-sub">/${esc(rec.phonetic)}/</div>`:''}<div style="margin-top:7px"><b>${esc(rec.dict_zh)}</b></div>${rec.definition_en?`<div class="day-sub" style="margin-top:7px">${esc(rec.definition_en)}</div>`:''}<div class="book-meta">辅助词典词条 · 不占每日3000词学习配额</div>`;}
     else{const st=Store.state.words[rec.term];const years=Object.entries(rec.year_counts||{}).map(([y,c])=>`${y}×${c}`).join(' · ');div.innerHTML=`<button class="close">×</button><h3>${esc(rec.term)} <button class="speak" data-pop-speak>🔊</button></h3><div><b>${esc(rec.sense_zh)}</b></div>${rec.phonetic?`<div class="day-sub">/${esc(rec.phonetic)}/</div>`:''}<div style="margin-top:7px">${esc(rec.dict_zh)}</div>${rec.definition_en?`<div class="day-sub" style="margin-top:7px">${esc(rec.definition_en)}</div>`:''}<div class="book-meta">七年真题出现 ${rec.count} 次 · ${esc(years)}${st?` · 记忆阶段 ${st.stage}/7`:''}</div>`;}
-    document.body.appendChild(div);$('.close',div).onclick=()=>div.remove();$('[data-pop-speak]',div)?.addEventListener('click',()=>Sound.speak(rec.term));
+    document.body.appendChild(div);if(rec?.term)Sound.preload([rec.term]);$('.close',div).onclick=()=>div.remove();$('[data-pop-speak]',div)?.addEventListener('click',()=>Sound.speak(rec.term));
   }
 
   async function focusPage(){const data=await readyData(false),plan=await ensurePlan(data);if(plan.focusType==='analysis')return analysisPage(data,plan);return freeTranslationPage(data,plan);}
@@ -272,8 +316,12 @@
     function bookRow(r){const st=Store.state.words[r.term],dots=Array.from({length:8},(_,i)=>`<i class="dot ${i<=st.stage?'on':''}"></i>`).join(''),ctx=(r.contexts||[])[0],src=ctx?data.corpus?.[ctx.sentence_id]:null;return `<div class="book-item"><div class="book-top"><div><span class="book-term">${esc(r.term)}</span> <button class="speak" data-book-speak="${esc(r.term)}">🔊</button></div><span class="badge ${r.freq_band}">${r.freq_band==='high'?'高频':r.freq_band==='mid'?'中频':'低频'} · ${r.count}次</span></div><div class="book-meaning">${esc(r.sense_zh)}</div><div class="book-meta">${r.phonetic?'/'+esc(r.phonetic)+'/ · ':''}第 ${st.learnedDay} 天加入 · 下次复习 ${st.nextReview||'待安排'}</div><div class="mastery">${dots}</div>${src?`<div class="book-context">${esc(src.en)}</div>`:''}</div>`;}
     render();}
 
-  async function statsPage(){const data=await readyData(false),w=Object.values(Store.state.words),ss=Object.values(Store.state.sentences),wacc=w.reduce((a,x)=>a+x.correct,0)/Math.max(1,w.reduce((a,x)=>a+x.attempts,0)),sacc=ss.reduce((a,x)=>a+x.correct,0)/Math.max(1,ss.reduce((a,x)=>a+x.attempts,0));const stable=w.filter(x=>x.stage>=5).length,weak=w.filter(x=>x.stage<=2&&x.attempts).length;shell(`<main class="page">${head('学习记录','')}<section class="study-card"><div class="task-grid"><div class="task"><span class="emoji">📅</span><b>第 ${Store.state.currentDay}/100 天</b><small>按学习日推进，不会因为断一天自动跳过</small></div><div class="task"><span class="emoji">📖</span><b>${w.length} 个词已接触</b><small>稳定掌握 ${stable} · 易错/模糊 ${weak}</small></div><div class="task"><span class="emoji">🎯</span><b>词汇正确率 ${Math.round(wacc*100)}%</b><small>包含连线与真题语境复习</small></div><div class="task"><span class="emoji">✍️</span><b>句子正确率 ${Math.round(sacc*100)}%</b><small>拼译、翻译、成分分析</small></div></div><div class="finish-row"><button class="secondary" onclick="location.hash='#wordbook'">打开单词本</button></div></section></main>`);}
+  async function statsPage(){const data=await readyData(false),w=Object.values(Store.state.words),ss=Object.values(Store.state.sentences),wacc=w.reduce((a,x)=>a+x.correct,0)/Math.max(1,w.reduce((a,x)=>a+x.attempts,0)),sacc=ss.reduce((a,x)=>a+x.correct,0)/Math.max(1,ss.reduce((a,x)=>a+x.attempts,0));const stable=w.filter(x=>x.stage>=5).length,weak=w.filter(x=>x.stage<=2&&x.attempts).length;shell(`<main class="page">${head('学习记录','')}<section class="study-card"><div class="task-grid"><div class="task"><span class="emoji">📅</span><b>第 ${Store.state.currentDay}/100 天</b><small>按学习日推进，不会因为断一天自动跳过</small></div><div class="task"><span class="emoji">📖</span><b>${w.length} 个词已接触</b><small>稳定掌握 ${stable} · 易错/模糊 ${weak}</small></div><div class="task"><span class="emoji">🎯</span><b>词汇正确率 ${Math.round(wacc*100)}%</b><small>包含连线与真题语境复习</small></div><div class="task"><span class="emoji">✍️</span><b>句子正确率 ${Math.round(sacc*100)}%</b><small>拼译、翻译、成分分析</small></div><div class="task"><span class="emoji">💾</span><b>学习记录已自动保存</b><small>LocalStorage + IndexedDB 双备份${Store.persistGranted?' · 已申请持久存储':''}</small></div></div><div class="finish-row"><button class="secondary" onclick="location.hash='#wordbook'">打开单词本</button></div></section></main>`);}
 
   async function route(){const h=(location.hash||'#home').slice(1);try{if(h==='home')return home();if(h==='words')return wordsPage();if(h==='en2zh')return sentenceArrange('en2zh');if(h==='zh2en')return sentenceArrange('zh2en');if(h==='focus')return focusPage();if(h==='review')return reviewPage();if(h==='wordbook')return wordbookPage();if(h==='stats')return statsPage();location.hash='#home';}catch(e){console.error(e);}}
-  window.addEventListener('hashchange',route);window.addEventListener('load',()=>{if(!location.hash)location.hash='#home';route();});
+  window.addEventListener('hashchange',route);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')Store.flush();});
+  window.addEventListener('pagehide',()=>Store.flush());
+  window.addEventListener('beforeunload',()=>Store.save(false));
+  window.addEventListener('load',async()=>{await Store.hydrate();if(!location.hash)location.hash='#home';route();});
 })();
