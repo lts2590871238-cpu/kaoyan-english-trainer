@@ -9,67 +9,78 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 120
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
       - name: Clean transient build directories
         run: |
-          rm -rf data/work data/candidate
-          mkdir -p data/work data/candidate data/checkpoints cache
-          rm -f data/checkpoints/lexicon_senses.json
+          rm -rf data/work data/candidate cache
+          mkdir -p data/work data/candidate data/checkpoints cache/nltk_data/corpora
+
       - name: Source preflight
         run: python scripts/preflight_source.py
-      - name: Download local dictionary and lemma database
+
+      - name: Download ECDICT, lemma database and WordNet
         run: |
-          curl -L --retry 5 --retry-delay 3 https://raw.githubusercontent.com/TheOpenDictionary/ecdict/master/ecdict.csv -o cache/ecdict.csv
-          curl -L --retry 5 --retry-delay 3 https://raw.githubusercontent.com/skywind3000/ECDICT/master/lemma.en.txt -o cache/lemma.en.txt
+          curl -fL --retry 5 --retry-delay 3 https://raw.githubusercontent.com/TheOpenDictionary/ecdict/master/ecdict.csv -o cache/ecdict.csv
+          curl -fL --retry 5 --retry-delay 3 https://raw.githubusercontent.com/skywind3000/ECDICT/master/lemma.en.txt -o cache/lemma.en.txt
+          curl -fL --retry 5 --retry-delay 3 https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/wordnet.zip -o cache/wordnet.zip
+          unzip -q cache/wordnet.zip -d cache/nltk_data/corpora
           test -s cache/ecdict.csv
           test -s cache/lemma.en.txt
+          test -d cache/nltk_data/corpora/wordnet
+
+      - name: Install local dictionary helper
+        run: python -m pip install --quiet 'nltk==3.9.2'
+
+      - name: Build local WordNet fallback cache
+        run: python scripts/build_wordnet_cache.py cache/lemma.en.txt cache/nltk_data cache/wordnet_defs.json
+
       - name: Build 3000-word LOCAL lexicon
-        run: python scripts/build_lexicon.py cache/ecdict.csv cache/lemma.en.txt
+        run: python scripts/build_lexicon.py cache/ecdict.csv cache/lemma.en.txt cache/wordnet_defs.json
+
       - name: Validate local lexicon before any AI
         run: python scripts/validate_base.py
+
+      - name: Lexicon rule self-test
+        run: python scripts/test_lexicon_rules.py
+
       - name: Enrich 600 sentences and 100 analyses with DeepSeek
-        id: enrich
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           DEEPSEEK_BUILD_MODEL: deepseek-v4-flash
         run: python scripts/build_ai_content.py
+
       - name: Build ONLY missing word practice contexts
-        id: wordctx
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           DEEPSEEK_BUILD_MODEL: deepseek-v4-flash
         run: python scripts/build_word_contexts.py
-      - name: Save AI recovery checkpoints
-        if: ${{ failure() }}
-        run: |
-          if [ -d data/checkpoints ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -f data/checkpoints
-            if ! git diff --cached --quiet; then
-              git commit -m "Save AI build recovery checkpoint"
-              git push origin HEAD:main
-            fi
-          fi
+
       - name: Validate AI outputs before compile
         run: python scripts/validate_ai.py
+
       - name: Compile isolated release candidate
         run: python scripts/compile_release.py
+
       - name: Validate isolated release candidate
         run: python scripts/validate_release.py data/candidate
+
       - name: Publish validated release only
         run: python scripts/publish_release.py
+
       - name: Validate published release
         run: python scripts/validate_release.py data/generated
+
       - name: Upload build reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -82,11 +93,14 @@ jobs:
             data/checkpoints/
             audit/
           if-no-files-found: warn
+
       - name: Commit validated generated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A data/generated data/checkpoints
           git diff --cached --quiet && exit 0
-          git commit -m "Publish validated V9 training data"
+          git commit -m "Publish validated V10 training data"
+          git fetch origin main
+          git rebase origin/main
           git push origin HEAD:main
