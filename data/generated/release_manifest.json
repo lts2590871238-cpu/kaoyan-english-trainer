@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "ready": true,
+  "release_id": "0302e11532b205dd5dbe",
+  "created_utc": "2026-09-05T11:18:36+00:00",
+  "required_files": [
+    "meta.json",
+    "lexicon.json",
+    "lexicon_index.json",
+    "dictionary_lookup.json",
+    "sentences.json",
+    "sentence_meta.json",
+    "corpus.json",
+    "analysis.json",
+    "context_translations.json",
+    "schedule.json"
+  ],
+  "files": {
+    "meta.json": {
+      "sha256": "84ef44a0c0a3751d7f82bbd83182872b6abbf5f0b50d3753854af5cd09365fbe",
+      "bytes": 877
+    },
+    "lexicon.json": {
+      "sha256": "e90fb3c3fba58c92cf21fc229db390d6d338eb0d69eaeb337f2c7e1b0e695940",
+      "bytes": 2484321
+    },
+    "lexicon_index.json": {
+      "sha256": "ad5a76c7137cc90e48fe2aecc92b33880cca82a6ce62dad61e2a12a3cb9d78df",
+      "bytes": 242330
+    },
+    "dictionary_lookup.json": {
+      "sha256": "b7a28ff6effe19292ba037183a38902c82a3e9abe70d4c623f570bc1cbc5414c",
+      "bytes": 761660
+    },
+    "sentences.json": {
+      "sha256": "98f50a59be20d70a4f313142eed43373fa7a5a10857789d7967657eff7f3f1b8",
+      "bytes": 651409
+    },
+    "sentence_meta.json": {
+      "sha256": "c19ada5d8e08a0e03e6505a2281c4d522630630880bb999ffac28efbb17d372d",
+      "bytes": 59504
+    },
+    "corpus.json": {
+      "sha256": "22677e1f2d2a9be2959cf573a08345f56fcab061873477725a9fab17b881bbe7",
+      "bytes": 265087
+    },
+    "analysis.json": {
+      "sha256": "10bf4625c05508c85b00608f5e3a64b6c6aea37ad39516e8c720fa91e43086c9",
+      "bytes": 186384
+    },
+    "context_translations.json": {
+      "sha256": "c096ad4aeec2ffed18e055dad537e8d1df3c8ce7565c2dec6639a8121852bdc6",
+      "bytes": 131798
+    },
+    "schedule.json": {
+      "sha256": "6b1be18bcf43aa73d7f19ddf6b64dae4c67917525c28e1dabee7663a9cf12d2a",
+      "bytes": 96046
+    }
+  },
+  "counts": {
+    "vocab": 3000,
+    "word_exposures": 3000,
+    "unique_new_words": 3000,
+    "reinforcement_exposures": 0,
+    "dictionary": 3044,
+    "sentences": 600,
+    "analysis": 100,
+    "corpus_contexts": 1326
+  },
+  "days": 100,
+  "title": "轩轩冲刺50分大作战！"
+}
