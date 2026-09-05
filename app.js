@@ -11,10 +11,29 @@
   const shuffle = arr => { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
   const tokenize = s => s.match(/[A-Za-z]+(?:[-'][A-Za-z]+)*|\d+(?:\.\d+)?|[^\w\s]/g) || [];
 
+  const RELEASE_FILES=['meta.json','lexicon.json','lexicon_index.json','dictionary_lookup.json','sentences.json','sentence_meta.json','corpus.json','analysis.json','context_translations.json','schedule.json'];
   const Data = {
-    cache:{},
-    async get(name){ if(this.cache[name]) return this.cache[name]; const r=await fetch(`data/generated/${name}.json`,{cache:'no-cache'}); if(!r.ok) throw new Error(`无法读取 ${name}`); return this.cache[name]=await r.json(); },
-    async meta(){ return this.get('meta'); },
+    cache:{},manifest:null,releaseId:null,
+    async release(){
+      if(this.manifest) return this.manifest;
+      const r=await fetch('data/generated/release_manifest.json',{cache:'no-store'});
+      if(!r.ok) throw new Error('正式题库尚未发布完成');
+      const m=await r.json();
+      const req=Array.isArray(m.required_files)?m.required_files:[];
+      if(m.ready!==true||!m.release_id||RELEASE_FILES.some(x=>!req.includes(x))) throw new Error('正式题库发布清单不完整');
+      if(Number(m.counts?.vocab)!==3000||Number(m.counts?.sentences)!==600||Number(m.counts?.analysis)!==100) throw new Error('正式题库数量校验未通过');
+      this.manifest=m;this.releaseId=m.release_id;return m;
+    },
+    async get(name){
+      if(this.cache[name]) return this.cache[name];
+      await this.release();
+      const file=`${name}.json`;
+      if(!RELEASE_FILES.includes(file)) throw new Error(`未登记的题库文件 ${file}`);
+      const r=await fetch(`data/generated/${file}?release=${encodeURIComponent(this.releaseId)}`,{cache:'no-cache'});
+      if(!r.ok) throw new Error(`正式题库缺少 ${file}`);
+      return this.cache[name]=await r.json();
+    },
+    async meta(){await this.release();return this.get('meta');},
     async dictionary(){
       if(this.cache.dictionaryIndex) return this.cache.dictionaryIndex;
       const rows=await this.get('dictionary_lookup'); const byTerm=new Map(),byForm=new Map();
@@ -22,25 +41,23 @@
       return this.cache.dictionaryIndex={byTerm,byForm};
     },
     async core(){
-      const [meta,lexicon,sentences,schedule]=await Promise.all([
-        this.get('meta'),this.get('lexicon_index'),this.get('sentence_meta'),this.get('schedule')
-      ]);
-      if(!meta.ready) throw new Error('题库尚未完成构建');
-      return {meta,lexicon,sentences,schedule};
+      const manifest=await this.release();
+      const [meta,lexicon,sentences,schedule]=await Promise.all([this.get('meta'),this.get('lexicon_index'),this.get('sentence_meta'),this.get('schedule')]);
+      if(!meta.ready||lexicon.length!==3000||Object.keys(sentences).length!==600||(schedule.words||[]).length!==100) throw new Error('正式题库核心文件校验失败');
+      return {manifest,meta,lexicon,sentences,schedule};
     },
     async full(){
       const core=await this.core();
-      const [lexicon,sentences,analysis,ctx,corpus] = await Promise.all([
-        this.get('lexicon'),this.get('sentences'),this.get('analysis'),this.get('context_translations'),this.get('corpus')
-      ]);
+      const [lexicon,sentences,analysis,ctx,corpus]=await Promise.all([this.get('lexicon'),this.get('sentences'),this.get('analysis'),this.get('context_translations'),this.get('corpus')]);
+      if(lexicon.length!==3000||Object.keys(sentences).length!==600||Object.keys(analysis).length!==100) throw new Error('正式题库完整文件校验失败');
       if(!this.cache.lexIndex){
-        const byTerm=new Map(), byForm=new Map();
-        lexicon.forEach(x=>{byTerm.set(x.term.toLowerCase(),x); (x.forms||[x.term]).forEach(f=>byForm.set(String(f).toLowerCase(),x)); byForm.set(x.term.toLowerCase(),x);});
+        const byTerm=new Map(),byForm=new Map();
+        lexicon.forEach(x=>{byTerm.set(x.term.toLowerCase(),x);(x.forms||[x.term]).forEach(f=>byForm.set(String(f).toLowerCase(),x));byForm.set(x.term.toLowerCase(),x);});
         this.cache.lexIndex={byTerm,byForm};
       }
       return {...core,lexicon,sentences,analysis,ctx,corpus,lexIndex:this.cache.lexIndex};
     },
-    prefetch(){const go=()=>this.full().catch(()=>{}); if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:2200}); else setTimeout(go,700);}
+    prefetch(){const go=()=>this.full().catch(()=>{});if('requestIdleCallback' in window)requestIdleCallback(go,{timeout:2200});else setTimeout(go,700);}
   };
 
   const Store = {
@@ -174,10 +191,17 @@
   function estimateMinutes(c,plan){const left=Math.max(0,30-c.words)*.25+Math.max(0,2-c.en2zh)*2.1+Math.max(0,2-c.zh2en)*2.1+Math.max(0,2-c.focus)*3+Math.max(0,(plan.review?.length||0)-c.review)*.45;return Math.max(0,Math.round(left));}
 
   async function home(){
-    Sound.setQuiet(false);let meta;try{meta=await Data.meta();}catch(e){shell(`<main class="page"><div class="setup">无法读取题库文件：${esc(e.message)}</div></main>`);return;}
-    let plan=null,c={words:0,en2zh:0,zh2en:0,focus:0,review:0};if(meta.ready){try{const data=await Data.core();plan=await ensurePlan(data);c=dayCompletion(plan);}catch(e){console.warn(e);}}
-    const day=Math.min(100,Store.state.currentDay),done=plan?c.words+c.en2zh+c.zh2en+c.focus+c.review:0,total=plan?30+2+2+2+(plan.review?.length||0):36,pct=Math.min(100,Math.round(done/Math.max(1,total)*100));const focusTranslation=plan?.focusType!=='analysis';
-    shell(`<main class="page"><section class="hero"><div class="hero-copy"><h1>轩轩冲刺50分大作战！</h1><p>第 ${day} / 100 天 · 今天只做一点点，也会离目标更近 🌷</p></div></section><section class="today-card"><div class="day-row"><div><div class="day-title">今日练习</div><div class="day-sub">${meta.ready?`预计还需 ${estimateMinutes(c,plan)} 分钟${plan?.ai?' · AI已微调今日顺序':''}`:'题库正在等待第一次构建'}</div></div><b>${pct}%</b></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>${meta.ready?`<div class="task-grid">
+    Sound.setQuiet(false);
+    let meta=null,plan=null,releaseError=null,c={words:0,en2zh:0,zh2en:0,focus:0,review:0};
+    try{
+      meta=await Data.meta();
+      const data=await Data.core();
+      plan=await ensurePlan(data);c=dayCompletion(plan);
+    }catch(e){releaseError=e;console.warn('release not ready:',e);}
+    const ready=Boolean(meta?.ready&&plan&&!releaseError);
+    const day=Math.min(100,Store.state.currentDay),done=ready?c.words+c.en2zh+c.zh2en+c.focus+c.review:0,total=ready?30+2+2+2+(plan.review?.length||0):36,pct=Math.min(100,Math.round(done/Math.max(1,total)*100));const focusTranslation=plan?.focusType!=='analysis';
+    const waiting=`<div class="setup"><b>正式题库还没有完整发布。</b><br>当前页面会主动拒绝加载半成品，所以你的学习记录不会被错误数据污染。等 GitHub Actions 最后的 <code>RELEASE VALIDATION: PASS</code> 和 <code>ATOMIC RELEASE CONTRACT: PASS</code> 都出现后，刷新网页即可。<br><small>${esc(releaseError?.message||'正在等待完整发布包')}</small></div>`;
+    shell(`<main class="page"><section class="hero"><div class="hero-copy"><h1>轩轩冲刺50分大作战！</h1><p>第 ${day} / 100 天 · 今天只做一点点，也会离目标更近 🌷</p></div></section><section class="today-card"><div class="day-row"><div><div class="day-title">今日练习</div><div class="day-sub">${ready?`预计还需 ${estimateMinutes(c,plan)} 分钟${plan?.ai?' · AI已微调今日顺序':''}`:'正式题库发布中'}</div></div><b>${pct}%</b></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>${ready?`<div class="task-grid">
       ${taskCard('#words','🍓','单词连线',`${c.words}/30`,'每日 30 个')}
       ${taskCard('#en2zh','🫐','英译汉',`${c.en2zh}/2`,'真题意群拼译')}
       ${taskCard('#zh2en','🍒','汉译英',`${c.zh2en}/2`,'真题英语拼句')}
@@ -186,13 +210,13 @@
       ${taskCard('#focus','🕯️',focusTranslation?'成分分析':'翻译训练','隔日开启',focusTranslation?'明天轮到它':'明天轮到它','focus-inactive')}
       ${taskCard('#wordbook','📖','单词本',`${Object.keys(Store.state.words).length} 词`,'按日期与掌握度查看')}
       ${taskCard('#stats','✨','学习记录',`Day ${day}`,'进度与正确率')}
-      </div><div class="finish-row"><button id="finishDay" class="primary" ${allDailyDone(plan)?'':'disabled'}>${day>=100?'完成100天作战！':'完成今天，进入下一天'}</button></div>`:`<div class="setup"><b>第一轮数据工程还没生成。</b><br>网页外观已经可以发布，但正式练习前请在 GitHub 仓库中添加 <code>DEEPSEEK_API_KEY</code> 到 Actions Secrets，然后运行 <b>Build stable bilingual content</b>。构建脚本只有在“3000词义完整、600句互不重复、100天配额全部通过”后才会发布题库。</div>`}</section></main>`);
+      </div><div class="finish-row"><button id="finishDay" class="primary" ${allDailyDone(plan)?'':'disabled'}>${day>=100?'完成100天作战！':'完成今天，进入下一天'}</button></div>`:waiting}</section></main>`);
     $('#finishDay')?.addEventListener('click',()=>{if(!allDailyDone(plan))return;if(Store.state.currentDay<100)Store.state.currentDay++;Store.save();Sound.sfx('finish');delete Store.state.plans[Store.state.currentDay];location.hash='#home';route();});
-    if(meta.ready) Data.prefetch();
+    if(ready)Data.prefetch();
   }
   function taskCard(h,e,t,n,s,cls=''){return `<a href="${h}" class="task ${cls}" style="text-decoration:none;color:inherit"><span class="emoji">${e}</span><b>${t}</b><small>${n} · ${s}</small></a>`;}
 
-  async function readyData(quiet=false){try{const d=await Data.full();Sound.setQuiet(quiet);return d;}catch(e){toast('题库尚未完成构建');location.hash='#home';setTimeout(home,0);throw e;}}
+  async function readyData(quiet=false){try{const d=await Data.full();Sound.setQuiet(quiet);return d;}catch(e){toast('正式题库尚未完整发布');location.hash='#home';setTimeout(home,0);throw e;}}
   function head(title,stat,back='#home'){return `<div class="module-head"><div class="module-title"><button class="back-btn" onclick="location.hash='${back}'">←</button><h2>${title}</h2></div>${stat||''}</div>`;}
 
   async function wordsPage(){
