@@ -1,8 +1,45 @@
 {
-  "version": "6.0",
-  "ready": false,
+  "version": "13.0",
+  "ready": true,
   "title": "轩轩冲刺50分大作战！",
   "days": 100,
-  "counts": {"vocab": 3000, "sentences": 600, "analysis": 100},
-  "message": "请先在 GitHub Actions 运行 Build stable bilingual content。"
+  "daily": {
+    "words": 30,
+    "en_to_zh": 2,
+    "zh_to_en": 2,
+    "focus": 2,
+    "focus_rotation": "odd=translation, even=analysis"
+  },
+  "counts": {
+    "vocab": 3000,
+    "word_exposures": 3000,
+    "unique_new_words": 3000,
+    "reinforcement_exposures": 0,
+    "dictionary": 3044,
+    "sentences": 600,
+    "analysis": 100,
+    "corpus_contexts": 1326
+  },
+  "bands": {
+    "high": 1500,
+    "mid": 900,
+    "low": 600
+  },
+  "sentence_pools": {
+    "en_to_zh": 200,
+    "zh_to_en": 200,
+    "free_translation": 100,
+    "analysis": 100
+  },
+  "analysis_stages": {
+    "precise": 30,
+    "coarse": 30,
+    "main_stem": 40
+  },
+  "requirements": {
+    "missing_word_sense": 0,
+    "missing_sentence_zh": 0,
+    "contextless_words": 0
+  },
+  "practice_contexts": 599
 }
