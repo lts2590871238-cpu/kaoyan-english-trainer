@@ -114,29 +114,34 @@ main_stem：只给 main_stem_indices、abridged_en、zh、main_stem_zh、discard
         analysis_out[x['id']]=i
     print('analysis',len(analysis_out),'/',len(analysis),flush=True)
 
-# ---------- 3000 context-specific word senses ----------
+# ---------- 3000 context-specific word senses + dictionary gap filling ----------
 lexpath=OUT/'lexicon.base.json'
 if not lexpath.exists():raise SystemExit('Run build_lexicon.py before build_ai_content.py')
 lex=json.loads(lexpath.read_text(encoding='utf8'))
 scheduled=[x for x in lex if x.get('scheduled')]
 assert len(scheduled)==3000
 lex_out={}
-system3='''你是考研英语词典编辑。根据词典释义和真题语境，选择“这个词在给定真题语境中的最准确、最短中文义”。不要发明词义。若是词组，按整体义处理。输出严格 JSON。sense_zh 通常 2-12 个汉字，可有分号但不要堆全部词典义。'''
-for batch in batches(scheduled,40):
+system3='''你是考研英语词典编辑。依据可靠词典信息和给定真题语境处理词条。不得发明不存在的词义。sense_zh 是“这个词在该真题语境中的最准确、最短中文义”；dict_zh 是适合学习者的常用核心中文词典义；definition_en 是简洁、准确的英英词典式释义。若输入已有 dict_zh/definition_en，优先保留其含义，只在缺失或明显不完整时补齐。若词条是明显的人名、地名、OCR乱码或不应作为学习词，valid=false。输出严格 JSON。'''
+for batch in batches(scheduled,32):
     req=[]
     for x in batch:
         ctx=x['contexts'][0]['text'] if x.get('contexts') else ''
-        req.append({'term':x['term'],'type':x['type'],'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'context':ctx})
-    user='返回 {"items":[{"term":"...","sense_zh":"本句准确义"}]}。输入：\n'+json.dumps(req,ensure_ascii=False)
-    obj=call_json(system3,user,9000)
+        req.append({'term':x['term'],'type':x['type'],'dict_zh':x.get('dict_zh',''),'definition_en':x.get('definition_en',''),'pos':x.get('pos',''),'context':ctx,'dictionary_source':x.get('dictionary_source','')})
+    user='返回 {"items":[{"term":"...","valid":true,"sense_zh":"本句准确义","dict_zh":"核心中文词典义","definition_en":"English dictionary-style definition","pos":"词性或phrase"}]}。输入：\n'+json.dumps(req,ensure_ascii=False)
+    obj=call_json(system3,user,11000)
     got={i['term'].lower():i for i in obj.get('items',[]) if isinstance(i,dict) and i.get('term')}
     for x in batch:
-        g=got.get(x['term'].lower())
-        sense=(g or {}).get('sense_zh','').strip()
-        if not sense:sense=x['dict_zh']
-        if not sense:raise RuntimeError('missing sense '+x['term'])
-        lex_out[x['term']]={'sense_zh':sense}
-    print('lexicon senses',len(lex_out),'/',len(scheduled),flush=True)
+        g=got.get(x['term'].lower()) or {}
+        if g.get('valid') is False:
+            raise RuntimeError('AI rejected scheduled lexicon item as invalid: '+x['term']+'; replace/filter it before publishing')
+        sense=(g.get('sense_zh') or x.get('dict_zh') or '').strip()
+        dict_zh=(x.get('dict_zh') or g.get('dict_zh') or sense).strip()
+        definition=(x.get('definition_en') or g.get('definition_en') or '').strip()
+        pos=(x.get('pos') or g.get('pos') or ('phrase' if x.get('type')=='phrase' else '')).strip()
+        if not sense or not dict_zh or (x.get('type')=='word' and not definition):
+            raise RuntimeError('incomplete dictionary enrichment: '+x['term'])
+        lex_out[x['term']]={'sense_zh':sense,'dict_zh':dict_zh,'definition_en':definition,'pos':pos}
+    print('lexicon dictionary+senses',len(lex_out),'/',len(scheduled),flush=True)
 
 (OUT/'sentences.enriched.json').write_text(json.dumps(sent_out,ensure_ascii=False,indent=2),encoding='utf8')
 (OUT/'corpus.translations.json').write_text(json.dumps(context_zh,ensure_ascii=False,indent=2),encoding='utf8')

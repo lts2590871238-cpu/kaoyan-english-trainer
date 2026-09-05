@@ -21,13 +21,25 @@ corpus={x['id']:{'en':x['text'],'year':x['year'],'page':x['page'],'source':x['so
 scheduled=[]
 for x in lex:
     if not x.get('scheduled'):continue
-    y=dict(x); y['sense_zh']=senses.get(x['term'],{}).get('sense_zh') or x.get('dict_zh','')
+    y=dict(x); e=senses.get(x['term'],{})
+    y['sense_zh']=e.get('sense_zh') or x.get('dict_zh','')
+    y['dict_zh']=e.get('dict_zh') or x.get('dict_zh','')
+    y['definition_en']=e.get('definition_en') or x.get('definition_en','')
+    y['pos']=e.get('pos') or x.get('pos','')
     # Avoid repeating the full English sentence inside every word record.
     y['contexts']=[{k:c.get(k) for k in ('sentence_id','year','page') if c.get(k) is not None} for c in (x.get('contexts') or []) if c.get('sentence_id') in corpus][:8]
     scheduled.append(y)
 
 lex_index=[{'term':x['term'],'count':x['count'],'freq_band':x['freq_band'],'type':x['type']} for x in scheduled]
 sentence_meta={k:{'id':k,'pool':v['pool'],'year':v['year'],'page':v['page'],'source':v['source'],'word_count':v['word_count']} for k,v in sent.items()}
+
+# Merge AI-filled dictionary gaps into the local click dictionary and ensure every scheduled word is clickable.
+lookup_map={x['term']:dict(x) for x in dict_lookup}
+for x in scheduled:
+    rec=lookup_map.get(x['term'],{'term':x['term'],'forms':x.get('forms',[x['term']]),'phonetic':x.get('phonetic','')})
+    rec['dict_zh']=x.get('dict_zh',''); rec['definition_en']=x.get('definition_en',''); rec['pos']=x.get('pos','')
+    lookup_map[x['term']]=rec
+dict_lookup=sorted(lookup_map.values(),key=lambda x:x['term'])
 
 # Full user-facing static files.
 (OUT/'lexicon.json').write_text(json.dumps(scheduled,ensure_ascii=False,separators=(',',':')),encoding='utf8')
