@@ -76,7 +76,7 @@ jobs:
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           DEEPSEEK_BUILD_MODEL: deepseek-v4-flash
-        run: python scripts/build_word_contexts.py
+        run: WORDNET_DEFS=cache/wordnet_defs.json python scripts/build_word_contexts.py
 
       - name: Validate AI outputs before compile
         run: python scripts/validate_ai.py
@@ -102,18 +102,20 @@ jobs:
             data/work/lexicon_report.json
             data/work/dictionary_backfill_unresolved.json
             data/work/word_contexts_unresolved.json
+            data/work/word_contexts_report.json
+            data/work/proper_noun_exclusions.json
             data/candidate/meta.json
             data/checkpoints/
             audit/
           if-no-files-found: warn
 
-      - name: Commit validated V14 generated data
+      - name: Commit validated V15 generated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A data/generated data/checkpoints
           git diff --cached --quiet && exit 0
-          git commit -m "Publish validated V14 exact-3000 training data"
+          git commit -m "Publish validated V15 exact-3000 training data"
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
