@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>轩轩英语 AI 诊断</title>
 <style>body{font-family:system-ui,"Microsoft YaHei",sans-serif;background:#fff9f5;color:#374052;margin:0;padding:24px}.box{max-width:760px;margin:auto;background:#fff;border:1px solid #eadfd7;border-radius:22px;padding:22px;box-shadow:0 12px 30px rgba(60,45,40,.08)}h1{font-size:24px}.row{padding:12px;border-radius:14px;background:#faf7f3;margin:10px 0}.ok{background:#eef9f2}.bad{background:#fff1f4}.muted{color:#7d8796;font-size:13px}button{border:0;border-radius:14px;padding:11px 16px;background:#ed91ad;color:white;font-weight:800;cursor:pointer}pre{white-space:pre-wrap;word-break:break-word;background:#f7f4f1;padding:12px;border-radius:12px}</style>
 </head><body><div class="box"><h1>🤖 AI 连接诊断</h1><p class="muted">这页检查 Cloudflare → DeepSeek 与账号云端基础配置，不会改学习记录。</p><div id="base" class="row">Worker 地址：读取中…</div><button id="run">运行完整自检</button><div id="health" class="row">尚未检查 Worker / D1</div><div id="self" class="row">尚未检查 DeepSeek</div><button id="score" disabled>再做一次真实翻译评分</button><div id="scoreOut" class="row">尚未评分</div><pre id="raw"></pre></div>
-<script src="config.js?v=20260906-v21"></script><script>
+<script src="config.js?v=20260906-v22"></script><script>
 const base=String(window.XUANXUAN_CONFIG?.AI_PROXY_URL||'').replace(/\/$/,'');
 document.querySelector('#base').textContent='Worker 地址：'+(base||'未配置');
 async function getJSON(url,opt){const r=await fetch(url,{cache:'no-store',...opt});const t=await r.text();let j;try{j=JSON.parse(t)}catch{throw new Error('返回不是JSON：'+t.slice(0,160))}return {r,j}}
