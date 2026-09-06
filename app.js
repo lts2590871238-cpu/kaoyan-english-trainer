@@ -1,16 +1,18 @@
 (() => {
   'use strict';
   const CFG = window.XUANXUAN_CONFIG || {};
-  const APP_VERSION = 'v20.0.0';
+  const APP_VERSION = 'v21.0.0';
   const APP_KEY = 'xuanxuan50_v6_state';
-  const BACKUP_KEY = APP_KEY + '_backup';
+  const LEGACY_BACKUP_KEY = APP_KEY + '_backup';
+  const AUTH_KEY = 'xuanxuan50_auth_v1';
+  const DEVICE_KEY = 'xuanxuan50_device_v1';
   const MEMORY_DB = 'xuanxuan50_memory_db';
   const MEMORY_STORE = 'kv';
   const INTERVALS = [1,2,4,7,15,30,60,120];
   const $ = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => [...r.querySelectorAll(s)];
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const todayISO = () => new Date().toISOString().slice(0,10);
+  const todayISO = () => { const d=new Date(),p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; };
   const addDays = (iso,n) => { const d=new Date(iso+'T12:00:00'); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
   const shuffle = arr => { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
   const tokenize = s => s.match(/[A-Za-z]+(?:[-'][A-Za-z]+)*|\d+(?:\.\d+)?|[^\w\s]/g) || [];
@@ -75,38 +77,87 @@
   async function idbGet(key){const db=await openMemoryDB();return new Promise((resolve,reject)=>{const tx=db.transaction(MEMORY_STORE,'readonly'),r=tx.objectStore(MEMORY_STORE).get(key);r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error);tx.oncomplete=()=>db.close();});}
   async function idbSet(key,value){const db=await openMemoryDB();return new Promise((resolve,reject)=>{const tx=db.transaction(MEMORY_STORE,'readwrite');tx.objectStore(MEMORY_STORE).put(value,key);tx.oncomplete=()=>{db.close();resolve();};tx.onerror=()=>{db.close();reject(tx.error);};});}
   const Store = {
-    state:null,saveTimer:null,persistGranted:false,
-    fresh(){return {version:8,schemaVersion:8,currentDay:1,created:todayISO(),updatedAt:Date.now(),sound:true,music:false,accent:CFG.DEFAULT_ACCENT||'en-US',plans:{},days:{},words:{},sentences:{},aiDictionary:{},aiDiagnostics:null};},
+    state:null,saveTimer:null,persistGranted:false,scope:'guest',cloudPaused:false,
+    storageKey(){return this.scope==='guest'?APP_KEY:`${APP_KEY}:user:${this.scope}`;},
+    backupKey(){return this.scope==='guest'?LEGACY_BACKUP_KEY:`${APP_KEY}:user:${this.scope}:backup`;},
+    idbKey(kind='state'){return `${this.scope}:${kind}`;},
+    setScope(scope){this.scope=String(scope||'guest');},
+    fresh(){return {version:9,schemaVersion:9,currentDay:1,created:todayISO(),challengeStart:null,updatedAt:Date.now(),sound:true,music:false,accent:CFG.DEFAULT_ACCENT||'en-US',plans:{},days:{},words:{},sentences:{},aiDictionary:{},aiDiagnostics:null};},
     parse(raw){try{const o=typeof raw==='string'?JSON.parse(raw):raw;return this.valid(o)?o:null;}catch{return null;}},
     valid(o){return !!(o&&typeof o==='object'&&Number(o.currentDay)>=1&&o.days&&o.words&&o.sentences);},
     normalizeSentence(x){
       x=x&&typeof x==='object'?x:{};x.attempts=Number(x.attempts)||0;x.correct=Number(x.correct)||0;x.totalScore=Number(x.totalScore)||0;x.module ||= null;x.lastSeen ||= null;
-      x.firstDay ||= null;x.bestScore=Number.isFinite(Number(x.bestScore))?Number(x.bestScore):0;x.lastScore=Number.isFinite(Number(x.lastScore))?Number(x.lastScore):0;x.history=Array.isArray(x.history)?x.history:[];return x;
+      x.firstDay ||= null;x.bestScore=Number.isFinite(Number(x.bestScore))?Number(x.bestScore):0;x.lastScore=Number.isFinite(Number(x.lastScore))?Number(x.lastScore):0;x.history=Array.isArray(x.history)?x.history.slice(-30):[];return x;
     },
     normalize(o){
-      o=this.valid(o)?o:this.fresh();o.version=8;o.schemaVersion=8;o.currentDay=Math.min(100,Math.max(1,Number(o.currentDay)||1));o.created ||= todayISO();o.updatedAt ||= Date.now();o.sound=o.sound!==false;o.music=!!o.music;o.accent ||= CFG.DEFAULT_ACCENT||'en-US';o.plans ||= {};o.days ||= {};o.words ||= {};o.sentences ||= {};o.aiDictionary ||= {};o.aiDiagnostics ||= null;
+      o=this.valid(o)?o:this.fresh();o.version=9;o.schemaVersion=9;o.currentDay=Math.min(100,Math.max(1,Number(o.currentDay)||1));o.created ||= todayISO();o.challengeStart ||= null;o.updatedAt ||= Date.now();o.sound=o.sound!==false;o.music=!!o.music;o.accent ||= CFG.DEFAULT_ACCENT||'en-US';o.plans ||= {};o.days ||= {};o.words ||= {};o.sentences ||= {};o.aiDictionary ||= {};o.aiDiagnostics ||= null;
       for(const [id,x] of Object.entries(o.sentences))o.sentences[id]=this.normalizeSentence(x);return o;
     },
     newest(rows){return rows.filter(x=>this.valid(x)).sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0))[0]||null;},
-    load(){const primary=this.parse(localStorage.getItem(APP_KEY)),backup=this.parse(localStorage.getItem(BACKUP_KEY));this.state=this.normalize(this.newest([primary,backup])||this.fresh());return this.state;},
+    load(){const primary=this.parse(localStorage.getItem(this.storageKey())),backup=this.parse(localStorage.getItem(this.backupKey()));this.state=this.normalize(this.newest([primary,backup])||this.fresh());return this.state;},
+    legacy(){return this.normalize(this.newest([this.parse(localStorage.getItem(APP_KEY)),this.parse(localStorage.getItem(LEGACY_BACKUP_KEY))])||this.fresh());},
+    hasProgress(o=this.state){return !!(o&&(Number(o.currentDay)>1||Object.keys(o.words||{}).length||Object.keys(o.sentences||{}).length||Object.keys(o.days||{}).some(k=>Object.values(o.days[k]||{}).some(v=>Array.isArray(v)&&v.length))));},
     async hydrate(){
-      let dbState=null,dbBackup=null;try{[dbState,dbBackup]=await Promise.all([idbGet('state'),idbGet('backup')]);}catch(e){console.warn('memory idb unavailable',e?.message||e);}
-      const localBackup=this.parse(localStorage.getItem(BACKUP_KEY));const best=this.newest([this.state,this.parse(dbState),this.parse(dbBackup),localBackup]);if(best)this.state=this.normalize(best);this.save(false);
+      let dbState=null,dbBackup=null;try{[dbState,dbBackup]=await Promise.all([idbGet(this.idbKey('state')),idbGet(this.idbKey('backup'))]);}catch(e){console.warn('memory idb unavailable',e?.message||e);}
+      const localBackup=this.parse(localStorage.getItem(this.backupKey()));const best=this.newest([this.state,this.parse(dbState),this.parse(dbBackup),localBackup]);if(best)this.state=this.normalize(best);this.save(false,true);await this.flush(true);
       try{if(navigator.storage?.persist)this.persistGranted=await navigator.storage.persist();}catch{}return this.state;
     },
-    save(rotate=true){
+    save(rotate=true,skipCloud=false){
       this.state=this.normalize(this.state);this.state.updatedAt=Date.now();const json=JSON.stringify(this.state);
-      try{const prev=localStorage.getItem(APP_KEY);if(rotate&&prev&&prev!==json)localStorage.setItem(BACKUP_KEY,prev);localStorage.setItem(APP_KEY,json);}catch(e){console.warn('local memory save failed',e);}
-      clearTimeout(this.saveTimer);this.saveTimer=setTimeout(()=>this.flush(),120);
+      try{const prev=localStorage.getItem(this.storageKey());if(rotate&&prev&&prev!==json)localStorage.setItem(this.backupKey(),prev);localStorage.setItem(this.storageKey(),json);}catch(e){console.warn('local memory save failed',e);}
+      clearTimeout(this.saveTimer);this.saveTimer=setTimeout(()=>this.flush(skipCloud),120);if(!skipCloud&&!this.cloudPaused)CloudSync.schedule();
     },
-    async flush(){clearTimeout(this.saveTimer);this.saveTimer=null;const snapshot=JSON.parse(JSON.stringify(this.state));try{const old=await idbGet('state');if(old&&this.valid(old)&&Number(old.updatedAt)!==Number(snapshot.updatedAt))await idbSet('backup',old);await idbSet('state',snapshot);}catch(e){console.warn('indexed memory save failed',e?.message||e);}},
+    async flush(skipCloud=false){clearTimeout(this.saveTimer);this.saveTimer=null;const snapshot=JSON.parse(JSON.stringify(this.state));try{const old=await idbGet(this.idbKey('state'));if(old&&this.valid(old)&&Number(old.updatedAt)!==Number(snapshot.updatedAt))await idbSet(this.idbKey('backup'),old);await idbSet(this.idbKey('state'),snapshot);}catch(e){console.warn('indexed memory save failed',e?.message||e);}if(!skipCloud&&!this.cloudPaused)CloudSync.schedule();},
     day(n=this.state.currentDay){return this.state.days[n] ||= {wordsDone:[],en2zhDone:[],zh2enDone:[],focusDone:[],reviewDone:[]};},
     word(term){return this.state.words[term] ||= {attempts:0,correct:0,wrong:0,stage:0,learnedDay:null,lastSeen:null,nextReview:null,contextsUsed:[]};},
     sentence(id){return this.state.sentences[id]=this.normalizeSentence(this.state.sentences[id]);}
   };
-  Store.load();
 
-  Store.load();
+  const Auth = {
+    token:null,user:null,expiresAt:0,offline:false,
+    base(){return String(CFG.AI_PROXY_URL||'').replace(/\/$/,'');},
+    loadCached(){try{const x=JSON.parse(localStorage.getItem(AUTH_KEY)||'null');if(x?.token&&x?.user){this.token=x.token;this.user=x.user;this.expiresAt=Number(x.expires_at)||0;return true;}}catch{}return false;},
+    persist(){if(this.token&&this.user)localStorage.setItem(AUTH_KEY,JSON.stringify({token:this.token,user:this.user,expires_at:this.expiresAt}));else localStorage.removeItem(AUTH_KEY);},
+    async restore(){if(!this.loadCached())return false;if(this.expiresAt&&this.expiresAt<Date.now()){this.clear();return false;}try{const r=await this.request('/auth/me',{method:'GET'},true);if(r?.user){this.user=r.user;this.offline=false;this.persist();return true;}}catch(e){if(e.code==='session_expired'||e.code==='unauthorized'){this.clear();return false;}this.offline=true;}return !!this.user;},
+    clear(){this.token=null;this.user=null;this.expiresAt=0;this.offline=false;localStorage.removeItem(AUTH_KEY);},
+    async deriveVerifier(username,password){
+      if(!crypto?.subtle)throw new Error('当前浏览器不支持安全登录所需的 Web Crypto');const u=String(username||'').trim().toLowerCase(),pw=String(password||'');if(pw.length<8||pw.length>72)throw new Error('密码长度需为8–72位');
+      const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveBits']);const salt=new TextEncoder().encode(`xuanxuan50:v1:${u}`);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt,iterations:150000},key,256);return b64url(new Uint8Array(bits));
+    },
+    async request(path,{method='POST',body=null}={},withAuth=true){
+      const base=this.base();if(!base){const e=new Error('云端地址未配置');e.code='not_configured';throw e;}const headers={};if(body!==null)headers['Content-Type']='application/json';if(withAuth&&this.token)headers.Authorization=`Bearer ${this.token}`;
+      const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),25000);try{const r=await fetch(base+path,{method,headers,body:body===null?undefined:JSON.stringify(body),cache:'no-store',signal:ctrl.signal});let out={};try{out=await r.json();}catch{}if(!r.ok||out?.ok===false){const e=new Error(out?.error?.message||`云端请求失败（HTTP ${r.status}）`);e.code=out?.error?.code||`http_${r.status}`;e.status=r.status;throw e;}return out;}catch(e){if(e?.name==='AbortError'){const x=new Error('云端请求超时');x.code='network_timeout';throw x;}throw e;}finally{clearTimeout(timer);}
+    },
+    async register(username,password,displayName){const verifier=await this.deriveVerifier(username,password);const out=await this.request('/auth/register',{body:{username,display_name:displayName,verifier,start_date:todayISO()}},false);this.token=out.session.token;this.expiresAt=out.session.expires_at;this.user=out.user;this.offline=false;this.persist();return out;},
+    async login(username,password){const verifier=await this.deriveVerifier(username,password);const out=await this.request('/auth/login',{body:{username,verifier}},false);this.token=out.session.token;this.expiresAt=out.session.expires_at;this.user=out.user;this.offline=false;this.persist();return out;},
+    async resetPassword(username,recoveryCode,newPassword){const newVerifier=await this.deriveVerifier(username,newPassword);const out=await this.request('/auth/reset-password',{body:{username,recovery_code:recoveryCode,new_verifier:newVerifier}},false);this.token=out.session.token;this.expiresAt=out.session.expires_at;this.user=out.user;this.offline=false;this.persist();return out;},
+    async logout(){try{if(this.token)await this.request('/auth/logout',{body:{}},true);}catch{}this.clear();}
+  };
+
+  function b64url(bytes){let s='';for(const b of bytes)s+=String.fromCharCode(b);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+  function bucketHash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0);}
+  const CloudSync = {
+    timer:null,syncing:false,lastSerialized:new Map(),status:'local',lastSyncAt:0,lastError:null,
+    deviceId(){let id=localStorage.getItem(DEVICE_KEY);if(!id){id=crypto.randomUUID?.()||`${Date.now()}-${Math.random()}`;localStorage.setItem(DEVICE_KEY,id);}return id;},
+    makeChunks(state){
+      const core={...state};delete core.words;delete core.sentences;delete core.aiDictionary;delete core.aiDiagnostics;const chunks={core};
+      const wb=Array.from({length:8},()=>({}));for(const [k,v] of Object.entries(state.words||{}))wb[bucketHash(k)%8][k]=v;wb.forEach((x,i)=>chunks[`words:${i}`]=x);
+      const sb=Array.from({length:36},()=>({}));for(const [k,v] of Object.entries(state.sentences||{}))sb[bucketHash(k)%36][k]=v;sb.forEach((x,i)=>chunks[`sentences:${i}`]=x);
+      chunks.aidict=state.aiDictionary||{};return chunks;
+    },
+    stateFromChunks(rows){const base=Store.fresh(),chunks=rows||{};if(chunks.core?.data)Object.assign(base,chunks.core.data);base.words={};base.sentences={};base.aiDictionary={};for(const [k,row] of Object.entries(chunks)){if(k.startsWith('words:')&&row?.data)Object.assign(base.words,row.data);else if(k.startsWith('sentences:')&&row?.data)Object.assign(base.sentences,row.data);else if(k==='aidict'&&row?.data)base.aiDictionary=row.data;}return Store.normalize(base);},
+    setHashes(chunks){this.lastSerialized.clear();for(const [k,v] of Object.entries(chunks))this.lastSerialized.set(k,JSON.stringify(v));},
+    schedule(){if(!Auth.user||!Auth.token||Store.scope==='guest')return;clearTimeout(this.timer);this.timer=setTimeout(()=>this.push().catch(()=>{}),1600);},
+    async pull(){if(!Auth.user||!Auth.token)return null;this.status='syncing';try{const out=await Auth.request('/sync/pull',{method:'GET'});this.status='synced';this.lastSyncAt=Date.now();this.lastError=null;return out;}catch(e){this.status='offline';this.lastError=e;throw e;}},
+    async push(force=false){if(this.syncing||!Auth.user||!Auth.token||Store.scope==='guest')return;this.syncing=true;this.status='syncing';try{const chunks=this.makeChunks(Store.state),changed=[];for(const [k,v] of Object.entries(chunks)){const text=JSON.stringify(v);if(force||this.lastSerialized.get(k)!==text)changed.push({key:k,data:v,text});}if(!changed.length){this.status='synced';return;}const out=await Auth.request('/sync/push',{body:{device_id:this.deviceId(),chunks:changed.map(x=>({key:x.key,data:x.data}))}});for(const x of changed)this.lastSerialized.set(x.key,x.text);this.status='synced';this.lastSyncAt=Date.now();this.lastError=null;return out;}catch(e){this.status='offline';this.lastError=e;console.warn('cloud sync failed',e?.message||e);}finally{this.syncing=false;renderCloudBadge();}},
+    async bootstrap({newAccount=false}={}){
+      if(!Auth.user)return;Store.setScope(Auth.user.id);Store.load();await Store.hydrate();Store.state.challengeStart ||= Auth.user.challenge_start||todayISO();
+      try{const pulled=await this.pull(),hasCloud=Object.keys(pulled?.chunks||{}).length>0;if(hasCloud){Store.cloudPaused=true;Store.state=this.stateFromChunks(pulled.chunks);Store.state.challengeStart ||= Auth.user.challenge_start||todayISO();Store.save(false,true);await Store.flush(true);Store.cloudPaused=false;this.setHashes(this.makeChunks(Store.state));return;}
+        const scopedHas=Store.hasProgress(Store.state),legacy=Store.legacy(),legacyHas=Store.hasProgress(legacy);if(!scopedHas&&legacyHas){let migrate=newAccount;try{if(!newAccount)migrate=confirm('检测到这台设备上有旧版学习记录。是否迁入当前账号并同步到云端？');}catch{}if(migrate){Store.state=Store.normalize(legacy);Store.state.challengeStart ||= Auth.user.challenge_start||todayISO();Store.save(false,true);await Store.flush(true);}}
+        this.setHashes({});await this.push(true);
+      }catch(e){this.status='offline';this.lastError=e;}
+    }
+  };
 
   const Sound = {
     ctx:null,timer:null,musicRunning:false,quiet:false,
@@ -147,37 +198,50 @@
   };
 
   function shell(inner){
-    $('#app').innerHTML=`<div class="app-shell"><header class="topbar"><div class="brand-mini">🌷 轩轩冲刺50分大作战！</div><div class="top-actions"><button id="accentBtn" class="icon-btn" title="切换英美音">${Store.state.accent==='en-GB'?'🇬🇧':'🇺🇸'}</button><button id="soundBtn" class="icon-btn" title="音效">🔔</button><button id="musicBtn" class="icon-btn" title="轻音乐">♫</button><button id="exportBtn" class="icon-btn" title="导出学习记录">↥</button><button id="importBtn" class="icon-btn" title="导入学习记录">↧</button><input id="importFile" type="file" accept="application/json" hidden></div></header>${inner}</div>`;
-    bindTopbar(); renderTopbarState();
+    const who=Auth.user?esc((Auth.user.display_name||Auth.user.username||'我').slice(0,2)):'登录';
+    $('#app').innerHTML=`<div class="app-shell"><header class="topbar"><div class="brand-mini">🌷 轩轩冲刺50分大作战！</div><div class="top-actions"><button id="accentBtn" class="icon-btn" title="切换英美音">${Store.state?.accent==='en-GB'?'🇬🇧':'🇺🇸'}</button><button id="soundBtn" class="icon-btn" title="音效">🔔</button><button id="musicBtn" class="icon-btn" title="轻音乐">♫</button><button id="accountBtn" class="account-btn" title="账号与云同步"><span id="cloudDot" class="cloud-dot"></span>${who}</button></div></header>${inner}</div>`;
+    bindTopbar(); renderTopbarState();renderCloudBadge();
   }
   function bindTopbar(){
     $('#soundBtn')?.addEventListener('click',()=>Sound.toggleSound()); $('#musicBtn')?.addEventListener('click',()=>Sound.toggleMusic());
     $('#accentBtn')?.addEventListener('click',()=>{Store.state.accent=Store.state.accent==='en-GB'?'en-US':'en-GB';Store.save();renderTopbarState();toast(Store.state.accent==='en-GB'?'已切换英音':'已切换美音');});
-    $('#exportBtn')?.addEventListener('click',exportMemory); $('#importBtn')?.addEventListener('click',()=>$('#importFile').click()); $('#importFile')?.addEventListener('change',importMemory);
+    $('#accountBtn')?.addEventListener('click',()=>location.hash='#account');
   }
   function renderTopbarState(){
-    const s=$('#soundBtn'),m=$('#musicBtn'),a=$('#accentBtn'); if(s)s.classList.toggle('active',Store.state.sound); if(m)m.classList.toggle('active',Store.state.music&&!Sound.quiet); if(a)a.textContent=Store.state.accent==='en-GB'?'🇬🇧':'🇺🇸';
+    const s=$('#soundBtn'),m=$('#musicBtn'),a=$('#accentBtn'); if(s)s.classList.toggle('active',Store.state?.sound!==false); if(m)m.classList.toggle('active',!!Store.state?.music&&!Sound.quiet); if(a)a.textContent=Store.state?.accent==='en-GB'?'🇬🇧':'🇺🇸';
     if(m){m.disabled=Sound.quiet;m.title=Sound.quiet?'单词读音页面自动暂停音乐':'轻音乐';}
   }
+  function renderCloudBadge(){const d=$('#cloudDot');if(!d)return;d.className='cloud-dot '+(!Auth.user?'guest':CloudSync.status==='synced'?'synced':CloudSync.status==='syncing'?'syncing':'offline');d.title=!Auth.user?'未登录':CloudSync.status==='synced'?'云端已同步':CloudSync.status==='syncing'?'正在同步':'当前离线，记录先保存在本机';}
   function exportMemory(){const blob=new Blob([JSON.stringify(Store.state,null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=`轩轩英语学习记录-${todayISO()}.json`;a.click();URL.revokeObjectURL(u);}
   function importMemory(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=async()=>{try{const o=JSON.parse(r.result);if(!Store.valid(o))throw 0;Store.state=Store.normalize(o);Store.save();await Store.flush();toast('学习记录已导入并双重保存');route();}catch{toast('这个记录文件无法识别');}};r.readAsText(f);}
   function toast(msg){document.querySelector('.toast')?.remove();const d=document.createElement('div');d.className='toast';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2200);}
+
+  async function accountPage(){
+    Sound.setQuiet(false);
+    if(!Auth.user){let mode='login';const draw=()=>{Store.state ||= Store.fresh();shell(`<main class="page account-page"><section class="account-hero"><h1>☁️ 账号与云端学习记录</h1><p>同一个账号可以在不同浏览器、不同手机继续学习，每个人的100天进度互不影响。</p></section><section class="study-card auth-card"><div class="book-tabs"><button class="secondary ${mode==='login'?'active':''}" id="loginTab">登录</button><button class="secondary ${mode==='register'?'active':''}" id="registerTab">注册</button><button class="secondary ${mode==='reset'?'active':''}" id="resetTab">忘记密码</button></div>${mode==='register'?`<label class="form-label">昵称</label><input class="auth-input" id="displayName" maxlength="20" placeholder="例如：轩轩">`:''}<label class="form-label">账号</label><input class="auth-input" id="username" autocomplete="username" maxlength="24" placeholder="3–24位字母、数字或下划线">${mode==='reset'?`<label class="form-label">恢复码</label><input class="auth-input" id="recoveryCode" autocomplete="off" placeholder="注册时保存的恢复码">`:''}<label class="form-label">${mode==='reset'?'新密码':'密码'}</label><input class="auth-input" id="password" type="password" autocomplete="${mode==='login'?'current-password':'new-password'}" maxlength="72" placeholder="至少8位"><div class="auth-note">密码只在你的浏览器里经过 PBKDF2 派生后再发送，服务器不保存明文密码。注册成功后会生成一个恢复码，请单独保存。</div><div id="authMsg"></div><div class="finish-row"><button class="primary" id="authSubmit">${mode==='login'?'登录并恢复云端记录':mode==='register'?'注册并开始100天':'用恢复码重设密码'}</button></div></section></main>`);$('#loginTab').onclick=()=>{mode='login';draw();};$('#registerTab').onclick=()=>{mode='register';draw();};$('#resetTab').onclick=()=>{mode='reset';draw();};$('#authSubmit').onclick=async()=>{const btn=$('#authSubmit'),msg=$('#authMsg'),u=$('#username').value.trim(),pw=$('#password').value,dn=mode==='register'?$('#displayName').value.trim():'',rc=mode==='reset'?$('#recoveryCode').value.trim():'';if(!u||!pw||(mode==='register'&&!dn)||(mode==='reset'&&!rc)){msg.innerHTML='<div class="ai-error">请把信息填写完整。</div>';return;}btn.disabled=true;btn.textContent=mode==='login'?'正在登录…':mode==='register'?'正在注册…':'正在重设…';try{let out;if(mode==='login')out=await Auth.login(u,pw);else if(mode==='register')out=await Auth.register(u,pw,dn);else out=await Auth.resetPassword(u,rc,pw);if(out?.recovery_code)sessionStorage.setItem('xuanxuan50_recovery_once',out.recovery_code);await CloudSync.bootstrap({newAccount:mode==='register'});toast(mode==='login'?'登录成功，已恢复你的学习记录':mode==='register'?'注册成功，请先保存恢复码':'密码已重设，请先保存新的恢复码');location.hash='#account';route();}catch(e){msg.innerHTML=`<div class="ai-error">${esc(e?.message||'账号操作失败')}</div>`;btn.disabled=false;btn.textContent=mode==='login'?'登录并恢复云端记录':mode==='register'?'注册并开始100天':'用恢复码重设密码';}};};draw();return;}
+    const last=CloudSync.lastSyncAt?new Date(CloudSync.lastSyncAt).toLocaleString():'尚未完成首次同步',status=CloudSync.status==='synced'?'已同步':CloudSync.status==='syncing'?'正在同步':'离线保存中';
+    const recoveryOnce=sessionStorage.getItem('xuanxuan50_recovery_once')||'';shell(`<main class="page account-page">${head('账号与云同步','')}<section class="study-card">${recoveryOnce?`<div class="recovery-card"><b>🔐 请保存账号恢复码</b><code id="recoveryText">${esc(recoveryOnce)}</code><small>忘记密码时需要它。保存后不会再主动显示。</small><div class="finish-row"><button class="primary" id="copyRecovery">复制恢复码</button><button class="secondary" id="dismissRecovery">我已保存</button></div></div>`:''}<div class="account-profile"><div class="avatar">${esc((Auth.user.display_name||Auth.user.username).slice(0,1))}</div><div><h2>${esc(Auth.user.display_name||Auth.user.username)}</h2><div class="book-meta">@${esc(Auth.user.username)} · 100天开始于 ${esc(Auth.user.challenge_start||Store.state.challengeStart||'')}</div></div></div><div class="cloud-panel"><b>☁️ 云端状态：${status}</b><small>最后同步：${esc(last)}</small><small>当前学习进度：Day ${Store.state.currentDay}/100 · ${Object.keys(Store.state.words).length}词 · ${Object.keys(Store.state.sentences).length}句</small></div><div class="finish-row account-actions"><button class="primary" id="syncNow">立即同步</button><button class="secondary" id="exportBtn">导出备份</button><button class="secondary" id="importBtn">导入备份</button><input id="importFile" type="file" accept="application/json" hidden><button class="secondary danger-btn" id="logoutBtn">退出账号</button></div><div id="accountMsg"></div><div class="auth-note">换手机或换浏览器时，只需登录同一账号。云端记录会恢复到本机；断网时仍先保存在本机，网络恢复后再同步。</div></section></main>`);
+    $('#copyRecovery')?.addEventListener('click',async()=>{const code=$('#recoveryText')?.textContent||'';try{await navigator.clipboard.writeText(code);toast('恢复码已复制');}catch{toast('请长按恢复码手动复制');}});$('#dismissRecovery')?.addEventListener('click',()=>{sessionStorage.removeItem('xuanxuan50_recovery_once');accountPage();});
+    $('#syncNow').onclick=async()=>{const b=$('#syncNow');b.disabled=true;b.textContent='同步中…';await CloudSync.push(true);b.disabled=false;b.textContent='立即同步';$('#accountMsg').innerHTML=CloudSync.status==='synced'?'<div class="sync-good">✓ 已同步到云端</div>':`<div class="ai-error">${esc(CloudSync.lastError?.message||'暂时无法连接云端，本机记录仍安全保存')}</div>`;};
+    $('#exportBtn').onclick=exportMemory;$('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=importMemory;
+    $('#logoutBtn').onclick=async()=>{if(!confirm('确定退出当前账号吗？云端记录不会删除。'))return;await CloudSync.push();await Auth.logout();CloudSync.lastSerialized.clear();CloudSync.status='local';Store.setScope('guest');Store.state=Store.fresh();location.hash='#account';route();};
+  }
 
   const AIState={diagnostic:null,checkedAt:0,planTried:new Set(),lastError:null};
   function aiBase(){return String(CFG.AI_PROXY_URL||'').replace(/\/$/,'');}
   function aiErrorText(err){
     const code=err?.code||'';const status=err?.status||err?.upstream_status||0;
-    const map={auth_failed:'DeepSeek API Key 无效，请检查 Cloudflare Secret',insufficient_balance:'DeepSeek API 余额不足，请先充值',invalid_parameters:'DeepSeek 请求参数不兼容',rate_limited:'DeepSeek 请求过快，请稍后再试',server_error:'DeepSeek 服务暂时异常',server_overloaded:'DeepSeek 当前繁忙，请稍后再试',timeout:'AI 请求超时，请检查网络后重试',origin_not_allowed:'Cloudflare 的 ALLOWED_ORIGIN 与网站地址不一致',not_configured:'Cloudflare Worker 还没有读取到 DEEPSEEK_API_KEY'};
+    const map={auth_failed:'DeepSeek API Key 无效，请检查 Cloudflare Secret',insufficient_balance:'DeepSeek API 余额不足，请先充值',invalid_parameters:'DeepSeek 请求参数不兼容',rate_limited:'DeepSeek 请求过快，请稍后再试',server_error:'DeepSeek 服务暂时异常',server_overloaded:'DeepSeek 当前繁忙，请稍后再试',timeout:'AI 请求超时，请检查网络后重试',origin_not_allowed:'Cloudflare 的 ALLOWED_ORIGIN 与网站地址不一致',not_configured:'Cloudflare Worker 还没有读取到 DEEPSEEK_API_KEY',network_error:'当前网络无法连接 AI 服务',network_timeout:'当前网络连接云端超时'};
     return map[code]||err?.message||(status?`AI 请求失败（HTTP ${status}）`:'AI 请求失败');
   }
   async function aiDiagnostic(force=false){
     const base=aiBase();if(!base)return {ok:false,error:{code:'not_configured',message:'AI_PROXY_URL 未配置'}};
     if(!force&&AIState.diagnostic&&Date.now()-AIState.checkedAt<120000)return AIState.diagnostic;
-    const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),18000);
+    const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),85000);
     try{const r=await fetch(base+'/self-test',{cache:'no-store',signal:ctrl.signal});let out={};try{out=await r.json();}catch{}if(!r.ok&&!out.error)out.error={code:'worker_http_'+r.status,message:`Worker HTTP ${r.status}`};AIState.diagnostic=out;AIState.checkedAt=Date.now();Store.state.aiDiagnostics={...out,checkedAt:Date.now()};Store.save(false);return out;}
     catch(e){const out={ok:false,error:{code:e?.name==='AbortError'?'timeout':'network_error',message:e?.name==='AbortError'?'AI 自检超时':'无法连接 Cloudflare Worker'}};AIState.diagnostic=out;AIState.checkedAt=Date.now();return out;}finally{clearTimeout(t);}
   }
-  async function ai(path,payload,{timeout=38000,kind='generic'}={}){
+  async function ai(path,payload,{timeout=80000,kind='generic'}={}){
     const base=aiBase();if(!base){const e=new Error('AI未配置');e.code='not_configured';throw e;}
     const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),timeout);
     try{
@@ -194,7 +258,7 @@
   function statHTML(module,total){const s=moduleStats(module,total);return `<div class="module-stat">完成 ${s.done}/${total} · 剩余 ${s.left} · 正确率 ${s.acc}%<div class="thin-progress"><i style="width:${Math.round(s.done/total*100)}%"></i></div></div>`;}
   function recordSentence(id,module,correct,score=correct?100:0,detail={}){
     const x=Store.sentence(id),n=Number(score)||0;x.attempts++;if(correct)x.correct++;x.totalScore+=n;x.module=module;x.lastSeen=todayISO();x.firstDay ||= Store.state.currentDay;x.lastScore=n;x.bestScore=Math.max(Number(x.bestScore)||0,n);
-    x.history.push({at:new Date().toISOString(),day:Store.state.currentDay,module,score:n,correct:!!correct,answer:String(detail.answer||''),feedback:detail.feedback||null,meta:detail.meta||null});if(x.history.length>80)x.history=x.history.slice(-80);Store.save();
+    x.history.push({at:new Date().toISOString(),day:Store.state.currentDay,module,score:n,correct:!!correct,answer:String(detail.answer||''),feedback:detail.feedback||null,meta:detail.meta||null});if(x.history.length>30)x.history=x.history.slice(-30);Store.save();
   }
   function markDayList(key,id){const d=Store.day();if(!d[key].includes(id))d[key].push(id);Store.save();}
   function updateWord(term,correct,contextId){
@@ -259,13 +323,14 @@
     const ready=Boolean(meta?.ready&&plan&&!releaseError);
     const day=Math.min(100,Store.state.currentDay),done=ready?c.words+c.en2zh+c.zh2en+c.focus+c.review:0,total=ready?30+2+2+focusRequired(plan)+(plan.review?.length||0):35,pct=Math.min(100,Math.round(done/Math.max(1,total)*100));const focusTranslation=plan?.focusType!=='analysis';
     const waiting=`<div class="setup"><b>正式题库还没有完整发布。</b><br>当前页面会主动拒绝加载半成品，所以你的学习记录不会被错误数据污染。等 GitHub Actions 最后的 <code>RELEASE VALIDATION: PASS</code> 和 <code>ATOMIC RELEASE CONTRACT: PASS</code> 都出现后，刷新网页即可。<br><small>${esc(releaseError?.message||'正在等待完整发布包')}</small></div>`;
-    shell(`<main class="page"><section class="hero"><div class="hero-copy"><h1>轩轩冲刺50分大作战！</h1><p>第 ${day} / 100 天 · 今天只做一点点，也会离目标更近 🌷</p></div></section><section class="today-card"><div class="day-row"><div><div class="day-title">今日练习</div><div class="day-sub">${ready?`预计还需 ${estimateMinutes(c,plan)} 分钟${plan?.ai?' · AI已微调今日顺序':''}`:'正式题库发布中'}</div></div><b>${pct}%</b></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>${ready?`<div class="task-grid">
+    shell(`<main class="page"><section class="hero"><div class="hero-copy"><h1>轩轩冲刺50分大作战！</h1><p>第 ${day} / 100 天 · ${Auth.user?esc(Auth.user.display_name||Auth.user.username)+' · 云端'+(CloudSync.status==='synced'?'已同步':'离线保存中'):'请登录后开始'} 🌷</p></div></section><section class="today-card"><div class="day-row"><div><div class="day-title">今日练习</div><div class="day-sub">${ready?`预计还需 ${estimateMinutes(c,plan)} 分钟${plan?.ai?' · AI已微调今日顺序':''}`:'正式题库发布中'}</div></div><b>${pct}%</b></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>${ready?`<div class="task-grid">
       ${taskCard('#words','🍓','单词连线',`${c.words}/30`,'每日 30 个')}
       ${taskCard('#en2zh','🫐','英译汉',`${c.en2zh}/2`,'真题意群拼译')}
       ${taskCard('#zh2en','🍒','汉译英',`${c.zh2en}/2`,'真题英语拼句')}
       ${taskCard('#review','🌱','今日复习',`${c.review}/${plan.review.length}`,'到期词 + 当日错词')}
       ${taskCard('#focus','🌸',focusTranslation?'今日翻译':'今日成分分析',`${Math.min(c.focus,focusRequired(plan))}/${focusRequired(plan)}`,focusTranslation?'1句必做 · 可反复评分':'精拆 → 粗拆 → 主干','focus-active')}
       ${taskCard('#focus','🕯️',focusTranslation?'成分分析':'翻译训练','隔日开启',focusTranslation?'明天轮到它':'明天轮到它','focus-inactive')}
+      ${taskCard('#account','☁️','账号云同步',Auth.user?'已登录':'未登录',Auth.user?'换设备也能继续学习':'注册后每人独立记录')}
       ${taskCard('#wordbook','📖','学习本',`${Object.keys(Store.state.words).length} 词 · ${Object.keys(Store.state.sentences).length} 句`,'单词 + 做过的真题句')}
       ${taskCard('#stats','✨','学习记录',`Day ${day}`,'进度与正确率')}
       </div><div class="finish-row"><button id="finishDay" class="primary" ${allDailyDone(plan)?'':'disabled'}>${day>=100?'完成100天作战！':'完成今天，进入下一天'}</button></div>`:waiting}</section></main>`);
@@ -347,12 +412,22 @@
   function showSentenceHistory(id,data){const st=Store.sentence(id),s=data.sentences[id];document.querySelector('.word-pop')?.remove();const div=document.createElement('div');div.className='word-pop history-pop';const rows=[...st.history].reverse().slice(0,30);div.innerHTML=`<button class="close">×</button><h3>历次练习 · ${esc(s?.year||'')} 真题</h3><div class="book-context">${esc(s?.en||'')}</div><div class="history-list">${rows.map((h,i)=>`<div class="history-row"><b>${rows.length-i}. ${Math.round(h.score||0)} 分</b><span>${esc((h.at||'').replace('T',' ').slice(0,16))}</span>${h.answer?`<div>${esc(h.answer)}</div>`:''}${h.feedback?.suggestion?`<small>${esc(h.feedback.suggestion)}</small>`:''}</div>`).join('')||'<div class="empty">暂无详细历史（旧版本记录只保留总次数）。</div>'}</div>`;document.body.appendChild(div);$('.close',div).onclick=()=>div.remove();}
   async function replaySentencePage(id){const data=await readyData(false),s=data.sentences[id];if(!s)return toast('句子不存在');const back='#wordbook';if(s.pool==='en_to_zh')return sentenceArrange('en2zh',{ids:[id],replay:true,back});if(s.pool==='zh_to_en')return sentenceArrange('zh2en',{ids:[id],replay:true,back});if(s.pool==='free_translation')return freeTranslationPage(data,{focus:[id],focusType:'translation'},{ids:[id],replay:true,back});if(s.pool==='analysis')return analysisPage(data,{focus:[id],focusType:'analysis'},{ids:[id],replay:true,back});toast('暂不支持重练这个句型');}
 
-  async function statsPage(){const data=await readyData(false),w=Object.values(Store.state.words),ss=Object.values(Store.state.sentences),wacc=w.reduce((a,x)=>a+x.correct,0)/Math.max(1,w.reduce((a,x)=>a+x.attempts,0)),sacc=ss.reduce((a,x)=>a+x.correct,0)/Math.max(1,ss.reduce((a,x)=>a+x.attempts,0));const stable=w.filter(x=>x.stage>=5).length,weak=w.filter(x=>x.stage<=2&&x.attempts).length;shell(`<main class="page">${head('学习记录','')}<section class="study-card"><div class="task-grid"><div class="task"><span class="emoji">📅</span><b>第 ${Store.state.currentDay}/100 天</b><small>按学习日推进，不会因为断一天自动跳过</small></div><div class="task"><span class="emoji">📖</span><b>${w.length} 个词已接触</b><small>稳定掌握 ${stable} · 易错/模糊 ${weak}</small></div><div class="task"><span class="emoji">🎯</span><b>词汇正确率 ${Math.round(wacc*100)}%</b><small>包含连线与真题语境复习</small></div><div class="task"><span class="emoji">✍️</span><b>句子正确率 ${Math.round(sacc*100)}%</b><small>拼译、翻译、成分分析</small></div><div class="task"><span class="emoji">💾</span><b>学习记录已自动保存</b><small>LocalStorage + IndexedDB 双备份${Store.persistGranted?' · 已申请持久存储':''}</small></div><div class="task"><span class="emoji">🤖</span><b>AI 连接诊断</b><small id="aiDiagText">点击检查 Worker、Key、余额、模型与 JSON</small><button class="secondary mini-btn" id="checkAI">检查 AI</button></div></div><div class="finish-row"><button class="secondary" onclick="location.hash='#wordbook'">打开学习本</button></div></section></main>`);$('#checkAI').onclick=async()=>{const b=$('#checkAI'),t=$('#aiDiagText');b.disabled=true;t.textContent='正在做真实自检…';const r=await aiDiagnostic(true);b.disabled=false;if(r.ok)t.innerHTML=`<span class="ai-ok">✓ Worker / Key / 余额 / 模型 / JSON 全部正常 · ${esc(r.version||'')}</span>`;else t.innerHTML=`<span class="ai-bad">✗ ${esc(aiErrorText(r.error||{}))}</span>`;};}
+  async function statsPage(){
+    const data=await readyData(false),w=Object.entries(Store.state.words),ss=Object.entries(Store.state.sentences),wvals=w.map(([,x])=>x),svals=ss.map(([,x])=>x),wacc=wvals.reduce((a,x)=>a+x.correct,0)/Math.max(1,wvals.reduce((a,x)=>a+x.attempts,0)),sacc=svals.reduce((a,x)=>a+x.correct,0)/Math.max(1,svals.reduce((a,x)=>a+x.attempts,0)),stable=wvals.filter(x=>x.stage>=5).length,weak=wvals.filter(x=>x.stage<=2&&x.attempts).length;
+    const labels={en2zh:'英译汉',zh2en:'汉译英',free_translation:'自由翻译',analysis:'成分分析'};const modules=Object.keys(labels).map(m=>{const rows=svals.filter(x=>x.module===m),attempts=rows.reduce((a,x)=>a+x.attempts,0),score=rows.reduce((a,x)=>a+x.totalScore,0);return {m,n:rows.length,avg:attempts?Math.round(score/attempts):0};});
+    const weakWords=w.filter(([,x])=>x.attempts>0).sort((a,b)=>(a[1].stage-b[1].stage)||(b[1].wrong-a[1].wrong)).slice(0,8);const weakSentences=ss.filter(([,x])=>x.attempts>0).sort((a,b)=>((a[1].totalScore/Math.max(1,a[1].attempts))-(b[1].totalScore/Math.max(1,b[1].attempts)))).slice(0,6);
+    shell(`<main class="page">${head('学习记录','')}<section class="study-card"><div class="task-grid"><div class="task"><span class="emoji">📅</span><b>第 ${Store.state.currentDay}/100 天</b><small>账号起始 ${esc(Store.state.challengeStart||Auth.user?.challenge_start||Store.state.created)} · 按学习日推进</small></div><div class="task"><span class="emoji">📖</span><b>${w.length} 个词已接触</b><small>稳定掌握 ${stable} · 易错/模糊 ${weak}</small></div><div class="task"><span class="emoji">🎯</span><b>词汇正确率 ${Math.round(wacc*100)}%</b><small>包含连线与真题语境复习</small></div><div class="task"><span class="emoji">✍️</span><b>句子正确率 ${Math.round(sacc*100)}%</b><small>拼译、翻译、成分分析</small></div><div class="task"><span class="emoji">☁️</span><b>${Auth.user?'云端账号已登录':'尚未登录云端'}</b><small>${Auth.user?`${esc(Auth.user.display_name||Auth.user.username)} · ${CloudSync.status==='synced'?'已同步':'离线保存中'}`:'登录后可跨设备恢复'}</small></div><div class="task"><span class="emoji">🤖</span><b>AI 连接诊断</b><small id="aiDiagText">点击检查 Worker、Key、余额、模型与 JSON</small><button class="secondary mini-btn" id="checkAI">检查 AI</button></div></div><h3 class="section-title">哪里比较薄弱</h3><div class="weak-grid">${modules.map(x=>`<div class="weak-card"><b>${labels[x.m]}</b><span>${x.n?`平均 ${x.avg} 分 · 已练 ${x.n} 句`:'还没有练习记录'}</span></div>`).join('')}</div><div class="weak-columns"><div><h4>需要重点复习的词</h4>${weakWords.map(([term,x])=>`<div class="weak-row"><b>${esc(term)}</b><span>阶段 ${x.stage}/7 · 错 ${x.wrong}</span></div>`).join('')||'<div class="empty">暂时没有明显薄弱词。</div>'}</div><div><h4>目前分数较低的句子</h4>${weakSentences.map(([id,x])=>`<button class="weak-row weak-button" data-weak-sentence="${esc(id)}"><b>${esc(labels[x.module]||'真题句')}</b><span>${Math.round(x.totalScore/Math.max(1,x.attempts))} 分 · 再练</span></button>`).join('')||'<div class="empty">暂时没有句子记录。</div>'}</div></div><div class="finish-row"><button class="secondary" onclick="location.hash='#wordbook'">打开学习本</button><button class="secondary" onclick="location.hash='#account'">账号与云同步</button></div></section></main>`);
+    $('#checkAI').onclick=async()=>{const b=$('#checkAI'),t=$('#aiDiagText');b.disabled=true;t.textContent='正在做真实自检…';const r=await aiDiagnostic(true);b.disabled=false;if(r.ok)t.innerHTML=`<span class="ai-ok">✓ Worker / Key / 余额 / 模型 / JSON 全部正常 · ${esc(r.version||'')}</span>`;else t.innerHTML=`<span class="ai-bad">✗ ${esc(aiErrorText(r.error||{}))}</span>`;};$$('[data-weak-sentence]').forEach(b=>b.onclick=()=>location.hash='#replay/'+encodeURIComponent(b.dataset.weakSentence));
+  }
 
-  async function route(){const h=(location.hash||'#home').slice(1);try{if(h==='home')return home();if(h==='words')return wordsPage();if(h==='en2zh')return sentenceArrange('en2zh');if(h==='zh2en')return sentenceArrange('zh2en');if(h==='focus')return focusPage();if(h==='review')return reviewPage();if(h==='wordbook')return wordbookPage();if(h==='stats')return statsPage();if(h.startsWith('replay/'))return replaySentencePage(decodeURIComponent(h.slice(7)));location.hash='#home';}catch(e){console.error(e);}}
+  async function route(){const h=(location.hash||'#home').slice(1);try{if(!Auth.user&&h!=='account'){location.hash='#account';return;}if(h==='account')return accountPage();if(h==='home')return home();if(h==='words')return wordsPage();if(h==='en2zh')return sentenceArrange('en2zh');if(h==='zh2en')return sentenceArrange('zh2en');if(h==='focus')return focusPage();if(h==='review')return reviewPage();if(h==='wordbook')return wordbookPage();if(h==='stats')return statsPage();if(h.startsWith('replay/'))return replaySentencePage(decodeURIComponent(h.slice(7)));location.hash=Auth.user?'#home':'#account';}catch(e){console.error(e);}}
   window.addEventListener('hashchange',route);
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')Store.flush();});
-  window.addEventListener('pagehide',()=>Store.flush());
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){Store.flush();CloudSync.push().catch(()=>{});}});
+  window.addEventListener('pagehide',()=>{Store.flush();CloudSync.push().catch(()=>{});});
   window.addEventListener('beforeunload',()=>Store.save(false));
-  window.addEventListener('load',async()=>{await Store.hydrate();if(!location.hash)location.hash='#home';route();});
+  window.addEventListener('load',async()=>{
+    const logged=await Auth.restore();
+    if(logged){await CloudSync.bootstrap({newAccount:false});}else{Store.setScope('guest');Store.load();await Store.hydrate();}
+    if(!location.hash)location.hash=logged?'#home':'#account';route();
+  });
 })();
