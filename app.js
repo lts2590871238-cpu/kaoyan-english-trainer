@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const CFG = window.XUANXUAN_CONFIG || {};
-  const APP_VERSION = 'v22.0.0';
+  const APP_VERSION = 'v22.1.0';
   const APP_KEY = 'xuanxuan50_v6_state';
   const LEGACY_BACKUP_KEY = APP_KEY + '_backup';
   const AUTH_KEY = 'xuanxuan50_auth_v1';
@@ -404,7 +404,7 @@
   async function dailyHubPage(){
     Sound.setQuiet(false);advanceCompletedDayIfNeeded();
     let plan=null,err=null;try{plan=await ensurePlan(await Data.core());}catch(e){err=e;}
-    const d=Store.day(),errors=todayErrorSummary(d),next=plan?nextPracticeLabel(plan):'今日任务',completed=!!(plan&&allPracticeDone(plan));
+    const errors=todayErrorSummary(),next=plan?nextPracticeLabel(plan):'今日任务',completed=!!(plan&&allPracticeDone(plan));
     shell(`<main class="hub-page"><section class="hub-hero">
       <div class="hub-title"><span>🌷 Day ${Store.state.currentDay}</span><b>${completed?'今天的正式练习完成啦':'今天想从哪里开始？'}</b><small>${plan?(completed?'可以自由复练，也可以看看复习和错题':`下一站：${esc(next)}`):'题库正在准备中'}</small></div>
       <div class="hub-triangle">
@@ -499,7 +499,7 @@
       const current=terms.slice(round*10,round*10+10),left=current.filter(t=>!done.has(t)),items=(left.length?left:current),lmap=data.lexIndex.byTerm;
       const chinese=shuffle(items.map(t=>({t,zh:lmap.get(t)?.sense_zh||lmap.get(t)?.dict_zh||''})));
       const stat=`<div class="module-stat">${flow?'第 1 / 4 关 · ':''}今日 ${done.size}/30 · 第 ${round+1}/3 轮<div class="thin-progress"><i style="width:${done.size/30*100}%"></i></div></div>`;
-      shell(`<main class="page">${head('单词连线',stat)}<div class="split-layout"><section class="study-card"><div class="round-row"><span>先点英文，再点中文。读音按钮可以反复听。</span><span>高 : 中 : 低 = 5 : 3 : 2</span></div><div class="match-grid"><div class="match-col">${items.map(t=>`<button class="match-item eng" data-term="${esc(t)}"><span>${esc(t)}</span><span class="speak" data-speak="${esc(t)}">🔊</span></button>`).join('')}</div><div class="match-col">${chinese.map((x,i)=>`<button class="match-item zh" data-term="${esc(x.t)}"><span>${String.fromCharCode(97+i)}. ${esc(x.zh)}</span></button>`).join('')}</div></div><div id="roundDone" class="finish-row"></div></section><aside class="illustration"><img src="assets/word-match.jpg" alt="单词连线陪伴图"></aside></div></main>`);
+      shell(`<main class="page">${head('单词连线',stat)}<div class="split-layout"><section class="study-card"><div class="round-row"><span>先点英文，再点中文。读音按钮可以反复听。</span><span>高 : 中 : 低 = 5 : 3 : 2</span></div><div class="match-grid"><div class="match-col">${items.map(t=>`<button class="match-item eng" data-term="${esc(t)}"><span>${esc(t)}</span><span class="speak" data-speak="${esc(t)}">🔊</span></button>`).join('')}</div><div class="match-col">${chinese.map((x,i)=>`<button class="match-item zh" data-term="${esc(x.t)}"><span>${String.fromCharCode(97+i)}. ${esc(x.zh)}</span></button>`).join('')}</div></div><div id="wordMatchFb" class="word-match-feedback" aria-live="polite"></div><div id="roundDone" class="finish-row"></div></section><aside class="illustration"><img src="assets/word-match.jpg" alt="单词连线陪伴图"></aside></div></main>`);
       Sound.preload(items);bindMatch(items);
     };
     function bindMatch(items){
@@ -509,8 +509,13 @@
       $$('.zh').forEach(b=>b.addEventListener('click',()=>{
         if(!selected||b.classList.contains('done'))return;const e=$(`.eng[data-term="${CSS.escape(selected)}"]`);
         if(b.dataset.term===selected){
-          e.classList.add('done','correct');b.classList.add('done','correct');const first=!wrongSet.has(selected);
-          if(!done.has(selected)){done.add(selected);day.wordsDone.push(selected);updateWord(selected,first,null);Store.save();}
+          const term=selected,hadWrong=wrongSet.has(term);
+          e.classList.add('done','correct');b.classList.add('done','correct');e.disabled=true;b.disabled=true;
+          if(!done.has(term)){done.add(term);day.wordsDone.push(term);updateWord(term,true,null);Store.save();}
+          const fb=$('#wordMatchFb');
+          if(fb)fb.innerHTML=hadWrong
+            ?`<div class="feedback good compact-feedback"><b>✓ 这次配对正确</b><span>${esc(term)} 前面已经错过，所以仍保留在“今日错题”里，稍后再巩固一次。</span></div>`
+            :`<div class="feedback good compact-feedback"><b>✓ 配对正确</b><span>继续找下一组。</span></div>`;
           Sound.sfx('ok');selected=null;
           if(items.every(t=>done.has(t))){
             $('#roundDone').innerHTML=round<2?'<button class="primary" id="nextRound">下一组 10 个</button>':`<button class="primary" id="finishWords">${flow?'本关完成，看看奖励 🌷':'今天的30个完成啦 🌷'}</button>`;
@@ -518,8 +523,15 @@
             $('#finishWords')?.addEventListener('click',()=>location.hash=flow?'#stage-clear/words':'#dashboard');
           }
         }else{
-          wrongSet.add(selected);markWordError(selected,{source:'word_match'});e.classList.add('wrong');b.classList.add('wrong');Sound.sfx('bad');
-          setTimeout(()=>{e.classList.remove('wrong');b.classList.remove('wrong');},300);
+          const term=selected;
+          wrongSet.add(term);
+          updateWord(term,false,null);
+          markWordError(term,{source:'word_match'});
+          e.classList.add('wrong');b.classList.add('wrong');
+          const fb=$('#wordMatchFb');
+          if(fb)fb.innerHTML=`<div class="feedback bad compact-feedback"><b>✗ 配错啦，已经判错</b><span>${esc(term)} 已立即记入“今日错题”。这个英文仍保持选中，再找一次正确释义。</span></div>`;
+          Sound.sfx('bad');
+          setTimeout(()=>{e.classList.remove('wrong');b.classList.remove('wrong');},700);
         }
       }));
     }
@@ -629,14 +641,95 @@
     }
     function reference(a,s,id){return `<div class="reference"><b>参考汉译：</b><br>${esc(a.zh||s.zh)}<br><br><b>最短主干：</b> ${esc(a.abridged_en||'')}<br><b>主干汉译：</b> ${esc(a.main_stem_zh||'')}<br><span class="day-sub">${esc(a.logic||'')}</span>${renderTokens(a.en,id)}</div>`;}
     function renderPrecise(a,s,id){
-      const groups=a.groups||[],answers=new Map();groups.forEach((g,gi)=>(g.token_indices||[]).forEach(t=>{if(!answers.has(t))answers.set(t,gi);}));
-      const saved=Drafts.get('analysis',id);let active=0,assign=saved?.stage==='precise'&&saved.assign&&typeof saved.assign==='object'?{...saved.assign}:{};
-      wrap(a,s,`<div class="analysis-board"><div class="day-sub">先点一个结构框，再点上面的单词方块，把每个词放到它主要所属的结构里。</div><div class="token-bank">${a.tokens.map((t,i)=>`<button class="a-token ${assign[i]!=null?'assigned':''}" data-ti="${i}">${esc(t)}</button>`).join('')}</div><div class="zones">${groups.map((g,i)=>`<div class="zone ${i===0?'active':''}" data-zone="${i}"><strong>${esc(g.label)}</strong><span class="mini">${esc(g.note||'')}</span><div class="zone-chips" id="zone${i}"></div></div>`).join('')}</div><div class="finish-row" style="gap:8px"><button class="secondary" id="resetA">重置</button><button class="primary" id="checkA">核对拆分</button></div></div>`);
-      $$('.zone').forEach(z=>z.onclick=()=>{$$('.zone').forEach(x=>x.classList.remove('active'));z.classList.add('active');active=+z.dataset.zone;});
-      $$('.a-token').forEach(b=>b.onclick=()=>{assign[+b.dataset.ti]=active;b.classList.add('assigned');Drafts.set('analysis',id,{stage:'precise',assign});draw();});
-      const draw=()=>groups.forEach((g,gi)=>{const el=$(`#zone${gi}`);if(el)el.innerHTML=Object.entries(assign).filter(([,v])=>Number(v)===gi).map(([k])=>`<span class="answer-chip">${esc(a.tokens[+k])}</span>`).join('');});draw();
-      $('#resetA').onclick=()=>{assign={};$$('.a-token').forEach(x=>x.classList.remove('assigned'));Drafts.set('analysis',id,{stage:'precise',assign});draw();};
-      $('#checkA').onclick=()=>{const lexical=a.tokens.map((t,i)=>/[A-Za-z0-9]/.test(t)?i:null).filter(x=>x!==null),right=lexical.filter(i=>Number(assign[i])===answers.get(i)).length,score=Math.round(right/Math.max(1,lexical.length)*100);$('#analysisFb').innerHTML=`<div class="feedback ${score>=70?'good':'bad'}"><b>结构归位 ${score}%</b>${reference(a,s,id)}</div>`;bindTokenClicks(data);complete(id,score,{answer:JSON.stringify(assign),meta:{stage:'precise'}});};
+      const groups=a.groups||[],answers=new Map(),lexical=a.tokens.map((t,i)=>/[A-Za-z0-9]/.test(t)?i:null).filter(i=>i!==null);
+      groups.forEach((g,gi)=>(g.token_indices||[]).forEach(t=>{if(!answers.has(t))answers.set(t,gi);}));
+      const saved=Drafts.get('analysis',id);
+      let assign=saved?.stage==='precise'&&saved.assign&&typeof saved.assign==='object'?{...saved.assign}:{},picked=null,checked=false;
+
+      wrap(a,s,`<div class="analysis-board">
+        <div class="analysis-instruction">
+          <b>先自己拆，不提前看答案。</b>
+          <span>电脑可以直接把单词拖进下面的结构区；手机先点一个单词，再点目标结构区。提交以后才会展开标准拆分和原因。</span>
+          <small id="analysisRemain"></small>
+        </div>
+        <div class="token-bank analysis-token-bank">${a.tokens.map((t,i)=>/[A-Za-z0-9]/.test(t)
+          ?`<button type="button" class="a-token ${assign[i]!=null?'assigned':''}" draggable="true" data-ti="${i}" aria-pressed="false">${esc(t)}</button>`
+          :`<span class="a-punct">${esc(t)}</span>`).join('')}</div>
+        <div class="zones analysis-zones">${groups.map((g,i)=>`<div class="zone analysis-zone" data-zone="${i}" role="button" tabindex="0">
+          <strong>${esc(g.label||`结构 ${i+1}`)}</strong>
+          <span class="mini">把你认为属于这一结构的词放到这里</span>
+          <div class="zone-chips" id="zone${i}"></div>
+        </div>`).join('')}</div>
+        <div class="finish-row" style="gap:8px"><button class="secondary" id="resetA">重置</button><button class="primary" id="checkA">核对拆分</button></div>
+      </div>`);
+
+      const save=()=>Drafts.set('analysis',id,{stage:'precise',assign});
+      const draw=()=>{
+        $$('.a-token').forEach(b=>{
+          const i=+b.dataset.ti;
+          b.classList.toggle('assigned',assign[i]!=null);
+          b.classList.toggle('picked',picked===i);
+          b.setAttribute('aria-pressed',picked===i?'true':'false');
+        });
+        groups.forEach((g,gi)=>{
+          const el=$(`#zone${gi}`);if(!el)return;
+          el.innerHTML=Object.entries(assign)
+            .filter(([,v])=>Number(v)===gi)
+            .sort((a,b)=>Number(a[0])-Number(b[0]))
+            .map(([k])=>`<button type="button" class="answer-chip analysis-chip" data-unassign="${k}" title="点一下放回词库">${esc(a.tokens[+k])}</button>`)
+            .join('');
+        });
+        const missing=lexical.filter(i=>assign[i]==null).length,remain=$('#analysisRemain');
+        if(remain)remain.textContent=missing?`还有 ${missing} 个词没有归位`:'所有词都已归位，可以核对了';
+      };
+      const place=(ti,gi)=>{
+        if(checked||!Number.isInteger(ti)||!Number.isInteger(gi)||gi<0||gi>=groups.length)return;
+        assign[ti]=gi;picked=null;save();draw();
+      };
+
+      $$('.a-token').forEach(b=>{
+        b.onclick=()=>{if(checked)return;picked=+b.dataset.ti;draw();};
+        b.ondragstart=e=>{
+          if(checked){e.preventDefault();return;}
+          const ti=+b.dataset.ti;e.dataTransfer.setData('text/plain',String(ti));e.dataTransfer.effectAllowed='move';b.classList.add('dragging');
+        };
+        b.ondragend=()=>b.classList.remove('dragging');
+      });
+      $$('.analysis-zone').forEach(z=>{
+        z.onclick=e=>{if(e.target.closest('[data-unassign]')||checked)return;if(picked!=null)place(picked,+z.dataset.zone);};
+        z.onkeydown=e=>{if(!checked&&(e.key==='Enter'||e.key===' ')&&picked!=null){e.preventDefault();place(picked,+z.dataset.zone);}};
+        z.ondragover=e=>{if(checked)return;e.preventDefault();e.dataTransfer.dropEffect='move';z.classList.add('drag-hover');};
+        z.ondragleave=()=>z.classList.remove('drag-hover');
+        z.ondrop=e=>{if(checked)return;e.preventDefault();z.classList.remove('drag-hover');place(Number(e.dataTransfer.getData('text/plain')),+z.dataset.zone);};
+      });
+      $('.analysis-zones')?.addEventListener('click',e=>{
+        const chip=e.target.closest('[data-unassign]');if(!chip||checked)return;
+        e.stopPropagation();delete assign[chip.dataset.unassign];picked=null;save();draw();
+      });
+      $('#resetA').onclick=()=>{if(checked)return;assign={};picked=null;save();draw();};
+      $('#checkA').onclick=()=>{
+        const missing=lexical.filter(i=>assign[i]==null);
+        if(missing.length){toast(`还有 ${missing.length} 个词没有归位，先自己找完再核对`);return;}
+        const right=lexical.filter(i=>Number(assign[i])===answers.get(i)).length,score=Math.round(right/Math.max(1,lexical.length)*100);
+        checked=true;
+        $$('.a-token').forEach(b=>{
+          b.draggable=false;b.disabled=true;
+          const i=+b.dataset.ti;
+          b.classList.toggle('analysis-right',Number(assign[i])===answers.get(i));
+          b.classList.toggle('analysis-wrong',Number(assign[i])!==answers.get(i));
+        });
+        $$('.analysis-zone').forEach(z=>{z.classList.remove('drag-hover');z.setAttribute('tabindex','-1');});
+        const detail=groups.map((g,gi)=>{
+          const words=(g.token_indices||[]).map(i=>a.tokens[i]).join(' ');
+          return `<div class="analysis-answer-row"><b>${esc(g.label||`结构 ${gi+1}`)}</b><span>${esc(words)}</span>${g.note?`<small>${esc(g.note)}</small>`:''}</div>`;
+        }).join('');
+        $('#analysisFb').innerHTML=`<div class="feedback ${score>=70?'good':'bad'}"><b>结构归位 ${score}%</b><div class="day-sub">${score===100?'全部归位正确！现在再看为什么这样拆。':`这次有 ${lexical.length-right} 个词需要再看看。下面现在才展开标准拆分和原因。`}</div><div class="analysis-answer-detail"><h3>核对后答案</h3>${detail}</div>${reference(a,s,id)}</div>`;
+        bindTokenClicks(data);
+        const btn=$('#checkA');btn.disabled=true;btn.textContent='已经核对';
+        $('#resetA').disabled=true;
+        complete(id,score,{answer:JSON.stringify(assign),meta:{stage:'precise'}});
+      };
+      draw();
     }
     function renderCoarse(a,s,id){
       const segs=a.segments||[],labels=shuffle([...new Set(segs.map(x=>x.label))]),saved=Drafts.get('analysis',id),chosen=saved?.stage==='coarse'&&Array.isArray(saved.chosen)?saved.chosen:[];
@@ -684,7 +777,7 @@
   }
 
   async function todayErrorsPage(){
-    const data=await readyData(true),day=Store.day(),summary=todayErrorSummary(day);
+    const data=await readyData(true),day=Store.errorDay();
     const wordRows=Object.entries(day.wordErrors||{}).sort((a,b)=>(Number(a[1].resolved)-Number(b[1].resolved))||((b[1].wrongCount||0)-(a[1].wrongCount||0)));
     const sentenceRows=Object.entries(day.sentenceErrors||{}).sort((a,b)=>(Number(a[1].resolved)-Number(b[1].resolved))||((b[1].wrongCount||0)-(a[1].wrongCount||0)));
     const openWords=wordRows.filter(([,x])=>!x.resolved);
@@ -698,7 +791,7 @@
           drill=`<div class="error-drill"><div class="error-drill-top"><span>🍓 错词再练</span><small>${openWords.filter(([t])=>!day.wordErrors[t]?.resolved).length} 个待巩固</small></div><div class="error-word">${esc(rec.term)} <button class="speak" id="errorSpeak">🔊</button></div><div class="options">${opts.map(x=>`<button class="option" data-error-word="${esc(x.term)}">${esc(x.zh)}</button>`).join('')}</div><div id="errorWordFb"></div></div>`;
         }
       }else if(wordRows.length){drill='<div class="error-drill done-drill">🌷 今天的错词已经全部重新巩固过啦。</div>';}
-      shell(`<main class="page">${head('今日错题',`<div class="module-stat">今天共错 ${sum.total} · 待巩固 ${sum.open}</div>`, '#review-center')}<section class="study-card"><div class="error-summary-grid"><div><b>${sum.wordOpen}</b><span>待巩固错词</span></div><div><b>${sum.sentenceOpen}</b><span>待巩固句子</span></div><div><b>${sum.total-sum.open}</b><span>今天已重新掌握</span></div></div>${summary.total===0?'<div class="empty"><div class="review-empty-icon">✨</div><h2>今天暂时没有错题</h2><p>保持这个状态，很棒！</p></div>':`${drill}<h3 class="section-title">今天做错过的句子</h3><div class="book-list">${sentenceRows.map(([id,row])=>{const st=Store.state.sentences[id],sen=data.sentences[id],label={en2zh:'英译汉',zh2en:'汉译英',free_translation:'自由翻译',analysis:'成分分析'}[row.module]||'真题句';return `<div class="book-item sentence-book-item ${row.resolved?'resolved-error':''}"><div class="book-top"><div><span class="book-term">${row.resolved?'✓ ':'❗ '}${esc(label)}</span> <span class="book-meta">${esc(sen?.year||'')} 真题</span></div><span class="badge">${row.resolved?'已巩固':'待巩固'} · 错 ${row.wrongCount||1}</span></div><div class="book-context">${esc(sen?.en||'')}</div><div class="book-meta">最近 ${Math.round(st?.lastScore||0)} 分 · 最佳 ${Math.round(st?.bestScore||0)} 分</div><div class="finish-row sentence-actions"><button class="primary" data-error-replay="${esc(id)}">${row.resolved?'再练一次':'去巩固'}</button></div></div>`;}).join('')||'<div class="empty">今天没有句子错题。</div>'}</div>`}</section></main>`);
+      shell(`<main class="page">${head('今日错题',`<div class="module-stat">今天共错 ${sum.total} · 待巩固 ${sum.open}</div>`, '#review-center')}<section class="study-card"><div class="error-summary-grid"><div><b>${sum.wordOpen}</b><span>待巩固错词</span></div><div><b>${sum.sentenceOpen}</b><span>待巩固句子</span></div><div><b>${sum.total-sum.open}</b><span>今天已重新掌握</span></div></div>${sum.total===0?'<div class="empty"><div class="review-empty-icon">✨</div><h2>今天暂时没有错题</h2><p>保持这个状态，很棒！</p></div>':`${drill}<h3 class="section-title">今天做错过的句子</h3><div class="book-list">${sentenceRows.map(([id,row])=>{const st=Store.state.sentences[id],sen=data.sentences[id],label={en2zh:'英译汉',zh2en:'汉译英',free_translation:'自由翻译',analysis:'成分分析'}[row.module]||'真题句';return `<div class="book-item sentence-book-item ${row.resolved?'resolved-error':''}"><div class="book-top"><div><span class="book-term">${row.resolved?'✓ ':'❗ '}${esc(label)}</span> <span class="book-meta">${esc(sen?.year||'')} 真题</span></div><span class="badge">${row.resolved?'已巩固':'待巩固'} · 错 ${row.wrongCount||1}</span></div><div class="book-context">${esc(sen?.en||'')}</div><div class="book-meta">最近 ${Math.round(st?.lastScore||0)} 分 · 最佳 ${Math.round(st?.bestScore||0)} 分</div><div class="finish-row sentence-actions"><button class="primary" data-error-replay="${esc(id)}">${row.resolved?'再练一次':'去巩固'}</button></div></div>`;}).join('')||'<div class="empty">今天没有句子错题。</div>'}</div>`}</section></main>`);
       $('#errorSpeak')?.addEventListener('click',()=>{const cur=openWords.find(([t])=>!day.wordErrors[t]?.resolved);if(cur)Sound.speak(cur[0]);});
       $$('[data-error-word]').forEach(b=>b.onclick=()=>{
         const cur=openWords.find(([t])=>!day.wordErrors[t]?.resolved);if(!cur)return;const [term]=cur,ok=b.dataset.errorWord===term;b.classList.add(ok?'correct':'wrong');

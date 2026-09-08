@@ -16,3 +16,43 @@
 .complete-summary{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:20px}.complete-summary span{padding:10px;border-radius:14px;background:#faf7f3;border:1px solid var(--line);font-weight:800}.firework{position:absolute;font-size:44px;opacity:0;animation:fireworkBurst 2.8s ease-out 1}.firework.f1{left:10%;top:9%}.firework.f2{right:11%;top:13%;animation-delay:.25s}.firework.f3{left:17%;bottom:15%;animation-delay:.5s}.firework.f4{right:17%;bottom:16%;animation-delay:.75s}@keyframes fireworkBurst{0%{transform:scale(.2);opacity:0}25%{opacity:1}55%{transform:scale(1.7) rotate(50deg);opacity:.85}100%{transform:scale(2.2) rotate(90deg);opacity:0}}
 @media(max-width:760px){.welcome-page,.hub-page,.celebrate-page{padding:8px}.welcome-hero,.hub-hero{min-height:calc(100vh - 16px);border-radius:25px;background-position:center 35%}.welcome-panel{top:55%;padding:20px 16px 22px}.welcome-panel h1{font-size:31px}.welcome-decor{font-size:25px}.hub-title{top:5%}.hub-triangle{top:55%;gap:14px 10px}.animal-card{padding:17px 12px;min-height:142px;border-radius:23px}.animal-card b{font-size:18px}.animal-face{font-size:35px}.dog-card{width:min(310px,82%)}.review-center-grid{grid-template-columns:1fr}.error-summary-grid{grid-template-columns:1fr 1fr}.error-summary-grid>div:last-child{grid-column:1/-1}.complete-summary{grid-template-columns:1fr}.celebrate-card{padding:34px 17px 28px}.celebrate-actions button{width:100%}.review-center-intro{align-items:flex-start}.review-big-emoji{font-size:42px}}
 @media(max-width:430px){.hub-title b{font-size:24px}.hub-title small{font-size:12px}.hub-triangle{width:calc(100% - 20px);grid-template-columns:1fr 1fr}.animal-card{min-height:132px;padding:15px 8px}.animal-card small{font-size:11px}.animal-card b{font-size:16px}.dog-card{width:82%}.welcome-start{min-width:90%;padding:15px 18px}.welcome-decor.d5,.welcome-decor.d6{display:none}.review-tools{align-items:flex-start;flex-direction:column}}
+
+/* V22.1: today-error consistency, explicit word judging, real sentence-analysis interaction */
+.word-match-feedback{min-height:0;margin-top:12px}
+.word-match-feedback:empty{display:none}
+.compact-feedback{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;margin-top:0}
+.compact-feedback b{white-space:nowrap}
+.compact-feedback span{line-height:1.55}
+.match-item.done:disabled{opacity:1;cursor:default}
+.analysis-instruction{display:grid;gap:5px;margin-bottom:12px;padding:13px 15px;border:1px solid #dceaf1;background:#f6fbfe;border-radius:17px;line-height:1.55}
+.analysis-instruction b{color:#416f86}
+.analysis-instruction span,.analysis-instruction small{color:var(--muted)}
+.analysis-instruction small{font-weight:850}
+.analysis-token-bank{align-items:center}
+.a-token[draggable="true"]{cursor:grab;user-select:none;touch-action:manipulation}
+.a-token.dragging{opacity:.4;transform:scale(.96)}
+.a-token.picked{outline:3px solid rgba(126,187,216,.3);border-color:#7ebbd8;background:#eef7ff}
+.a-token.assigned{opacity:.62}
+.a-token.analysis-right{opacity:1;border-color:#98cfac;background:#eef9f2}
+.a-token.analysis-wrong{opacity:1;border-color:#e49bb0;background:#fff1f4}
+.a-punct{display:inline-flex;align-items:center;justify-content:center;padding:8px 2px;font-weight:900;color:#7b8491}
+.analysis-zones{gap:12px}
+.analysis-zone{transition:border-color .16s,background .16s,transform .16s;cursor:pointer}
+.analysis-zone.drag-hover{border-color:#7ebbd8;background:#eef9ff;transform:translateY(-2px)}
+.analysis-zone .mini{display:block;margin:4px 0 8px}
+.analysis-chip{border:0;cursor:pointer}
+.analysis-chip:hover{background:#ffeef3}
+.analysis-answer-detail{display:grid;gap:9px;margin-top:15px;padding:14px;border:1px solid #e7ddd6;border-radius:16px;background:#fff}
+.analysis-answer-detail h3{margin:0 0 3px}
+.analysis-answer-row{display:grid;grid-template-columns:minmax(110px,.7fr) minmax(0,1.3fr);gap:5px 12px;padding:9px 10px;border-radius:12px;background:#faf7f3}
+.analysis-answer-row b{color:#5b6574}
+.analysis-answer-row span{font-family:Georgia,"Times New Roman",serif;line-height:1.55}
+.analysis-answer-row small{grid-column:1/-1;color:var(--muted);line-height:1.55}
+@media(max-width:700px){
+  .compact-feedback{display:grid}
+  .analysis-answer-row{grid-template-columns:1fr}
+  .analysis-answer-row small{grid-column:auto}
+  .a-token[draggable="true"]{cursor:pointer}
+  .analysis-zone{min-height:92px}
+}
+
