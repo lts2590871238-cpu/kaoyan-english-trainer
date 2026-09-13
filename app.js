@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const CFG = window.XUANXUAN_CONFIG || {};
-  const APP_VERSION = 'v22.2.0';
+  const APP_VERSION = 'v22.3.0';
   const APP_KEY = 'xuanxuan50_v6_state';
   const LEGACY_BACKUP_KEY = APP_KEY + '_backup';
   const AUTH_KEY = 'xuanxuan50_auth_v1';
@@ -310,8 +310,12 @@
     };
   }
   function advanceCompletedDayIfNeeded(){
-    const d=Store.day();if(!d.completed||!d.completedAt||d.completedAt>=todayISO()||Store.state.currentDay>=100)return false;
-    Store.state.currentDay++;Store.day();Store.save(false);return true;
+    const d=Store.day();
+    if(!d.completed||Store.state.currentDay>=100)return false;
+    Store.state.currentDay++;
+    Store.day();
+    Store.save(false);
+    return true;
   }
 
   function dueCandidates(lexicon){
@@ -481,9 +485,10 @@
       <div class="celebrate-icon">🎆</div><div class="celebrate-kicker">Day ${Store.state.currentDay} 完成啦！</div><h1>恭喜完成今天练习！</h1><p>今天又离 50 分更近一点。剩下的时间可以自由复练，不会重复计算今日完成量。</p>
       <div class="complete-summary"><span>🍓 单词 ${c.words}/30</span><span>🫐 英译汉 ${c.en2zh}/2</span><span>🍒 汉译英 ${c.zh2en}/2</span><span>🌸 ${label} ${c.focus}/${focusRequired(plan)}</span></div>
       ${errors.open?`<div class="complete-note">今天还有 ${errors.open} 个错题可以在首页慢慢巩固。</div>`:'<div class="complete-note good-note">今天的错题也都已经巩固啦 🌷</div>'}
-      <div class="celebrate-actions single"><button class="primary" id="completeBack">🏡 返回首页</button></div>
+      <div class="complete-note good-note">${Store.state.currentDay<100?'下一天已经解锁，不需要等到明天。想继续就直接进入下一天，想休息也可以随时回来。':'100 天挑战全部完成啦！'}</div>
+      <div class="celebrate-actions single"><button class="primary" id="completeBack">${Store.state.currentDay<100?'🐾 进入下一天':'🏡 返回首页'}</button></div>
     </section></main>`,{minimal:true});
-    Sound.sfx('finish');$('#completeBack').onclick=()=>location.hash='#dashboard';
+    Sound.sfx('finish');$('#completeBack').onclick=()=>{advanceCompletedDayIfNeeded();location.hash='#dashboard';};
   }
 
   async function home(){return dashboardPage();}
