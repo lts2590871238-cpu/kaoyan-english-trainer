@@ -1,4 +1,4 @@
-const VERSION = 'v21.0.0';
+const VERSION = 'v21.1.0';
 const API_ROOT = 'https://api.deepseek.com';
 const DEFAULT_MODEL = 'deepseek-v4-flash';
 const SESSION_DAYS = 30;
@@ -32,9 +32,10 @@ export default {
 
     if (!originAllowed(origin, env)) return json({ ok:false, error:{code:'origin_not_allowed',message:'Origin not allowed'} }, 403, cors);
 
-    if (url.pathname.startsWith('/auth/') || url.pathname.startsWith('/sync/')) {
+    if (url.pathname.startsWith('/auth/') || url.pathname.startsWith('/sync/') || url.pathname.startsWith('/admin/')) {
       if (!env.DB) return json({ok:false,error:{code:'db_not_configured',message:'D1 database binding DB is not configured'}},503,cors);
       if (!env.AUTH_PEPPER) return json({ok:false,error:{code:'auth_not_configured',message:'AUTH_PEPPER is not configured'}},503,cors);
+      if (url.pathname.startsWith('/admin/') && !env.ADMIN_RESET_SECRET) return json({ok:false,error:{code:'admin_not_configured',message:'ADMIN_RESET_SECRET is not configured'}},503,cors);
       try { return await handleAccountRoutes(request, url, env, cors); }
       catch (err) { const e=normalizeError(err); return json({ok:false,error:e,worker_version:VERSION},e.http_status||500,cors); }
     }
@@ -92,6 +93,21 @@ async function handleAccountRoutes(request,url,env,cors){
     await env.DB.batch([env.DB.prepare('UPDATE users SET verifier_hash=?,recovery_hash=?,last_login_at=? WHERE id=?').bind(verifierHash,newRecoveryHash,now,row.id),env.DB.prepare('DELETE FROM sessions WHERE user_id=?').bind(row.id)]);
     const session=await createSession(env,row.id);
     return json({ok:true,user:{id:row.id,username:row.username,display_name:row.display_name,challenge_start:row.challenge_start,created_at:row.created_at},session,recovery_code:newCode},200,cors);
+  }
+  if(request.method==='POST' && url.pathname==='/admin/reset-password'){
+    const body=await readJson(request),username=normalizeUsername(body.username),newVerifier=validateVerifier(body.new_verifier),adminSecret=String(body.admin_secret||'');
+    await authRateLimit(request,env,`admin-reset:${username}`,5,30*60);
+    if(!adminSecret)throw clientError('admin_denied','管理员密钥不正确',401);
+    const [providedHash,expectedHash]=await Promise.all([sha256b64(adminSecret),sha256b64(String(env.ADMIN_RESET_SECRET||''))]);
+    if(!safeEqual(providedHash,expectedHash))throw clientError('admin_denied','管理员密钥不正确',401);
+    const row=await env.DB.prepare('SELECT id,username,display_name,challenge_start,created_at FROM users WHERE username=?').bind(username).first();
+    if(!row)return json({ok:false,error:{code:'user_not_found',message:'没有找到这个账号'}},404,cors);
+    const verifierHash=await hmacVerifier(newVerifier,env.AUTH_PEPPER),newCode=randomRecoveryCode(),newRecoveryHash=await hmacVerifier('recovery:'+normalizeRecovery(newCode),env.AUTH_PEPPER),now=Date.now();
+    await env.DB.batch([
+      env.DB.prepare('UPDATE users SET verifier_hash=?,recovery_hash=? WHERE id=?').bind(verifierHash,newRecoveryHash,row.id),
+      env.DB.prepare('DELETE FROM sessions WHERE user_id=?').bind(row.id)
+    ]);
+    return json({ok:true,user:{username:row.username,display_name:row.display_name},recovery_code:newCode,reset_at:now},200,cors);
   }
   if(request.method==='POST' && url.pathname==='/auth/logout'){
     const token=getBearer(request);if(token){const hash=await sha256b64(token);await env.DB.prepare('DELETE FROM sessions WHERE token_hash=?').bind(hash).run();}
