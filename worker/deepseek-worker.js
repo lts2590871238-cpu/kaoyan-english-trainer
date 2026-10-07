@@ -22,6 +22,7 @@ export default {
         configured:Boolean(env.DEEPSEEK_API_KEY),
         database:Boolean(env.DB),
         auth_configured:Boolean(env.AUTH_PEPPER),
+        admin_reset_configured:Boolean(env.ADMIN_RESET_SECRET),
         model:env.DEEPSEEK_MODEL || DEFAULT_MODEL,
         version:VERSION,
         service:'xuanxuan-english-ai'
@@ -96,7 +97,7 @@ async function handleAccountRoutes(request,url,env,cors){
   }
   if(request.method==='POST' && url.pathname==='/admin/reset-password'){
     const body=await readJson(request),username=normalizeUsername(body.username),newVerifier=validateVerifier(body.new_verifier),adminSecret=String(body.admin_secret||'');
-    await authRateLimit(request,env,`admin-reset:${username}`,5,30*60);
+    await authRateLimit(request,env,'admin-reset',8,30*60);
     if(!adminSecret)throw clientError('admin_denied','管理员密钥不正确',401);
     const [providedHash,expectedHash]=await Promise.all([sha256b64(adminSecret),sha256b64(String(env.ADMIN_RESET_SECRET||''))]);
     if(!safeEqual(providedHash,expectedHash))throw clientError('admin_denied','管理员密钥不正确',401);
