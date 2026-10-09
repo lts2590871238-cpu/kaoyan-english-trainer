@@ -730,43 +730,131 @@
       groups.forEach((g,gi)=>(g.token_indices||[]).forEach(t=>{if(!answers.has(t))answers.set(t,gi);}));
       const lexical=a.tokens.map((t,i)=>/[A-Za-z0-9]/.test(t)?i:null).filter(i=>i!==null&&answers.has(i));
       const saved=Drafts.get('analysis',id);
-      let assign=saved?.stage==='precise'&&saved.assign&&typeof saved.assign==='object'?{...saved.assign}:{},picked=null,locked=false;
+      let assign=saved?.stage==='precise'&&saved.assign&&typeof saved.assign==='object'?{...saved.assign}:{};
+      let selectedTokens=new Set(),rangeMode=false,rangeStart=null,lastIndex=null,locked=false;
       for(const k of Object.keys(assign))if(!lexical.includes(Number(k))||!Number.isInteger(Number(assign[k]))||Number(assign[k])<0||Number(assign[k])>=groups.length)delete assign[k];
-      wrap(a,s,`<div class="analysis-board">
-        <div class="analysis-drop-hint"><b>先自己找结构，做完前不显示答案。</b><span>电脑：把单词拖进下面的结构区；手机：先点一个单词，再点目标结构区。放错区域也可以点回来重新分。</span><small id="analysisRemain"></small></div>
-        <div class="token-bank">${a.tokens.map((t,i)=>lexical.includes(i)?`<button type="button" class="a-token ${assign[i]!=null?'assigned':''}" draggable="true" data-ti="${i}">${esc(t)}</button>`:`<span class="a-punct">${esc(t)}</span>`).join('')}</div>
-        <div class="zones">${groups.map((g,i)=>`<div class="zone" data-zone="${i}" role="button" tabindex="0"><strong>${esc(g.label||`结构 ${i+1}`)}</strong><span class="mini">把属于这一结构的词放到这里</span><div class="zone-chips" id="zone${i}"></div></div>`).join('')}</div>
-        <div class="finish-row" style="gap:8px"><button class="secondary" id="resetA">重置</button><button class="primary" id="checkA">核对拆分</button></div>
+      wrap(a,s,`<div class="analysis-board analysis-batch">
+        <div class="analysis-drop-hint"><b>一次选择一整组词，再一起归类。提交之前不会显示答案。</b><span>手机：逐词点亮后直接点结构区；点「连续选词」再点首词和末词，可一次选中整段。电脑还支持 Shift 连选或拖动已选词组。</span><small id="analysisRemain"></small></div>
+        <div class="analysis-batch-toolbar">
+          <button type="button" class="secondary" id="rangeA" aria-pressed="false">⇆ 连续选词</button>
+          <button type="button" class="secondary" id="clearSelectionA">取消选中</button>
+          <span id="selectedAStatus" role="status" aria-live="polite">当前未选词</span>
+        </div>
+        <div class="token-bank analysis-token-bank">${a.tokens.map((t,i)=>lexical.includes(i)?`<button type="button" class="a-token" draggable="true" data-ti="${i}" aria-pressed="false">${esc(t)}</button>`:`<span class="a-punct">${esc(t)}</span>`).join('')}</div>
+        <div class="zones">${groups.map((g,i)=>`<div class="zone analysis-group-zone" data-zone="${i}" data-group-tone="${i%6}" role="button" tabindex="0"><strong>${esc(g.label||`结构 ${i+1}`)}</strong><span class="mini">把已选的整组词放到这里，或拖动词组</span><div class="zone-chips" id="zone${i}"></div></div>`).join('')}</div>
+        <div class="finish-row" style="gap:8px"><button class="secondary" id="resetA">全部重置</button><button class="primary" id="checkA">连好了，核对拆分</button></div>
       </div>`);
       const save=()=>Drafts.set('analysis',id,{stage:'precise',assign});
       const draw=()=>{
-        $$('.a-token').forEach(b=>{const i=+b.dataset.ti;b.classList.toggle('assigned',assign[i]!=null);b.classList.toggle('picked',picked===i);b.setAttribute('aria-pressed',picked===i?'true':'false');});
-        groups.forEach((g,gi)=>{const el=$(`#zone${gi}`);if(el)el.innerHTML=Object.entries(assign).filter(([,v])=>Number(v)===gi).sort((a,b)=>Number(a[0])-Number(b[0])).map(([k])=>`<button type="button" class="answer-chip analysis-chip" data-unassign="${k}" title="点一下放回词库">${esc(a.tokens[+k])}</button>`).join('');});
-        const missing=lexical.filter(i=>assign[i]==null).length,remain=$('#analysisRemain');if(remain)remain.textContent=missing?`还有 ${missing} 个词没有归位`:'所有词都已归位，可以核对了';
+        $$('.a-token').forEach(b=>{
+          const i=+b.dataset.ti;
+          b.classList.toggle('assigned',assign[i]!=null);
+          b.classList.toggle('picked',selectedTokens.has(i));
+          b.setAttribute('aria-pressed',selectedTokens.has(i)?'true':'false');
+          if(assign[i]!=null)b.dataset.groupTone=String(Number(assign[i])%6);
+          else delete b.dataset.groupTone;
+        });
+        groups.forEach((g,gi)=>{
+          const el=$(`#zone${gi}`);if(!el)return;
+          const indices=lexical.filter(i=>Number(assign[i])===gi),blocks=[];
+          for(const i of indices){
+            const previous=blocks[blocks.length-1],p=lexical.indexOf(i);
+            if(previous&&lexical.indexOf(previous[previous.length-1])===p-1)previous.push(i);
+            else blocks.push([i]);
+          }
+          el.innerHTML=blocks.map(ids=>`<button type="button" class="answer-chip analysis-chip" data-unassign="${ids.join(',')}" title="点一下将整段移回词库">${esc(a.tokens.slice(ids[0],ids[ids.length-1]+1).join(' '))}</button>`).join('');
+        });
+        const missing=lexical.filter(i=>assign[i]==null).length,remain=$('#analysisRemain');
+        if(remain)remain.textContent=missing?`已归类 ${lexical.length-missing}/${lexical.length} 词 · 还有 ${missing} 个词待归类`:'所有词都已归类，可在提交前重新调整';
+        const label=$('#selectedAStatus');
+        if(label)label.textContent=rangeMode?(rangeStart===null?'连续选词：请点首词':`连续选词：已定首词「${a.tokens[rangeStart]}」，请点末词`):(selectedTokens.size?`已选 ${selectedTokens.size} 个词，点下面的结构区即可整组放入`:'当前未选词');
+        const rangeButton=$('#rangeA');
+        if(rangeButton){rangeButton.classList.toggle('active',rangeMode);rangeButton.setAttribute('aria-pressed',rangeMode?'true':'false');rangeButton.textContent=rangeMode?'连续选词中 · 点末词':'⇆ 连续选词';}
+        const clear=$('#clearSelectionA');if(clear)clear.disabled=locked||(!selectedTokens.size&&!rangeMode);
       };
-      const place=(ti,gi)=>{if(locked||!lexical.includes(ti)||gi<0||gi>=groups.length)return;assign[ti]=gi;picked=null;save();draw();};
+      const choose=(i,e={})=>{
+        if(locked||!lexical.includes(i))return;
+        if(rangeMode){
+          if(rangeStart===null){rangeStart=i;selectedTokens.clear();selectedTokens.add(i);}
+          else{
+            const p=lexical.indexOf(rangeStart),q=lexical.indexOf(i);
+            for(const j of lexical.slice(Math.min(p,q),Math.max(p,q)+1))selectedTokens.add(j);
+            rangeMode=false;rangeStart=null;lastIndex=i;
+          }
+        }else if(e.shiftKey&&lastIndex!==null){
+          const p=lexical.indexOf(lastIndex),q=lexical.indexOf(i);
+          for(const j of lexical.slice(Math.min(p,q),Math.max(p,q)+1))selectedTokens.add(j);
+        }else{
+          if(selectedTokens.has(i))selectedTokens.delete(i);else selectedTokens.add(i);
+          lastIndex=i;
+        }
+        draw();
+      };
+      const place=(ids,gi)=>{
+        if(locked||!Number.isInteger(gi)||gi<0||gi>=groups.length)return;
+        const moving=[...new Set(ids)].filter(i=>lexical.includes(i));if(!moving.length)return;
+        for(const i of moving)assign[i]=gi;
+        selectedTokens.clear();rangeMode=false;rangeStart=null;lastIndex=null;
+        save();draw();
+      };
       $$('.a-token').forEach(b=>{
-        b.onclick=()=>{if(locked)return;picked=+b.dataset.ti;draw();};
-        b.ondragstart=e=>{if(locked){e.preventDefault();return;}const ti=+b.dataset.ti;e.dataTransfer.setData('text/plain',String(ti));e.dataTransfer.effectAllowed='move';b.classList.add('dragging');};
+        b.onclick=e=>choose(+b.dataset.ti,e);
+        b.ondragstart=e=>{
+          if(locked){e.preventDefault();return;}
+          const i=+b.dataset.ti;
+          const moving=selectedTokens.has(i)?[...selectedTokens]:[i];
+          e.dataTransfer.setData('text/plain',JSON.stringify(moving));
+          e.dataTransfer.effectAllowed='move';b.classList.add('dragging');
+        };
         b.ondragend=()=>b.classList.remove('dragging');
       });
       $$('.zone').forEach(z=>{
-        z.onclick=e=>{if(locked||e.target.closest('[data-unassign]'))return;if(picked!=null)place(picked,+z.dataset.zone);};
-        z.onkeydown=e=>{if(!locked&&(e.key==='Enter'||e.key===' ')&&picked!=null){e.preventDefault();place(picked,+z.dataset.zone);}};
+        z.onclick=e=>{if(locked||e.target.closest('[data-unassign]'))return;place([...selectedTokens],Number(z.dataset.zone));};
+        z.onkeydown=e=>{if(!locked&&(e.key==='Enter'||e.key===' ')&&selectedTokens.size){e.preventDefault();place([...selectedTokens],Number(z.dataset.zone));}};
         z.ondragover=e=>{if(locked)return;e.preventDefault();e.dataTransfer.dropEffect='move';z.classList.add('drag-hover');};
         z.ondragleave=()=>z.classList.remove('drag-hover');
-        z.ondrop=e=>{if(locked)return;e.preventDefault();z.classList.remove('drag-hover');const ti=Number(e.dataTransfer.getData('text/plain'));place(ti,+z.dataset.zone);};
+        z.ondrop=e=>{
+          if(locked)return;e.preventDefault();z.classList.remove('drag-hover');
+          let ids=[];try{ids=JSON.parse(e.dataTransfer.getData('text/plain'));}catch{}
+          if(!Array.isArray(ids))return;
+          place(ids.map(Number),Number(z.dataset.zone));
+        };
       });
-      $('.zones')?.addEventListener('click',e=>{const chip=e.target.closest('[data-unassign]');if(!chip||locked)return;e.stopPropagation();delete assign[chip.dataset.unassign];picked=null;save();draw();});
-      $('#resetA').onclick=()=>{if(locked)return;assign={};picked=null;save();draw();};
+      $('.zones')?.addEventListener('click',e=>{
+        const chip=e.target.closest('[data-unassign]');if(!chip||locked)return;e.stopPropagation();
+        for(const k of chip.dataset.unassign.split(','))delete assign[Number(k)];
+        selectedTokens.clear();save();draw();
+      });
+      $('#rangeA').onclick=()=>{
+        if(locked)return;
+        rangeMode=!rangeMode;rangeStart=null;selectedTokens.clear();lastIndex=null;draw();
+      };
+      $('#clearSelectionA').onclick=()=>{
+        if(locked)return;
+        rangeMode=false;rangeStart=null;selectedTokens.clear();lastIndex=null;draw();
+      };
+      $('#resetA').onclick=()=>{
+        if(locked)return;
+        assign={};selectedTokens.clear();rangeMode=false;rangeStart=null;lastIndex=null;save();draw();
+      };
       $('#checkA').onclick=()=>{
-        const missing=lexical.filter(i=>assign[i]==null);if(missing.length){toast(`还有 ${missing.length} 个词没有归位，先自己找完再核对`);return;}
+        const missing=lexical.filter(i=>assign[i]==null);if(missing.length){toast(`还有 ${missing.length} 个词没有归位，先分好再核对`);return;}
         const right=lexical.filter(i=>Number(assign[i])===answers.get(i)).length,score=Math.round(right/Math.max(1,lexical.length)*100),wrong=lexical.filter(i=>Number(assign[i])!==answers.get(i));
-        locked=true;$$('.a-token').forEach(b=>{b.draggable=false;const i=+b.dataset.ti;b.classList.toggle('analysis-right',Number(assign[i])===answers.get(i));b.classList.toggle('analysis-wrong',Number(assign[i])!==answers.get(i));});
-        const detail=groups.map((g,gi)=>{const words=(g.token_indices||[]).map(i=>a.tokens[i]).join(' ');return `<div class="analysis-answer-row"><b>${esc(g.label||`结构 ${gi+1}`)}</b><span>${esc(words)}</span>${g.note?`<small>${esc(g.note)}</small>`:''}</div>`;}).join('');
+        locked=true;rangeMode=false;selectedTokens.clear();
+        $$('.a-token').forEach(b=>{
+          b.draggable=false;const i=+b.dataset.ti;
+          b.classList.toggle('analysis-right',Number(assign[i])===answers.get(i));
+          b.classList.toggle('analysis-wrong',Number(assign[i])!==answers.get(i));
+        });
+        const detail=groups.map((g,gi)=>{
+          const words=(g.token_indices||[]).map(i=>a.tokens[i]).join(' ');
+          return `<div class="analysis-answer-row"><b>${esc(g.label||`结构 ${gi+1}`)}</b><span>${esc(words)}</span>${g.note?`<small>${esc(g.note)}</small>`:''}</div>`;
+        }).join('');
         $('#analysisFb').innerHTML=`<div class="feedback ${score>=70?'good':'bad'}"><b>结构归位 ${score}%</b><div class="day-sub">${wrong.length?`有 ${wrong.length} 个词需要再看看。现在才展开标准拆分和原因。`:'全部归位正确！现在看看为什么这样拆。'}</div><div class="analysis-answer-detail"><h3>核对后答案</h3>${detail}</div>${reference(a,s,id)}</div>`;
-        bindTokenClicks(data);const btn=$('#checkA');if(btn){btn.disabled=true;btn.textContent='已经核对';}const reset=$('#resetA');if(reset)reset.disabled=true;
-        complete(id,score,{answer:JSON.stringify(assign),meta:{stage:'precise'}});
+        bindTokenClicks(data);
+        const btn=$('#checkA');if(btn){btn.disabled=true;btn.textContent='已经核对';}
+        $('#resetA').disabled=true;$('#rangeA').disabled=true;$('#clearSelectionA').disabled=true;
+        complete(id,score,{answer:JSON.stringify(assign),meta:{stage:'precise',batchSelection:true}});
       };
       draw();
     }
