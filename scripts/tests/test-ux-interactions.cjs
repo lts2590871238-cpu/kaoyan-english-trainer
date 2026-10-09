@@ -61,8 +61,24 @@ async function wordFlow(page,name){
   await page.locator('#submitMatches').waitFor();
   assert.equal(await page.locator('#submitMatches').isDisabled(),true,'premature word submission enabled');
   async function select(en,zh){
-    await page.locator('.eng[data-term="'+en+'"]').click();
-    await page.locator('.zh[data-term="'+zh+'"]').click();
+    const english=page.locator('.eng[data-term="'+en+'"]'),chinese=page.locator('.zh[data-term="'+zh+'"]');
+    await english.click();
+    if(name==='phone'&&en==='word01'){
+      console.log('phone after ENG click',await page.evaluate(()=>({
+        selected:document.querySelector('.eng.selected')?.dataset.term,
+        aria:document.querySelector('.eng[data-term="word01"]')?.getAttribute('aria-pressed'),
+        count:document.querySelector('#wordMatchCount')?.innerText
+      })));
+    }
+    await chinese.click();
+    if(name==='phone'&&en==='word01'){
+      console.log('phone after ZH click',await page.evaluate(()=>({
+        selected:document.querySelector('.eng.selected')?.dataset.term,
+        paired:[...document.querySelectorAll('.match-item.paired')].map(x=>x.dataset.term),
+        count:document.querySelector('#wordMatchCount')?.innerText,
+        clicked:document.activeElement?.outerHTML?.slice(0,200)
+      })));
+    }
   }
   await select('word01','word02');
   assert.match(await page.locator('#wordMatchCount').innerText(),/已连 1\/10/,'first attempted pair was not registered');
