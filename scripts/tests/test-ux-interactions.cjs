@@ -63,22 +63,8 @@ async function wordFlow(page,name){
   async function select(en,zh){
     const english=page.locator('.eng[data-term="'+en+'"]'),chinese=page.locator('.zh[data-term="'+zh+'"]');
     await english.click();
-    if(name==='phone'&&en==='word01'){
-      console.log('phone after ENG click',await page.evaluate(()=>({
-        selected:document.querySelector('.eng.selected')?.dataset.term,
-        aria:document.querySelector('.eng[data-term="word01"]')?.getAttribute('aria-pressed'),
-        count:document.querySelector('#wordMatchCount')?.innerText
-      })));
-    }
     await chinese.click();
-    if(name==='phone'&&en==='word01'){
-      console.log('phone after ZH click',await page.evaluate(()=>({
-        selected:document.querySelector('.eng.selected')?.dataset.term,
-        paired:[...document.querySelectorAll('.match-item.paired')].map(x=>x.dataset.term),
-        count:document.querySelector('#wordMatchCount')?.innerText,
-        clicked:document.activeElement?.outerHTML?.slice(0,200)
-      })));
-    }
+
   }
   await select('word01','word02');
   assert.match(await page.locator('#wordMatchCount').innerText(),/已连 1\/10/,'first attempted pair was not registered');
@@ -130,7 +116,8 @@ async function analysisFlow(page,name){
   await zone(0).click();
   assert.equal((await page.evaluate(()=>Object.keys(window.__UX_TEST__.Store.state.drafts['2:analysis:test-precise'].assign).length)),3);
   await token(3).click();await token(4).click();
-  await token(3).dragTo(zone(1));
+  if(name==='phone')await zone(1).click(); // touch-safe batch placement
+  else await token(3).dragTo(zone(1)); // desktop HTML5 multiword drag
   assert.equal((await page.evaluate(()=>Object.keys(window.__UX_TEST__.Store.state.drafts['2:analysis:test-precise'].assign).length)),5);
   await token(5).click();await token(7).click({modifiers:['Shift']});
   await zone(2).click();
