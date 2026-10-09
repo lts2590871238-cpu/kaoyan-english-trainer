@@ -569,7 +569,7 @@
         if(button){button.disabled=submitted||total!==items.length;button.textContent=submitted?'本组已提交':'连好了，提交';}
         $('#clearMatches').disabled=submitted||total===0;
       };
-      $('[data-speak]').forEach(b=>b.addEventListener('click',()=>{Sound.speak(b.dataset.speak);}));
+      $$('[data-speak]').forEach(b=>b.addEventListener('click',()=>{Sound.speak(b.dataset.speak);}));
       $$('.eng').forEach(b=>b.addEventListener('click',()=>{
         if(submitted)return;
         selected=selected===b.dataset.term?null:b.dataset.term;
