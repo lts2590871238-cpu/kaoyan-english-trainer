@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const CFG = window.XUANXUAN_CONFIG || {};
-  const APP_VERSION = 'v22.3.1';
+  const APP_VERSION = 'v22.4.0';
   const APP_KEY = 'xuanxuan50_v6_state';
   const LEGACY_BACKUP_KEY = APP_KEY + '_backup';
   const AUTH_KEY = 'xuanxuan50_auth_v1';
