@@ -528,49 +528,97 @@
       const current=terms.slice(round*10,round*10+10),left=current.filter(t=>!done.has(t)),items=(left.length?left:current),lmap=data.lexIndex.byTerm;
       const chinese=shuffle(items.map(t=>({t,zh:lmap.get(t)?.sense_zh||lmap.get(t)?.dict_zh||''})));
       const stat=`<div class="module-stat">${flow?'第 1 / 4 关 · ':''}今日 ${done.size}/30 · 第 ${round+1}/3 轮<div class="thin-progress"><i style="width:${done.size/30*100}%"></i></div></div>`;
-      shell(`<main class="page">${head('单词连线',stat)}<div class="split-layout"><section class="study-card"><div class="round-row"><span>先点英文，再点中文。选错会立即记入今日错题，不会被后面的正确抵消。</span><span>高 : 中 : 低 = 5 : 3 : 2</span></div><div class="match-grid"><div class="match-col">${items.map(t=>`<button class="match-item eng" data-term="${esc(t)}"><span>${esc(t)}</span><span class="speak" data-speak="${esc(t)}">🔊</span></button>`).join('')}</div><div class="match-col">${chinese.map((x,i)=>`<button class="match-item zh" data-term="${esc(x.t)}"><span>${String.fromCharCode(97+i)}. ${esc(x.zh)}</span></button>`).join('')}</div></div><div id="wordMatchFb" class="word-match-feedback" aria-live="polite"></div><div id="roundDone" class="finish-row"></div></section><aside class="illustration"><img src="assets/word-match.jpg" alt="单词连线陪伴图"></aside></div></main>`);
+      shell(`<main class="page">${head('单词连线',stat)}<div class="split-layout"><section class="study-card"><div class="round-row"><span>先配好本组单词，可以反复调整。全部连好后点「连好了，提交」才统一判分，提交前不会记错题。</span><span>高 : 中 : 低 = 5 : 3 : 2</span></div><div class="match-grid"><div class="match-col">${items.map(t=>`<button class="match-item eng" data-term="${esc(t)}"><span>${esc(t)}</span><span class="speak" data-speak="${esc(t)}">🔊</span></button>`).join('')}</div><div class="match-col">${chinese.map((x,i)=>`<button class="match-item zh" data-term="${esc(x.t)}"><span>${String.fromCharCode(97+i)}. ${esc(x.zh)}</span></button>`).join('')}</div></div><div class="word-match-actions"><div class="word-match-count" id="wordMatchCount" aria-live="polite"></div><button class="secondary" type="button" id="clearMatches">重新连本组</button><button class="primary" type="button" id="submitMatches" disabled>连好了，提交</button></div><div id="wordMatchFb" class="word-match-feedback" aria-live="polite"></div><div id="roundDone" class="finish-row"></div></section><aside class="illustration"><img src="assets/word-match.jpg" alt="单词连线陪伴图"></aside></div></main>`);
       Sound.preload(items);bindMatch(items);
     };
     function bindMatch(items){
-      let selected=null;
-      const wrongSet=new Set();
+      const valid=new Set(items);
+      const draftId=`round-${round+1}-${items.join('|')}`;
+      const prior=Drafts.get('word-match',draftId);
+      const pair=new Map(Object.entries(prior?.pairs||{}).filter(([en,zh])=>valid.has(en)&&valid.has(zh)));
+      const occupied=new Set();
+      for(const [en,zh] of pair)if(occupied.has(zh))pair.delete(en);else occupied.add(zh);
+      let selected=null,submitted=false;
+      const colors=['match-tone-0','match-tone-1','match-tone-2','match-tone-3','match-tone-4','match-tone-5'];
+      const save=()=>Drafts.set('word-match',draftId,{pairs:Object.fromEntries(pair)});
+      const show=()=>{
+        $$('.eng').forEach(b=>{
+          const term=b.dataset.term,paired=pair.has(term);
+          b.classList.toggle('selected',selected===term);
+          b.classList.toggle('paired',paired);
+          b.classList.remove(...colors);
+          if(paired)b.classList.add(colors[items.indexOf(term)%colors.length]);
+          b.setAttribute('aria-pressed',selected===term?'true':'false');
+          let tag=b.querySelector('.match-number');
+          if(!tag){tag=document.createElement('small');tag.className='match-number';b.appendChild(tag);}
+          tag.textContent=paired?`● ${items.indexOf(term)+1}`:'';
+        });
+        $$('.zh').forEach(b=>{
+          const term=b.dataset.term;
+          const en=[...pair].find(([,zh])=>zh===term)?.[0];
+          b.classList.toggle('paired',!!en);
+          b.classList.remove(...colors);
+          if(en)b.classList.add(colors[items.indexOf(en)%colors.length]);
+          let tag=b.querySelector('.match-number');
+          if(!tag){tag=document.createElement('small');tag.className='match-number';b.appendChild(tag);}
+          tag.textContent=en?`● ${items.indexOf(en)+1}`:'';
+        });
+        const total=pair.size;
+        $('#wordMatchCount').textContent=submitted?`本组已提交 · ${total} 对`:`已连 ${total}/${items.length} 对 · 点选英文再点中文；已连的也可以重新配对`;
+        const button=$('#submitMatches');
+        if(button){button.disabled=submitted||total!==items.length;button.textContent=submitted?'本组已提交':'连好了，提交';}
+        $('#clearMatches').disabled=submitted||total===0;
+      };
       $$('[data-speak]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();Sound.speak(b.dataset.speak);}));
       $$('.eng').forEach(b=>b.addEventListener('click',()=>{
-        if(b.classList.contains('done'))return;
-        $$('.eng').forEach(x=>x.classList.remove('selected'));
-        b.classList.add('selected');selected=b.dataset.term;
+        if(submitted)return;
+        selected=selected===b.dataset.term?null:b.dataset.term;
+        show();
       }));
       $$('.zh').forEach(b=>b.addEventListener('click',()=>{
-        if(!selected||b.classList.contains('done'))return;
-        const term=selected,e=$(`.eng[data-term="${CSS.escape(term)}"]`),fb=$('#wordMatchFb');
-        if(!e)return;
-        if(b.dataset.term===term){
-          const hadWrong=wrongSet.has(term);
-          e.classList.add('done','correct');b.classList.add('done','correct');e.disabled=true;b.disabled=true;
+        if(submitted)return;
+        const zh=b.dataset.term,previous=[...pair].find(([,v])=>v===zh)?.[0];
+        if(selected===null){if(previous){pair.delete(previous);save();show();}return;}
+        if(previous&&previous!==selected)pair.delete(previous);
+        pair.set(selected,zh);
+        selected=null;
+        save();show();
+      }));
+      $('#clearMatches').onclick=()=>{
+        if(submitted)return;
+        pair.clear();selected=null;save();show();
+      };
+      $('#submitMatches').onclick=()=>{
+        if(submitted||pair.size!==items.length)return;
+        submitted=true;
+        let correct=0;
+        const wrong=[];
+        for(const term of items){
+          const ok=pair.get(term)===term;
+          if(ok)correct++;else wrong.push({term,chosen:pair.get(term)});
           if(!done.has(term)){
             done.add(term);day.wordsDone.push(term);
-            updateWord(term,true,null);
-            Store.save();
+            updateWord(term,ok,null);
+            if(!ok)markWordError(term,{source:'word_match'});
           }
-          if(fb)fb.innerHTML=hadWrong
-            ?`<div class="feedback good compact-feedback"><b>✓ 这次配对正确</b><span>${esc(term)} 刚才已经判错并进入“今日错题”，这里改对不会把那次错误抹掉。</span></div>`
-            :`<div class="feedback good compact-feedback"><b>✓ 配对正确</b><span>继续找下一组。</span></div>`;
-          Sound.sfx('ok');selected=null;e.classList.remove('selected');
-          if(items.every(t=>done.has(t))){
-            $('#roundDone').innerHTML=round<2?'<button class="primary" id="nextRound">下一组 10 个</button>':`<button class="primary" id="finishWords">${flow?'本关完成，看看奖励 🌷':'今天的30个完成啦 🌷'}</button>`;
-            $('#nextRound')?.addEventListener('click',()=>{round++;render();});
-            $('#finishWords')?.addEventListener('click',()=>location.hash=flow?'#stage-clear/words':'#dashboard');
-          }
-        }else{
-          wrongSet.add(term);
-          updateWord(term,false,null);
-          markWordError(term,{source:'word_match'});
-          e.classList.add('wrong');b.classList.add('wrong');
-          if(fb)fb.innerHTML=`<div class="feedback bad compact-feedback"><b>✗ 配错啦，已经判错</b><span>${esc(term)} 已立即进入“今日错题”。保持这个英文选中，再找它真正的中文义。</span></div>`;
-          Sound.sfx('bad');
-          setTimeout(()=>{e.classList.remove('wrong');b.classList.remove('wrong');},700);
+          const e=$$('.eng').find(b=>b.dataset.term===term);
+          const zh=$$('.zh').find(b=>b.dataset.term===pair.get(term));
+          e?.classList.add(ok?'correct':'wrong');
+          zh?.classList.add(ok?'correct':'wrong');
         }
-      }));
+        Drafts.clear('word-match',draftId);
+        Store.save();
+        selected=null;show();
+        $$('.match-item').forEach(b=>b.disabled=true);
+        const meanings=items.map(t=>({t,zh:data.lexIndex.byTerm.get(t)?.sense_zh||data.lexIndex.byTerm.get(t)?.dict_zh||''}));
+        const meaningByTerm=new Map(meanings.map(x=>[x.t,x.zh]));
+        $('#wordMatchFb').innerHTML=`<div class="feedback ${wrong.length?'bad':'good'} compact-feedback"><b>本组提交：${correct}/${items.length} 对正确</b><span>${wrong.length?'下面列出需要巩固的配对，已计入今日错题。':'全部正确！提交前调整过的配对不会计入错题。'}</span>${wrong.length?`<div class="match-correction-list">${wrong.map(x=>`<div><b>${esc(x.term)}</b><span>你连的是：${esc(meaningByTerm.get(x.chosen)||'')}</span><strong>正确：${esc(meaningByTerm.get(x.term)||'')}</strong></div>`).join('')}</div>`:''}</div>`;
+        Sound.sfx(wrong.length?'bad':'finish');
+        $('#roundDone').innerHTML=round<2?'<button class="primary" id="nextRound">下一组 10 个</button>':`<button class="primary" id="finishWords">${flow?'本关完成，看看奖励 🌷':'今天的30个完成啦 🌷'}</button>`;
+        $('#nextRound')?.addEventListener('click',()=>{round++;render();});
+        $('#finishWords')?.addEventListener('click',()=>location.hash=flow?'#stage-clear/words':'#dashboard');
+      };
+      show();
     }
     render();
   }
