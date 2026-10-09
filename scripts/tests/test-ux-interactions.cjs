@@ -39,6 +39,9 @@ function fixtures(){
 async function setup(page){
   await page.goto(page.__testUrl,{waitUntil:'load'});
   await page.waitForFunction(()=>!!window.__UX_TEST__&&!!window.__UX_TEST__.Store.state);
+  // Wait for the real IndexedDB/guest bootstrap before replacing the test state.
+  // Otherwise bootstrap can overwrite the fixture while phones are tapping pairs.
+  await page.locator('.account-page').waitFor({timeout:15000});
   await page.evaluate(()=>{
     const h=window.__UX_TEST__,state=h.Store.fresh();
     h.Store.state=state;state.currentDay=2;state.sound=false;
@@ -62,6 +65,7 @@ async function wordFlow(page,name){
     await page.locator('.zh[data-term="'+zh+'"]').click();
   }
   await select('word01','word02');
+  assert.match(await page.locator('#wordMatchCount').innerText(),/已连 1\/10/,'first attempted pair was not registered');
   let before=await page.evaluate(()=>{const st=window.__UX_TEST__.Store.state;return {progress:st.days[2].wordsDone.length,wrong:Object.keys(st.errorDays||{}).length,word:Object.keys(st.words).length};});
   assert.equal(before.progress,0);
   assert.equal(before.word,0,'guessing before submit must not update word memory');
