@@ -1,0 +1,43 @@
+name: UX regression - word pairs and sentence phrases
+on:
+  push:
+    branches:
+      - feature/batch-word-match-and-phrase-analysis
+  pull_request:
+    paths:
+      - 'app.js'
+      - 'styles.css'
+      - 'v22.css'
+      - 'index.html'
+      - 'scripts/tests/test-ux-interactions.cjs'
+      - '.github/workflows/ux-interactions.yml'
+permissions:
+  contents: read
+jobs:
+  interaction-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JS syntax
+        run: |
+          node --check app.js
+          node --check scripts/tests/test-ux-interactions.cjs
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Run real browser interaction tests
+        run: node scripts/tests/test-ux-interactions.cjs
+      - name: Keep screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: english-ux-desktop-phone
+          path: test-results/*.png
+          if-no-files-found: ignore
