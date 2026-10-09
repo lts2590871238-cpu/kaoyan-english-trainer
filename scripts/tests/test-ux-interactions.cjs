@@ -70,7 +70,13 @@ async function wordFlow(page,name){
     const en='word'+String(i).padStart(2,'0');
     await select(en,en);
   }
-  assert.equal(await page.locator('#submitMatches').isEnabled(),true);
+  const pairDiagnostic=await page.evaluate(()=>({
+    label:document.querySelector('#wordMatchCount')?.textContent,
+    pairs:window.__UX_TEST__.Drafts.get('word-match','round-1-'+window.__UX_TEST__.Store.state.plans[2].words.slice(0,10).join('|'))?.pairs,
+    selected:document.querySelector('.eng.selected')?.dataset.term,
+    viewport:innerWidth
+  }));
+  assert.equal(await page.locator('#submitMatches').isEnabled(),true,'word pair state: '+JSON.stringify(pairDiagnostic));
   await page.evaluate(()=>window.__UX_TEST__.wordsPage({flow:true}));
   assert.equal(await page.locator('.match-item.paired').count(),20,'unfinished word pairing not restored from draft');
   assert.equal(await page.locator('#submitMatches').isEnabled(),true);
