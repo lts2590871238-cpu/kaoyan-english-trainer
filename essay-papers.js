@@ -1,6 +1,6 @@
-/* 题目来自用户交接包：2005–2025英语一Part A/B；题型和配图说明已人工对照扫描件。 */
+/* 题目来自用户交接包：2005–2025 英语一 Part A/B；2026 小作文/大作文由用户上传的 2026 原卷扫描图逐项校对。 */
 window.KAOYAN_ESSAY_PAPERS = {
-  "source": "用户提供的2005–2025英语一历年真题合集",
+  "source": "用户提供的2005–2026英语（一）历年写作真题，其中2026由用户提供原卷图片核对",
   "records": [
     {
       "id": "2005_A",
@@ -505,6 +505,30 @@ window.KAOYAN_ESSAY_PAPERS = {
       "visual_description": "全国居民平均每百户家用电器拥有量：2014年空调75.2台、洗衣机83.7台、电冰箱85.5台；2017年96.1、91.7、95.3；2020年117.7、96.7、101.8；2023年145.9、98.2、103.4；单位是每百户拥有台数，绝对不能写成百分比",
       "visual_required": true,
       "source_page": 21
+    },
+    {
+      "id": "2026_A",
+      "year": 2026,
+      "part": "A",
+      "title": "介绍中国家庭手写书信与展出情况",
+      "type": "回复询问邮件",
+      "prompt_en": "Read the following email from your friend Paul and write him a reply.\n\nHi Li Ming,\n\nI was really moved by the Chinese families’ handwritten letters you posted yesterday. They are priceless! Could you please tell me a bit more about them? And are they currently on public display somewhere? I’m very keen to see them in person. Thanks.\n\nYours,\nPaul\n\nYou should write about 100 words on the ANSWER SHEET.\nDo not use your own name in the email; use “Li Ming” instead. (10 points)",
+      "max_score": 10,
+      "word_target": "约100词",
+      "source_page": 22
+    },
+    {
+      "id": "2026_B",
+      "year": 2026,
+      "part": "B",
+      "title": "养老机器人接受度与首要关注因素",
+      "type": "饼图＋柱状图·科技与养老",
+      "prompt_en": "Write an essay based on the charts below. In your essay, you should\n1) describe the charts briefly,\n2) interpret the charts, and\n3) give your comments.\nWrite your answer in 160-200 words on the ANSWER SHEET. (20 points)",
+      "max_score": 20,
+      "word_target": "160–200词",
+      "visual_description": "调查主题：养老机器人消费者接受度及首要关注点。饼图：完全接受39.3%、部分接受32.8%、不接受27.9%；柱状图：安全46.30%、价格24.90%、便利10.70%。饼图占比合计100%；柱状图仅列出图中三项（合计81.90%），不能擅自编造其余类别或推断样本规模。两图使用各自分类。",
+      "visual_required": true,
+      "source_page": 22
     }
   ]
 };
