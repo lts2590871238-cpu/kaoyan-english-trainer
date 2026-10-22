@@ -73,3 +73,12 @@
 /* The landing-page essay entry is separately discoverable from the daily-study CTA. */
 .welcome-essay-entry{display:block;width:max-content;max-width:100%;margin:16px auto 0;background:rgba(255,255,255,.95);border:1px solid #fff;border-radius:18px;padding:12px 18px;text-decoration:none;color:#9b426b;font-weight:850;box-shadow:0 6px 24px rgba(53,31,47,.1);text-shadow:none;text-align:center}
 .welcome-essay-entry:hover{background:white;transform:translateY(-1px)}
+
+/* Original exam magnifier: scroll the actual scan without losing writer position. */
+.essay-image-open{display:block;width:100%;max-width:760px;padding:0;margin:0;border:0;background:transparent;cursor:zoom-in;text-align:left}
+.essay-image-open img{display:block;width:100%;max-height:620px;object-fit:contain;border:1px solid #ece5e5;border-radius:13px}
+.essay-image-open[hidden]{display:none}
+.essay-lightbox{position:fixed;inset:0;z-index:9999;background:rgba(20,27,38,.95);display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px;overflow:auto;overscroll-behavior:contain}
+.essay-lightbox-close{position:sticky;top:0;z-index:1;align-self:flex-start;background:#fff;color:#334458;border:0;border-radius:13px;padding:12px 18px;min-height:44px;cursor:pointer;font:700 15px/1.4 system-ui,sans-serif}
+.essay-lightbox img{display:block;width:auto;max-width:100%;height:auto;max-height:none;object-fit:contain;border-radius:5px;box-shadow:0 14px 48px #0004}
+@media(max-width:720px){.essay-lightbox{padding:10px}.essay-lightbox img{width:100%;height:auto}.essay-lightbox-close{align-self:stretch;text-align:left}}
