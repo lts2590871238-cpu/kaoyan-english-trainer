@@ -135,7 +135,7 @@ async function handleAccountRoutes(request,url,env,cors){
     if(items.length>MAX_SYNC_CHUNKS) return json({ok:false,error:{code:'too_many_chunks',message:'Too many sync chunks'}},400,cors);
     const now=Date.now(),stmts=[];
     for(const item of items){
-      const key=String(item?.key||'').trim();if(!/^(core|aidict|words:\d+|sentences:\d+)$/.test(key))continue;
+      const key=String(item?.key||'').trim();if(!/^(core|aidict|words:\d+|sentences:\d+|essay:20(?:0[5-9]|1[0-9]|2[0-5])_[AB]:[A-Za-z0-9_-]{8,100})$/.test(key))continue;
       const data=JSON.stringify(item.data??{});if(data.length>1500000)return json({ok:false,error:{code:'chunk_too_large',message:`Sync chunk ${key} is too large`}},413,cors);
       stmts.push(env.DB.prepare('INSERT INTO progress_chunks(user_id,chunk_key,data_json,updated_at) VALUES(?,?,?,?) ON CONFLICT(user_id,chunk_key) DO UPDATE SET data_json=excluded.data_json,updated_at=excluded.updated_at')
         .bind(auth.user.id,key,data,now));
