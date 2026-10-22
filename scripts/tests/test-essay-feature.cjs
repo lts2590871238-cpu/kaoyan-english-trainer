@@ -25,6 +25,12 @@ function installMock(context,user){
       for(const x of batch)chunks.set(x.key,x.data);
       return route.fulfill({json:{ok:true,written:batch.length}});
     }
+    if(url.pathname==='/ocr-essay'){
+      const payload=route.request().postDataJSON();
+      assert.match(payload.image_data,/^data:image\/jpeg;base64,/);
+      assert.equal(payload.paper_id,'2026_B');
+      return route.fulfill({json:{ok:true,text:'Here is my handwritten essay with a speling mistake.',review_required:true}});
+    }
     if(url.pathname==='/score-essay'){
       gradeCalls++;
       return route.fulfill({json:{ok:true,review:{score:8,band:'第四档',overall:'任务完整，语法可进一步改进',dimensions:{task:4,organization:4,language:3,format:4},strengths:['覆盖任务'],issues:[{problem:'搭配问题',quote:'I very like it.',reason:'副词位置不当',revision:'I like it very much.'}],next_step:'修正搭配，检查论证',revised_sample:'I like it very much.'}}});
@@ -110,6 +116,22 @@ async function testBrowser(browser,base,device){
   await page.locator('#essayLightbox img').waitFor({state:'visible',timeout:10000});
   await page.locator('#essayCloseImage').click();
   assert.equal(await page.locator('#essayLightbox').count(),0,'2026 enlarged image did not close');
+  const essayBefore=await page.locator('#essayInput').inputValue();
+  assert.equal(essayBefore,'','OCR test begins with untouched blank draft');
+  await page.locator('#essayPhoto').setInputFiles(path.join(root,'essay-scans','2026.jpg'));
+  await page.locator('.essay-photo').first().waitFor();
+  await page.locator('#essayScan').click();
+  await page.locator('#essayOCRReview').waitFor({state:'visible',timeout:20000});
+  assert.match(await page.locator('#essayOCRText').inputValue(),/speling mistake/);
+  assert.equal(await page.locator('#essayInput').inputValue(),'','recognition must not overwrite the essay before approval');
+  await page.locator('#essayOCRText').fill('Here is my edited handwritten essay.');
+  await page.locator('#essayUseOCR').click();
+  assert.equal(await page.locator('#essayInput').inputValue(),'Here is my edited handwritten essay.');
+  await page.goto(base+'/#essay');
+  await page.locator('.essay-banner').waitFor();
+  await page.goto(base+'/#essay/2026_B');
+  await page.locator('#essayInput').waitFor();
+  assert.equal(await page.locator('#essayInput').inputValue(),'Here is my edited handwritten essay.','OCR corrected text draft was not preserved');
   await page.screenshot({path:path.join(root,'test-results','essay-'+device+'.png'),fullPage:true});
   const overflow=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:innerWidth}));
   assert(overflow.scroll<=overflow.viewport+3,device+' has horizontal overflow '+JSON.stringify(overflow));

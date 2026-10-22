@@ -82,3 +82,20 @@
 .essay-lightbox-close{position:sticky;top:0;z-index:1;align-self:flex-start;background:#fff;color:#334458;border:0;border-radius:13px;padding:12px 18px;min-height:44px;cursor:pointer;font:700 15px/1.4 system-ui,sans-serif}
 .essay-lightbox img{display:block;width:auto;max-width:100%;height:auto;max-height:none;object-fit:contain;border-radius:5px;box-shadow:0 14px 48px #0004}
 @media(max-width:720px){.essay-lightbox{padding:10px}.essay-lightbox img{width:100%;height:auto}.essay-lightbox-close{align-self:stretch;text-align:left}}
+
+/* Handwriting photo workflow (scoped to composition editor). */
+.essay-ocr{border:1px solid #e4d8e8;background:linear-gradient(135deg,#f7f4ff,#fffafb);padding:16px;border-radius:18px;margin:18px 0 22px}
+.essay-ocr h3{font-size:17px;margin:0 0 3px;color:#59436e}
+.essay-ocr .essay-flex p{margin:0;font-size:13px;color:#736988;line-height:1.7}
+.essay-ocr-actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:13px 0}
+.essay-ocr .essay-filelabel{display:inline-flex;align-items:center;justify-content:center;user-select:none;cursor:pointer}
+.essay-ocr .essay-main:disabled{opacity:.55;cursor:not-allowed}
+.essay-photo-previews{display:flex;gap:10px;flex-wrap:wrap}
+.essay-photo{display:flex;position:relative;flex-direction:column;width:96px;border:1px solid #e4d8e8;border-radius:12px;padding:5px;background:white}
+.essay-photo img{display:block;width:84px;height:108px;object-fit:cover;border-radius:7px}
+.essay-photo span{font-size:12px;text-align:center;color:#82718c}
+.essay-photo button{position:absolute;right:2px;top:2px;background:#fff;border:1px solid #e0c6d1;color:#a65373;border-radius:50%;height:27px;width:27px;font-size:18px;cursor:pointer}
+.essay-ocr-review-label{display:block;margin:18px 0 5px;font-weight:800;color:#59436e}
+.essay-ocr .essay-ocr-text{width:100%;min-height:185px;margin:5px 0;padding:13px;background:#fff;border:1px solid #d9cce5;border-radius:12px;font:16px/1.7 Georgia,"Times New Roman",serif;resize:vertical;color:#26384c;white-space:pre-wrap;overflow-wrap:anywhere}
+.essay-ocr #essayOCRReview[hidden]{display:none}
+@media(max-width:600px){.essay-ocr{padding:12px}.essay-ocr-actions{display:grid;grid-template-columns:1fr 1fr}.essay-ocr-actions #essayScan,.essay-ocr-actions #essayUseOCR{grid-column:1/-1}.essay-ocr .essay-filelabel{font-size:14px;padding:12px 8px}}

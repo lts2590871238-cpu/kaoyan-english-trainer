@@ -1,7 +1,7 @@
 name: Essay archive browser regression
 on:
   push:
-    branches: [feature/english-essay-2026]
+    branches: [feature/essay-handwriting-ocr]
     paths:
       - 'app.js'
       - 'index.html'
