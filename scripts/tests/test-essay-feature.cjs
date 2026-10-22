@@ -84,6 +84,17 @@ async function testBrowser(browser,base,device){
   await page.locator('#essayInput').waitFor();
   assert.match(await page.locator('.essay-image-summary').innerText(),/2014.*2017.*2020.*2023/);
   assert.match(await page.locator('.essay-image-summary').innerText(),/每百户/);
+  await page.locator('#essayOriginalImage').waitFor();
+  await page.locator('#essayOpenImage').click();
+  await page.locator('#essayLightbox').waitFor();
+  assert(await page.locator('#essayLightbox img').isVisible(),'original paper did not expand');
+  await page.locator('#essayCloseImage').click();
+  assert.equal(await page.locator('#essayLightbox').count(),0,'return-from-image button did not close overlay');
+  await page.goto(base+'/#essay/2010_A');
+  await page.locator('#essayOpenImage').waitFor();
+  assert(await page.locator('#essayOriginalImage').isVisible(),'Part A also needs original source image');
+  await page.goto(base+'/#essay/2025_B');
+  await page.locator('#essayInput').waitFor();
   await page.screenshot({path:path.join(root,'test-results','essay-'+device+'.png'),fullPage:true});
   const overflow=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:innerWidth}));
   assert(overflow.scroll<=overflow.viewport+3,device+' has horizontal overflow '+JSON.stringify(overflow));
