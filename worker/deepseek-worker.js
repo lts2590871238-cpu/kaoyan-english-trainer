@@ -151,7 +151,7 @@ function normalizeDisplayName(v){const s=String(v||'').trim();if(s.length<1||s.l
 function validateVerifier(v){const s=String(v||'').trim();if(!/^[A-Za-z0-9_-]{40,60}$/.test(s))throw clientError('bad_verifier','登录凭据格式错误');return s;}
 function randomRecoveryCode(){const b=new Uint8Array(12);crypto.getRandomValues(b);const h=[...b].map(x=>x.toString(16).padStart(2,'0')).join('').toUpperCase();return h.match(/.{1,6}/g).join('-');}
 function normalizeRecovery(v){const s=String(v||'').replace(/[^A-Fa-f0-9]/g,'').toUpperCase();if(!/^[A-F0-9]{24}$/.test(s))throw clientError('bad_recovery_code','恢复码格式不正确');return s;}
-function clientError(code,message,status=400){const e=new Error(message);e.client=true;e.code=code;e.status=status;return e;}
+function clientError(code,message,status=400){return Object.assign(new Error(message),{client:true,code,status});}
 async function readJson(request){try{return await request.json();}catch{throw clientError('bad_json','Invalid JSON body');}}
 function serverDate(){return new Date().toISOString().slice(0,10);}
 function bytesToB64url(bytes){let s='';for(const b of bytes)s+=String.fromCharCode(b);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
