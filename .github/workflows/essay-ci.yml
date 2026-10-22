@@ -1,0 +1,51 @@
+name: Essay archive browser regression
+on:
+  push:
+    branches: [feature/essay-archive-2005-2025]
+    paths:
+      - 'app.js'
+      - 'index.html'
+      - 'essay*'
+      - 'scripts/tests/test-essay-feature.cjs'
+      - 'scripts/tests/test-essay-worker.mjs'
+      - 'worker/deepseek-worker.js'
+      - '.github/workflows/essay-ci.yml'
+  pull_request:
+    paths:
+      - 'app.js'
+      - 'index.html'
+      - 'essay*'
+      - 'scripts/tests/test-essay-feature.cjs'
+      - '.github/workflows/essay-ci.yml'
+permissions:
+  contents: read
+jobs:
+  essay-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Static syntax and UTF-8 sanity
+        run: |
+          node --check app.js
+          node --check essay-papers.js
+          node --check essay-trainer.js
+          node --check worker/deepseek-worker.js
+      - name: Worker API regression (no secrets)
+        run: node scripts/tests/test-essay-worker.mjs
+      - name: Chromium and Playwright
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Desktop and phone essay practice regression
+        run: node scripts/tests/test-essay-feature.cjs
+      - name: Browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: essay-desktop-phone
+          path: test-results/essay-*.png
+          if-no-files-found: ignore

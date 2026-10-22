@@ -140,7 +140,7 @@
     },
     async request(path,{method='POST',body=null}={},withAuth=true){
       const base=this.base();if(!base){const e=new Error('云端地址未配置');e.code='not_configured';throw e;}const headers={};if(body!==null)headers['Content-Type']='application/json';if(withAuth&&this.token)headers.Authorization=`Bearer ${this.token}`;
-      const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),25000);try{const r=await fetch(base+path,{method,headers,body:body===null?undefined:JSON.stringify(body),cache:'no-store',signal:ctrl.signal});let out={};try{out=await r.json();}catch{}if(!r.ok||out?.ok===false){const e=new Error(out?.error?.message||`云端请求失败（HTTP ${r.status}）`);e.code=out?.error?.code||`http_${r.status}`;e.status=r.status;throw e;}return out;}catch(e){if(e?.name==='AbortError'){const x=new Error('云端请求超时');x.code='network_timeout';throw x;}throw e;}finally{clearTimeout(timer);}
+      const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),path==='/score-essay'?85000:25000);try{const r=await fetch(base+path,{method,headers,body:body===null?undefined:JSON.stringify(body),cache:'no-store',signal:ctrl.signal});let out={};try{out=await r.json();}catch{}if(!r.ok||out?.ok===false){const e=new Error(out?.error?.message||`云端请求失败（HTTP ${r.status}）`);e.code=out?.error?.code||`http_${r.status}`;e.status=r.status;throw e;}return out;}catch(e){if(e?.name==='AbortError'){const x=new Error('云端请求超时');x.code='network_timeout';throw x;}throw e;}finally{clearTimeout(timer);}
     },
     async register(username,password,displayName){const verifier=await this.deriveVerifier(username,password);const out=await this.request('/auth/register',{body:{username,display_name:displayName,verifier,start_date:todayISO()}},false);this.token=out.session.token;this.expiresAt=out.session.expires_at;this.user=out.user;this.offline=false;this.persist();return out;},
     async login(username,password){const verifier=await this.deriveVerifier(username,password);const out=await this.request('/auth/login',{body:{username,verifier}},false);this.token=out.session.token;this.expiresAt=out.session.expires_at;this.user=out.user;this.offline=false;this.persist();return out;},
@@ -155,22 +155,99 @@
     timer:null,syncing:false,lastSerialized:new Map(),status:'local',lastSyncAt:0,lastError:null,
     deviceId(){let id=localStorage.getItem(DEVICE_KEY);if(!id){id=crypto.randomUUID?.()||`${Date.now()}-${Math.random()}`;localStorage.setItem(DEVICE_KEY,id);}return id;},
     makeChunks(state){
-      const core={...state};delete core.words;delete core.sentences;delete core.aiDictionary;delete core.aiDiagnostics;const chunks={core};
+      const core={...state};delete core.words;delete core.sentences;delete core.aiDictionary;delete core.aiDiagnostics;delete core.essayHistory;const chunks={core};
       const wb=Array.from({length:8},()=>({}));for(const [k,v] of Object.entries(state.words||{}))wb[bucketHash(k)%8][k]=v;wb.forEach((x,i)=>chunks[`words:${i}`]=x);
       const sb=Array.from({length:36},()=>({}));for(const [k,v] of Object.entries(state.sentences||{}))sb[bucketHash(k)%36][k]=v;sb.forEach((x,i)=>chunks[`sentences:${i}`]=x);
-      chunks.aidict=state.aiDictionary||{};return chunks;
+      chunks.aidict=state.aiDictionary||{};
+      // One immutable cloud chunk per saved essay, not one ever-growing core blob.
+      for(const [paperId,rows] of Object.entries(state.essayHistory||{})){
+        if(!/^20(?:0[5-9]|1[0-9]|2[0-5])_[AB]$/.test(paperId)||!Array.isArray(rows))continue;
+        for(const rec of rows){
+          if(!rec||!/^[A-Za-z0-9_-]{8,100}$/.test(String(rec.id||'')))continue;
+          chunks['essay:'+paperId+':'+rec.id]={paperId,record:rec};
+        }
+      }
+      return chunks;
     },
-    stateFromChunks(rows){const base=Store.fresh(),chunks=rows||{};if(chunks.core?.data)Object.assign(base,chunks.core.data);base.words={};base.sentences={};base.aiDictionary={};for(const [k,row] of Object.entries(chunks)){if(k.startsWith('words:')&&row?.data)Object.assign(base.words,row.data);else if(k.startsWith('sentences:')&&row?.data)Object.assign(base.sentences,row.data);else if(k==='aidict'&&row?.data)base.aiDictionary=row.data;}return Store.normalize(base);},
+    stateFromChunks(rows){const base=Store.fresh(),chunks=rows||{};if(chunks.core?.data)Object.assign(base,chunks.core.data);base.words={};base.sentences={};base.aiDictionary={};base.essayHistory ||= {};for(const [k,row] of Object.entries(chunks)){if(k.startsWith('words:')&&row?.data)Object.assign(base.words,row.data);else if(k.startsWith('sentences:')&&row?.data)Object.assign(base.sentences,row.data);else if(k==='aidict'&&row?.data)base.aiDictionary=row.data;
+        else if(k.startsWith('essay:')&&row?.data){
+          const parts=k.split(':'),paperId=parts[1],id=parts.slice(2).join(':');
+          const rec=row.data.record;
+          if(/^20(?:0[5-9]|1[0-9]|2[0-5])_[AB]$/.test(paperId)&&id===String(rec?.id||'')&&rec&&typeof rec.text==='string'){
+            const arr=base.essayHistory[paperId] ||= [];
+            if(!arr.some(x=>x.id===id))arr.push(rec);
+          }
+        }
+      }
+      for(const rows of Object.values(base.essayHistory))if(Array.isArray(rows))rows.sort((x,y)=>Number(x.createdAt||0)-Number(y.createdAt||0));
+      return Store.normalize(base);},
     setHashes(chunks){this.lastSerialized.clear();for(const [k,v] of Object.entries(chunks))this.lastSerialized.set(k,JSON.stringify(v));},
     schedule(){if(!Auth.user||!Auth.token||Store.scope==='guest')return;clearTimeout(this.timer);this.timer=setTimeout(()=>this.push().catch(()=>{}),1600);},
     async pull(){if(!Auth.user||!Auth.token)return null;this.status='syncing';try{const out=await Auth.request('/sync/pull',{method:'GET'});this.status='synced';this.lastSyncAt=Date.now();this.lastError=null;return out;}catch(e){this.status='offline';this.lastError=e;throw e;}},
-    async push(force=false){if(this.syncing||!Auth.user||!Auth.token||Store.scope==='guest')return;this.syncing=true;this.status='syncing';try{const chunks=this.makeChunks(Store.state),changed=[];for(const [k,v] of Object.entries(chunks)){const text=JSON.stringify(v);if(force||this.lastSerialized.get(k)!==text)changed.push({key:k,data:v,text});}if(!changed.length){this.status='synced';return;}const out=await Auth.request('/sync/push',{body:{device_id:this.deviceId(),chunks:changed.map(x=>({key:x.key,data:x.data}))}});for(const x of changed)this.lastSerialized.set(x.key,x.text);this.status='synced';this.lastSyncAt=Date.now();this.lastError=null;return out;}catch(e){this.status='offline';this.lastError=e;console.warn('cloud sync failed',e?.message||e);}finally{this.syncing=false;renderCloudBadge();}},
+    async push(force=false){
+      if(this.syncing||!Auth.user||!Auth.token||Store.scope==='guest')return;
+      this.syncing=true;this.status='syncing';
+      try {
+        const chunks=this.makeChunks(Store.state),changed=[];
+        for(const [k,v] of Object.entries(chunks)){
+          const serialized=JSON.stringify(v);
+          if(force||this.lastSerialized.get(k)!==serialized)changed.push({key:k,data:v,text:serialized});
+        }
+        if(!changed.length){this.status='synced';return;}
+        // Worker allows 48 chunks per request; 40-sized batches include fresh accounts.
+        for(let i=0;i<changed.length;i+=40){
+          const batch=changed.slice(i,i+40);
+          const out=await Auth.request('/sync/push',{body:{device_id:this.deviceId(),chunks:batch.map(x=>({key:x.key,data:x.data}))}});
+          if(Number(out.written)!==batch.length)throw new Error('云端实际保存数量与发送数量不一致，请重试');
+          for(const x of batch)this.lastSerialized.set(x.key,x.text);
+        }
+        this.status='synced';this.lastSyncAt=Date.now();this.lastError=null;
+      }catch(e){this.status='offline';this.lastError=e;console.warn('cloud sync failed',e?.message||e);}
+      finally{this.syncing=false;renderCloudBadge();}
+    },
     async bootstrap({newAccount=false}={}){
-      if(!Auth.user)return;Store.setScope(Auth.user.id);Store.load();await Store.hydrate();Store.state.challengeStart ||= Auth.user.challenge_start||todayISO();
-      try{const pulled=await this.pull(),hasCloud=Object.keys(pulled?.chunks||{}).length>0;if(hasCloud){Store.cloudPaused=true;Store.state=this.stateFromChunks(pulled.chunks);Store.state.challengeStart ||= Auth.user.challenge_start||todayISO();Store.save(false,true);await Store.flush(true);Store.cloudPaused=false;this.setHashes(this.makeChunks(Store.state));return;}
-        const scopedHas=Store.hasProgress(Store.state),legacy=Store.legacy(),legacyHas=Store.hasProgress(legacy);if(!scopedHas&&legacyHas){let migrate=newAccount;try{if(!newAccount)migrate=confirm('检测到这台设备上有旧版学习记录。是否迁入当前账号并同步到云端？');}catch{}if(migrate){Store.state=Store.normalize(legacy);Store.state.challengeStart ||= Auth.user.challenge_start||todayISO();Store.save(false,true);await Store.flush(true);}}
+      if(!Auth.user)return;
+      Store.setScope(Auth.user.id);Store.load();await Store.hydrate();
+      Store.state.challengeStart ||= Auth.user.challenge_start||todayISO();
+      const localEssays=structuredClone(Store.state.essayHistory||{});
+      const localDrafts=structuredClone(Store.state.essayWork||{});
+      try{
+        const pulled=await this.pull(),hasCloud=Object.keys(pulled?.chunks||{}).length>0;
+        if(hasCloud){
+          Store.cloudPaused=true;
+          Store.state=this.stateFromChunks(pulled.chunks);
+          const cloudChunks=this.makeChunks(Store.state);
+          let missing=0;
+          for(const [paperId,items] of Object.entries(localEssays)){
+            if(!/^20(?:0[5-9]|1[0-9]|2[0-5])_[AB]$/.test(paperId)||!Array.isArray(items))continue;
+            const dest=Store.state.essayHistory ||= {};
+            const rows=dest[paperId] ||= [],seen=new Set(rows.map(x=>x.id));
+            for(const record of items)if(record&&record.id&&!seen.has(record.id)){
+              rows.push(record);seen.add(record.id);missing++;
+            }
+            rows.sort((x,y)=>Number(x.createdAt||0)-Number(y.createdAt||0));
+          }
+          // Never discard an unsubmitted local draft because the cloud draft was empty.
+          Store.state.essayWork ||= {};
+          for(const [id,draft] of Object.entries(localDrafts)){
+            if(typeof draft==='string'&&draft.trim()&&!Store.state.essayWork[id])Store.state.essayWork[id]=draft;
+          }
+          Store.state.challengeStart ||= Auth.user.challenge_start||todayISO();
+          Store.save(false,true);await Store.flush(true);
+          Store.cloudPaused=false;
+          this.setHashes(cloudChunks);
+          if(missing||Object.keys(localDrafts).length)await this.push();
+          return;
+        }
+        const scopedHas=Store.hasProgress(Store.state)||Object.values(localEssays).some(x=>Array.isArray(x)&&x.length>0),
+          legacy=Store.legacy(),legacyHas=Store.hasProgress(legacy);
+        if(!scopedHas&&legacyHas){
+          let migrate=newAccount;
+          try{if(!newAccount)migrate=confirm('检测到这台设备上有旧版学习记录。是否迁入当前账号并同步到云端？');}catch{}
+          if(migrate){Store.state=Store.normalize(legacy);Store.state.challengeStart ||= Auth.user.challenge_start||todayISO();Store.save(false,true);await Store.flush(true);}
+        }
         this.setHashes({});await this.push(true);
-      }catch(e){this.status='offline';this.lastError=e;}
+      }catch(e){Store.cloudPaused=false;this.status='offline';this.lastError=e;}
     }
   };
 
@@ -423,7 +500,7 @@
         <div class="welcome-kicker">Day ${Store.state.currentDay} / 100 · ${name}</div>
         <h1>轩轩冲刺50分大作战！</h1>
         <p>${done?'今天的正式任务已经完成啦，可以再回来看看 🌷':line}</p>
-        <button class="welcome-start" id="startToday">${done?'今天完成啦，进去看看！':'开始今天的学习！'}</button>
+        <button class="welcome-start" id="startToday">${done?'今天完成啦，进去看看！':'开始今天的学习！'}</button><a class="welcome-essay-entry" href="#essay">✍️ 历年考研作文 · 2005—2025</a>
       </div>
     </section></main>`,{minimal:true});
     $('#startToday').onclick=()=>location.hash='#daily-hub';
@@ -466,6 +543,7 @@
       ${taskCard('#account','☁️','学习进度同步',Auth.user?'已登录':'未登录',Auth.user?'换设备也能继续学习':'注册后每人独立记录')}
       ${taskCard('#wordbook','📖','学习本',`${Object.keys(Store.state.words).length} 词 · ${Object.keys(Store.state.sentences).length} 句`,'单词 + 真题句 + 错题')}
       ${taskCard('#stats','✨','学习记录',`Day ${day}`,'进度、正确率与薄弱项')}
+      ${taskCard('#essay','📝','历年考研作文','2005—2025','42 道大小作文 · DeepSeek 分档评分')}
       </div><div class="dashboard-actions"><button class="secondary" id="backWelcome">回到欢迎页</button><button class="primary" id="guidedPractice">${formalDone?'查看今日完成':'按顺序继续今天练习'}</button></div>`:waiting}</section></main>`);
     $('#backWelcome')?.addEventListener('click',()=>location.hash='#welcome');
     $('#guidedPractice')?.addEventListener('click',()=>location.hash=formalDone?'#daily-complete':nextPracticeHash(plan));
@@ -988,6 +1066,16 @@
     const h=(location.hash||'#welcome').slice(1);
     try{
       if(!Auth.user&&h!=='account'&&h!=='admin-reset'){location.hash='#account';return;}
+      if(h==='essay'||h.startsWith('essay/')||h.startsWith('essay-history/')){
+        Sound.setQuiet(true);
+        if(!window.EssayModule)throw new Error('历年作文模块尚未加载');
+        return window.EssayModule.open({
+          shell,
+          state:()=>Store.state,
+          save:()=>Store.save(),
+          request:(path,body)=>Auth.request(path,{method:'POST',body},true)
+        },h);
+      }
       if(h==='account')return accountPage();
       if(h==='admin-reset')return adminResetPage();
       if(h==='welcome')return welcomePage();

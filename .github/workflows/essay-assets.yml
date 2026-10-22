@@ -1,0 +1,34 @@
+name: Import essay question scans (2005-2025)
+on:
+  push:
+    branches:
+      - feature/essay-archive-2005-2025
+    paths:
+      - tools/import-essay-scans.py
+      - .github/workflows/essay-assets.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import-scans:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install --quiet 'PyMuPDF>=1.24,<2' 'Pillow>=10,<13' 'requests>=2.32,<3'
+      - name: Import and verify public exam writing scans
+        run: python tools/import-essay-scans.py
+      - name: Commit images into feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add essay-scans/*.jpg
+          if ! git diff --staged --quiet; then
+            git commit -m "assets(essay): include 21 annual question scans"
+            git pull --rebase origin feature/essay-archive-2005-2025
+            git push origin HEAD:feature/essay-archive-2005-2025
+          fi
