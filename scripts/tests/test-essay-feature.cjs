@@ -11,22 +11,42 @@ const srv=http.createServer((req,res)=>{
   res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream'});
   fs.createReadStream(file).pipe(res);
 });
-const user={id:'essay-test-user',username:'tester',display_name:'作文测试',challenge_start:'2026-10-01',created_at:Date.now()};
-let gradeCalls=0;
-async function testBrowser(browser,base,device){
-  const context=await browser.newContext(device==='phone'?{viewport:{width:390,height:844},isMobile:true,deviceScaleFactor:1}:{viewport:{width:1280,height:840}});
-  await context.addInitScript(data=>{localStorage.setItem('xuanxuan50_auth_v1',JSON.stringify({token:'test-session',user:data,expires_at:Date.now()+86400000}));},user);
-  await context.route('https://xuanxuan-english-ai.lts2590871238.workers.dev/**',async route=>{
+const cloudByUser=new Map();
+function installMock(context,user){
+  const chunks=cloudByUser.get(user.id)||new Map();
+  cloudByUser.set(user.id,chunks);
+  return context.route('https://xuanxuan-english-ai.lts2590871238.workers.dev/**',async route=>{
     const url=new URL(route.request().url());
     if(url.pathname==='/auth/me')return route.fulfill({json:{ok:true,user}});
-    if(url.pathname==='/sync/pull')return route.fulfill({json:{ok:true,chunks:{}}});
-    if(url.pathname==='/sync/push')return route.fulfill({json:{ok:true,written:1}});
+    if(url.pathname==='/sync/pull')return route.fulfill({json:{ok:true,chunks:Object.fromEntries(Array.from(chunks.entries()).map(([k,v])=>[k,{data:v,updated_at:Date.now()}]))}});
+    if(url.pathname==='/sync/push'){
+      const batch=route.request().postDataJSON().chunks;
+      assert(batch.length<=48,'batch over server limit');
+      for(const x of batch)chunks.set(x.key,x.data);
+      return route.fulfill({json:{ok:true,written:batch.length}});
+    }
     if(url.pathname==='/score-essay'){
       gradeCalls++;
       return route.fulfill({json:{ok:true,review:{score:8,band:'第四档',overall:'任务完整，语法可进一步改进',dimensions:{task:4,organization:4,language:3,format:4},strengths:['覆盖任务'],issues:[{problem:'搭配问题',quote:'I very like it.',reason:'副词位置不当',revision:'I like it very much.'}],next_step:'修正搭配，检查论证',revised_sample:'I like it very much.'}}});
     }
     return route.fulfill({json:{ok:true}});
   });
+}
+async function waitCloud(id,count){
+  const deadline=Date.now()+17000;
+  while(Date.now()<deadline){
+    const got=[...(cloudByUser.get(id)||new Map()).keys()].filter(k=>k.startsWith('essay:2010_A:')).length;
+    if(got>=count)return;
+    await new Promise(r=>setTimeout(r,150));
+  }
+  throw new Error('cloud did not retain '+count+' independent attempts');
+}
+let gradeCalls=0;
+async function testBrowser(browser,base,device){
+  const user={id:'essay-test-'+device,username:'tester',display_name:'作文测试',challenge_start:'2026-10-01',created_at:Date.now()};
+  const context=await browser.newContext(device==='phone'?{viewport:{width:390,height:844},isMobile:true,deviceScaleFactor:1}:{viewport:{width:1280,height:840}});
+  await context.addInitScript(data=>{localStorage.setItem('xuanxuan50_auth_v1',JSON.stringify({token:'test-session',user:data,expires_at:Date.now()+86400000}));},user);
+  await installMock(context,user);
   const page=await context.newPage();
   const errors=[];
   page.on('pageerror',error=>errors.push(error.message));
@@ -68,6 +88,16 @@ async function testBrowser(browser,base,device){
   const overflow=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,viewport:innerWidth}));
   assert(overflow.scroll<=overflow.viewport+3,device+' has horizontal overflow '+JSON.stringify(overflow));
   assert.deepEqual(errors,[],device+' page JS errors: '+errors.join(' | '));
+  await waitCloud(user.id,2);
+  // A fresh browser/device must restore both immutable records from the cloud.
+  const fresh=await browser.newContext({viewport:{width:414,height:896}});
+  await fresh.addInitScript(data=>{localStorage.setItem('xuanxuan50_auth_v1',JSON.stringify({token:'test-session',user:data,expires_at:Date.now()+86400000}));},user);
+  await installMock(fresh,user);
+  const other=await fresh.newPage();
+  await other.goto(base+'/#essay-history/2010_A',{waitUntil:'load'});
+  await other.locator('.essay-history-card').first().waitFor({timeout:15000});
+  assert.equal(await other.locator('.essay-history-card').count(),2,'cross-device cloud restore lost a revision');
+  await fresh.close();
   await context.close();
   console.log('PASS '+device+' annual list, years, drafts, scoring, two immutable versions, chart facts, viewport');
 }
