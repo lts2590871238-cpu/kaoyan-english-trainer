@@ -11,6 +11,19 @@
   var history = function(id) { var h = context.state().essayHistory || {}; return Array.isArray(h[id]) ? h[id] : []; };
   var work = function(id) { return String((context.state().essayWork || {})[id] || ""); };
   var total = function() { return Object.values(context.state().essayHistory || {}).reduce(function(n,a){return n + (Array.isArray(a)?a.length:0);},0); };
+  function archiveAttempt(id,text,review) {
+    var st=context.state();st.essayHistory ||= {};st.essayHistory[id] ||= [];
+    var record={
+      id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())+"-"+Math.random().toString(36).slice(2)),
+      createdAt:Date.now(),text:text,words:count(text),review:review||null
+    };
+    st.essayHistory[id].push(record);context.save();return record;
+  }
+  function archiveIfNew(id,text){
+    if(!String(text).trim())return false;
+    var h=history(id);if(h.length&&h[h.length-1].text===text)return false;
+    archiveAttempt(id,text,null);return true;
+  }
   function saveDraft(id,text) {
     var st=context.state(); st.essayWork ||= {}; st.essayWork[id]=text;
     context.save();
@@ -66,7 +79,7 @@
       '<section class="essay-answer"><div class="essay-flex"><h2>我的作文</h2><span id="essayWords">当前 '+w+' 词 · '+e(p.word_target)+'</span></div>'+
       '<textarea id="essayInput" aria-label="输入英语作文" spellcheck="true" autocapitalize="sentences" placeholder="在这里输入你的作文……可以分段，输入内容会自动保存。">'+e(text)+'</textarea>'+
       '<p id="essaySaveStatus" class="essay-save">草稿自动保存在当前账号，也会随原网站学习进度同步。</p>'+
-      '<div class="essay-toolbar"><button id="essaySave" class="essay-soft">保存草稿</button><button id="essayNew" class="essay-soft">重新写一篇</button><button id="essayGrade" class="essay-main">保存本次作文并用 DeepSeek 评分</button></div>'+
+      '<div class="essay-toolbar"><button id="essaySave" class="essay-soft">保存草稿</button><button id="essayArchive" class="essay-soft">保存这一稿到历史</button><button id="essayNew" class="essay-soft">重新写一篇</button><button id="essayGrade" class="essay-main">保存本次作文并用 DeepSeek 评分</button></div>'+
       '<div id="essayFeedback" role="status" aria-live="polite"></div></section>'+
       '<p class="essay-fineprint">评分参考英语（一）写作五档标准：内容与任务完成、组织衔接、语言准确与多样性；小作文额外检查格式和语域。书写字迹无法在线评估。每次提交都会留下独立记录。</p>');
     var ta=document.getElementById("essayInput"),sv=document.getElementById("essaySaveStatus");
@@ -77,9 +90,15 @@
     });
     ta.addEventListener("blur",function(){clearTimeout(debounce);saveDraft(id,ta.value);sv.textContent="草稿已保存";});
     document.getElementById("essaySave").onclick=function(){saveDraft(id,ta.value);sv.textContent="草稿已保存 · "+stamp(Date.now());};
+    document.getElementById("essayArchive").onclick=function(){
+      if(!ta.value.trim()){sv.textContent="先写入作文，再保存为一稿。";return;}
+      var rec=archiveAttempt(id,ta.value,null);
+      sv.textContent="已保存为独立历史记录 · "+stamp(rec.createdAt);
+    };
     document.getElementById("essayNew").onclick=function(){
-      if(ta.value.trim()&&!confirm("开始一篇新作文？历史提交不会删除，当前未评分草稿会被清空。"))return;
-      ta.value="";saveDraft(id,"");ta.focus();document.getElementById("essayWords").textContent="当前 0 词 · "+p.word_target;sv.textContent="新草稿已创建";
+      if(ta.value.trim()&&!confirm("开始写另一稿？当前内容会先自动保存到历史，不会丢失。"))return;
+      if(ta.value.trim())archiveIfNew(id,ta.value);
+      ta.value="";saveDraft(id,"");ta.focus();document.getElementById("essayWords").textContent="当前 0 词 · "+p.word_target;sv.textContent="新草稿已创建；上一稿已保留";
     };
     document.getElementById("essayGrade").onclick=function(){grade(p,ta.value);};
     imageStatus();
@@ -107,10 +126,7 @@
     if(count(essay)<15){document.getElementById("essayFeedback").innerHTML='<p class="essay-warning">正文太短，至少输入可供评阅的完整语句后再提交。</p>';return;}
     var b=document.getElementById("essayGrade"),slot=document.getElementById("essayFeedback");
     if(b.disabled)return;
-    var key=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+"-"+Math.random().toString(36).slice(2));
-    var record={id:key,createdAt:Date.now(),text:essay,words:count(essay),review:null};
-    var st=context.state();st.essayHistory ||= {};st.essayHistory[p.id] ||= [];
-    st.essayHistory[p.id].push(record);context.save();
+    var record=archiveAttempt(p.id,essay,null);
     b.disabled=true;b.textContent="DeepSeek 正在按分档标准阅卷…";
     slot.innerHTML='<p class="essay-save">本次作文已单独保存，正在获取 AI 批改结果。</p>';
     try {
@@ -134,6 +150,7 @@
     document.querySelectorAll("[data-revise]").forEach(function(el){el.onclick=function(){
       var entry=history(id).find(function(x){return x.id===el.dataset.revise;});
       if(!entry)return;if(work(id).trim()&&!confirm("覆盖当前未提交草稿并以这一稿继续修改？已提交历史不会改变。"))return;
+      if(work(id).trim())archiveIfNew(id,work(id));
       saveDraft(id,entry.text);go("#essay/"+id);
     };});
   }
