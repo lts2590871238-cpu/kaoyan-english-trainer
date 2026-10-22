@@ -523,7 +523,7 @@ window.KAOYAN_ESSAY_PAPERS = {
       "part": "B",
       "title": "养老机器人接受度与首要关注因素",
       "type": "饼图＋柱状图·科技与养老",
-      "prompt_en": "Write an essay based on the charts below. In your essay, you should\n1) describe the charts briefly,\n2) interpret the charts, and\n3) give your comments.\nWrite your answer in 160-200 words on the ANSWER SHEET. (20 points)",
+      "prompt_en": "Write an essay based on the charts below. In your essay, you should\n1) describe the charts briefly,\n2) interpret the charts, and\n3) give your comments,\nWrite your answer in 160-200 words on the ANSWER SHEET. (20 points)",
       "max_score": 20,
       "word_target": "160–200词",
       "visual_description": "调查主题：养老机器人消费者接受度及首要关注点。饼图：完全接受39.3%、部分接受32.8%、不接受27.9%；柱状图：安全46.30%、价格24.90%、便利10.70%。饼图占比合计100%；柱状图仅列出图中三项（合计81.90%），不能擅自编造其余类别或推断样本规模。两图使用各自分类。",
