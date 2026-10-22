@@ -87,6 +87,7 @@ async function testBrowser(browser,base,device){
   await page.locator('#essayOriginalImage').waitFor();
   await page.locator('#essayOpenImage').click();
   await page.locator('#essayLightbox').waitFor();
+  await page.locator('#essayLightbox img').waitFor({state:'visible',timeout:10000});
   assert(await page.locator('#essayLightbox img').isVisible(),'original paper did not expand');
   await page.locator('#essayCloseImage').click();
   assert.equal(await page.locator('#essayLightbox').count(),0,'return-from-image button did not close overlay');
