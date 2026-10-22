@@ -39,7 +39,7 @@
     activeId="";
     var rows = catalog.filter(function(p){ return queryFilter==="all" || p.part===queryFilter; });
     var marks=[];
-    for(var y=2025;y>=2005;y--){
+    for(var y=2026;y>=2005;y--){
       var ps=rows.filter(function(p){return p.year===y;});
       if(!ps.length)continue;
       marks.push('<section class="essay-year"><header>'+y+' 年<span>英语（一）历年真题</span></header><div class="essay-year-papers">'+ps.map(function(p){
@@ -48,7 +48,7 @@
       }).join("")+'</div></section>');
     }
     box(top("历年考研作文","#dashboard")+
-      '<section class="essay-banner"><span>2005—2025 · 英语（一）</span><h1>历年考研作文</h1><p>42 道原题 · 小作文 10 分 · 大作文 20 分。每次写作独立保存，DeepSeek 按大纲分档进行模拟阅卷。</p><div class="essay-summary"><b>21 年</b><b>42 题</b><b>'+total()+' 次记录</b></div></section>'+
+      '<section class="essay-banner"><span>2005—2026 · 英语（一）</span><h1>历年考研作文</h1><p>44 道原题 · 小作文 10 分 · 大作文 20 分。每次写作独立保存，DeepSeek 按大纲分档进行模拟阅卷。</p><div class="essay-summary"><b>22 年</b><b>44 题</b><b>'+total()+' 次记录</b></div></section>'+
       '<section class="essay-filter"><label for="essayFilter">筛选题型</label><select id="essayFilter"><option value="all">全部大小作文</option><option value="A">只看小作文</option><option value="B">只看大作文</option></select><button class="essay-soft" id="essayExport">导出全部记录</button></section>'+
       '<div class="essay-catalog">'+marks.join("")+'</div><p class="essay-fineprint">提示：题型按原卷标注。2010 年小作文是招募志愿者通知，并非建议信。AI 分数用于练习反馈，不是官方阅卷结果。</p>');
     document.getElementById("essayFilter").value=queryFilter;

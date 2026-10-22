@@ -161,7 +161,7 @@
       chunks.aidict=state.aiDictionary||{};
       // One immutable cloud chunk per saved essay, not one ever-growing core blob.
       for(const [paperId,rows] of Object.entries(state.essayHistory||{})){
-        if(!/^20(?:0[5-9]|1[0-9]|2[0-5])_[AB]$/.test(paperId)||!Array.isArray(rows))continue;
+        if(!/^20(?:0[5-9]|1[0-9]|2[0-6])_[AB]$/.test(paperId)||!Array.isArray(rows))continue;
         for(const rec of rows){
           if(!rec||!/^[A-Za-z0-9_-]{8,100}$/.test(String(rec.id||'')))continue;
           chunks['essay:'+paperId+':'+rec.id]={paperId,record:rec};
@@ -173,7 +173,7 @@
         else if(k.startsWith('essay:')&&row?.data){
           const parts=k.split(':'),paperId=parts[1],id=parts.slice(2).join(':');
           const rec=row.data.record;
-          if(/^20(?:0[5-9]|1[0-9]|2[0-5])_[AB]$/.test(paperId)&&id===String(rec?.id||'')&&rec&&typeof rec.text==='string'){
+          if(/^20(?:0[5-9]|1[0-9]|2[0-6])_[AB]$/.test(paperId)&&id===String(rec?.id||'')&&rec&&typeof rec.text==='string'){
             const arr=base.essayHistory[paperId] ||= [];
             if(!arr.some(x=>x.id===id))arr.push(rec);
           }
@@ -219,7 +219,7 @@
           const cloudChunks=this.makeChunks(Store.state);
           let missing=0;
           for(const [paperId,items] of Object.entries(localEssays)){
-            if(!/^20(?:0[5-9]|1[0-9]|2[0-5])_[AB]$/.test(paperId)||!Array.isArray(items))continue;
+            if(!/^20(?:0[5-9]|1[0-9]|2[0-6])_[AB]$/.test(paperId)||!Array.isArray(items))continue;
             const dest=Store.state.essayHistory ||= {};
             const rows=dest[paperId] ||= [],seen=new Set(rows.map(x=>x.id));
             for(const record of items)if(record&&record.id&&!seen.has(record.id)){
@@ -500,7 +500,7 @@
         <div class="welcome-kicker">Day ${Store.state.currentDay} / 100 · ${name}</div>
         <h1>轩轩冲刺50分大作战！</h1>
         <p>${done?'今天的正式任务已经完成啦，可以再回来看看 🌷':line}</p>
-        <button class="welcome-start" id="startToday">${done?'今天完成啦，进去看看！':'开始今天的学习！'}</button><a class="welcome-essay-entry" href="#essay">✍️ 历年考研作文 · 2005—2025</a>
+        <button class="welcome-start" id="startToday">${done?'今天完成啦，进去看看！':'开始今天的学习！'}</button><a class="welcome-essay-entry" href="#essay">✍️ 历年考研作文 · 2005—2026</a>
       </div>
     </section></main>`,{minimal:true});
     $('#startToday').onclick=()=>location.hash='#daily-hub';
@@ -543,7 +543,7 @@
       ${taskCard('#account','☁️','学习进度同步',Auth.user?'已登录':'未登录',Auth.user?'换设备也能继续学习':'注册后每人独立记录')}
       ${taskCard('#wordbook','📖','学习本',`${Object.keys(Store.state.words).length} 词 · ${Object.keys(Store.state.sentences).length} 句`,'单词 + 真题句 + 错题')}
       ${taskCard('#stats','✨','学习记录',`Day ${day}`,'进度、正确率与薄弱项')}
-      ${taskCard('#essay','📝','历年考研作文','2005—2025','42 道大小作文 · DeepSeek 分档评分')}
+      ${taskCard('#essay','📝','历年考研作文','2005—2026','44 道大小作文 · DeepSeek 分档评分')}
       </div><div class="dashboard-actions"><button class="secondary" id="backWelcome">回到欢迎页</button><button class="primary" id="guidedPractice">${formalDone?'查看今日完成':'按顺序继续今天练习'}</button></div>`:waiting}</section></main>`);
     $('#backWelcome')?.addEventListener('click',()=>location.hash='#welcome');
     $('#guidedPractice')?.addEventListener('click',()=>location.hash=formalDone?'#daily-complete':nextPracticeHash(plan));

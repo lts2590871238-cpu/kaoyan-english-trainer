@@ -1,0 +1,33 @@
+name: Import 2026 English I exam scan
+on:
+  push:
+    branches: [feature/english-essay-2026]
+    paths:
+      - 'tools/import-essay-2026.py'
+      - '.github/workflows/essay-2026-assets.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Dependencies
+        run: pip install --quiet pymupdf Pillow requests
+      - name: Download original 2026 writing page
+        run: python tools/import-essay-2026.py
+      - name: Commit original image
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add essay-scans/2026.jpg
+          if ! git diff --staged --quiet; then
+            git commit -m "assets(essay): add 2026 English-I writing page"
+            git pull --rebase origin feature/english-essay-2026
+            git push origin HEAD:feature/english-essay-2026
+          fi
