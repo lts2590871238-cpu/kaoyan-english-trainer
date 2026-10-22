@@ -1,4 +1,4 @@
-const VERSION = 'v21.3.0-essay-ocr';
+const VERSION = 'v21.3.1-ocr-diagnostics';
 const API_ROOT = 'https://api.deepseek.com';
 const DEFAULT_MODEL = 'deepseek-v4-flash';
 const SESSION_DAYS = 30;
@@ -323,8 +323,21 @@ async function recognizeHandwrittenEssay(body,env){
       temperature:0,max_completion_tokens:2200,stream:false
     });
   }catch(err){
-    console.warn('handwriting OCR provider failed',String(err?.message||'').slice(0,160));
-    throw clientError('ocr_unavailable','手写识别服务暂时不可用，可能是 Workers AI 额度、模型访问或图片问题；原作文草稿不受影响。',503);
+    const detail=String(err?.message||err||'').slice(0,350);
+    const number=Number(err?.status||err?.statusCode||0);
+    const providerCode=String(err?.code||'').slice(0,50);
+    // Do not log image content or credentials. A short provider message is enough for support.
+    console.warn('essay OCR failed',{status:number,code:providerCode,reason:detail});
+    const low=(providerCode+' '+detail).toLowerCase();
+    if(number===429||/quota|daily limit|rate limit|neurons|insufficient.*credit|billing/.test(low))
+      throw clientError('ocr_quota','Cloudflare Workers AI 调用额度或频率受限。请查看 Workers AI 使用量及计费设置；原作文草稿未改动。',429);
+    if(number===400||/invalid.*(image|request|parameter)|schema|unsupported|input.*format|unprocessable/.test(low))
+      throw clientError('ocr_bad_request','视觉模型拒绝了图片或请求参数，请检查 Cloudflare Worker 日志中的 essay OCR failed 错误详情。草稿未改动。',502);
+    if(number===404||/model.*not found|model.*not available|access denied|not supported/.test(low))
+      throw clientError('ocr_model_access','当前 Cloudflare 账户无法访问所选视觉模型，请查看 Workers AI 模型权限与日志。草稿未改动。',503);
+    if(number===503||number===504||/busy|capacity|timeout|timed out|overloaded/.test(low))
+      throw clientError('ocr_capacity','视觉模型当前繁忙或超时，可稍后重试。草稿未改动。',503);
+    throw clientError('ocr_provider_failure','Cloudflare 视觉识别调用失败。请到 Worker Observability / Logs 查找 essay OCR failed，并提供错误代码或文字（不要上传密钥及作文照片）。草稿未改动。',503);
   }
   const raw=output?.choices?.[0]?.message?.content??output?.response??output?.result??'';
   const content=Array.isArray(raw)?raw.filter(x=>x?.type==='text').map(x=>x.text||'').join('\n'):String(raw||'');
