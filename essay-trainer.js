@@ -3,7 +3,7 @@
   "use strict";
   var catalog = (window.KAOYAN_ESSAY_PAPERS && window.KAOYAN_ESSAY_PAPERS.records) || [];
   var byId = Object.fromEntries(catalog.map(function (x) { return [x.id, x]; }));
-  var context = null, debounce = null, activeId = "", queryFilter = "all";
+  var context = null, debounce = null, activeId = "", queryFilter = "all", scanImages=[], scanBusy=false;
   var e = function (v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
   var count = function (s) { return (String(s || "").match(/[A-Za-z]+(?:[-’'][A-Za-z]+)*/g) || []).length; };
   var get = function(id) { return byId[id] || null; };
@@ -36,6 +36,7 @@
     context.shell('<main class="essay-page"><div class="essay-frame">'+inner+'</div></main>');
   }
   function listPage() {
+    resetScanImages();
     activeId="";
     var rows = catalog.filter(function(p){ return queryFilter==="all" || p.part===queryFilter; });
     var marks=[];
@@ -93,14 +94,136 @@
     };
     if(im.complete){if(im.naturalWidth)im.onload();else im.onerror();}
   }
+
+  function resetScanImages(){
+    for(const im of scanImages)if(im.url)URL.revokeObjectURL(im.url);
+    scanImages=[];scanBusy=false;
+  }
+  function scanMarkup(){
+    return '<div class="essay-ocr"><div class="essay-flex"><div><h3>手写作文拍照识别</h3><p>写在纸上也能评分：拍照／选图 → 识别 → 核对文字 → 填入作文。</p></div></div>'+
+      '<div class="essay-ocr-actions"><label class="essay-soft essay-filelabel" for="essayCamera">📷 拍照识别</label>'+
+      '<input id="essayCamera" type="file" accept="image/*" capture="environment" hidden>'+
+      '<label class="essay-soft essay-filelabel" for="essayPhoto">🖼 上传照片（最多3页）</label>'+
+      '<input id="essayPhoto" type="file" accept="image/jpeg,image/png,image/webp,image/*" multiple hidden>'+
+      '<button type="button" id="essayScan" class="essay-main" disabled>开始识别</button></div>'+
+      '<div id="essayPhotoPreviews" class="essay-photo-previews"></div>'+
+      '<p id="essayScanStatus" class="essay-save" role="status" aria-live="polite">请尽量正对纸面、光线均匀、字迹清晰。照片不会保存到作文历史，但识别时会传至 Cloudflare Workers AI，可能产生 AI 用量费用。</p>'+
+      '<div id="essayOCRReview" hidden><label class="essay-ocr-review-label" for="essayOCRText">识别结果（请先核对错字和漏字）</label>'+
+      '<textarea id="essayOCRText" class="essay-ocr-text" spellcheck="false" aria-label="识别结果，可编辑"></textarea>'+
+      '<div class="essay-ocr-actions"><button type="button" id="essayUseOCR" class="essay-main">填入作文输入框</button>'+
+      '<button type="button" id="essayAppendOCR" class="essay-soft">追加到已有作文后</button></div></div>'+
+      '<p class="essay-img-note">不会自动评分，也不会自动修改你的英语。请核对后再点击下方 DeepSeek 评分。</p></div>';
+  }
+  async function toJpegData(file){
+    if(!file||!file.type.startsWith("image/"))throw Error("请选择图片文件（JPG、PNG、WebP）。");
+    if(file.size>15*1024*1024)throw Error("单张照片不能超过15MB，请使用手机普通拍照或压缩后重试。");
+    const source=URL.createObjectURL(file);
+    try{
+      const img=new Image();
+      await new Promise((resolve,reject)=>{
+        img.onload=resolve;img.onerror=()=>reject(new Error("当前浏览器无法打开此图片；如为 HEIC，请转换成 JPG 后上传。"));
+        img.src=source;
+      });
+      if(!img.naturalWidth||!img.naturalHeight)throw Error("图片尺寸无效");
+      const ratio=Math.min(1,2300/Math.max(img.naturalWidth,img.naturalHeight));
+      const cv=document.createElement("canvas");
+      cv.width=Math.max(1,Math.round(img.naturalWidth*ratio));
+      cv.height=Math.max(1,Math.round(img.naturalHeight*ratio));
+      cv.getContext("2d",{alpha:false}).drawImage(img,0,0,cv.width,cv.height);
+      let result="";
+      for(const q of [0.88,0.77,0.66]){
+        result=cv.toDataURL("image/jpeg",q);
+        if(result.length<2100000)break;
+      }
+      if(result.length>=2100000)throw Error("压缩后图片依旧太大，请裁去多余背景，重新拍照。");
+      return result;
+    }finally{URL.revokeObjectURL(source);}
+  }
+  function installScanControls(p,editor,saveStatus){
+    const camera=document.getElementById("essayCamera"),gallery=document.getElementById("essayPhoto"),
+      preview=document.getElementById("essayPhotoPreviews"),status=document.getElementById("essayScanStatus"),
+      scan=document.getElementById("essayScan"),review=document.getElementById("essayOCRReview"),
+      result=document.getElementById("essayOCRText");
+    const redraw=()=>{
+      preview.innerHTML=scanImages.map((item,index)=>
+        '<div class="essay-photo"><img src="'+item.url+'" alt="待识别作文第'+(index+1)+'页"><span>第'+(index+1)+'页</span><button type="button" data-del="'+index+'" aria-label="删除第'+(index+1)+'页">×</button></div>'
+      ).join("");
+      preview.querySelectorAll("[data-del]").forEach(btn=>btn.onclick=()=>{
+        if(scanBusy)return;
+        const removed=scanImages.splice(Number(btn.dataset.del),1)[0];
+        if(removed)URL.revokeObjectURL(removed.url);
+        redraw();
+      });
+      scan.disabled=scanBusy||scanImages.length===0;
+      camera.disabled=gallery.disabled=scanBusy;
+    };
+    const accept=files=>{
+      if(scanBusy)return;
+      const arrivals=Array.from(files||[]);
+      if(!arrivals.length)return;
+      if(scanImages.length+arrivals.length>3){
+        status.textContent="最多上传3页，请先删除多余图片。";status.classList.add("essay-warning");return;
+      }
+      for(const file of arrivals){
+        if(!file.type.startsWith("image/")||file.size>15*1024*1024){
+          status.textContent="仅支持单张15MB以内的图片；HEIC可能需要先转JPG。";
+          status.classList.add("essay-warning");return;
+        }
+      }
+      for(const file of arrivals)scanImages.push({file,url:URL.createObjectURL(file)});
+      review.hidden=true;
+      status.classList.remove("essay-warning");
+      status.textContent="已选择"+scanImages.length+"页，请确认顺序（依次上传的顺序即识别顺序），点击“开始识别”。";
+      redraw();
+    };
+    camera.onchange=()=>{accept(camera.files);camera.value="";};
+    gallery.onchange=()=>{accept(gallery.files);gallery.value="";};
+    scan.onclick=async ()=>{
+      if(scanBusy||scanImages.length===0)return;
+      scanBusy=true;redraw();review.hidden=true;status.classList.remove("essay-warning");
+      const sections=[];
+      try{
+        for(let idx=0;idx<scanImages.length;idx++){
+          status.textContent="正在识别第"+(idx+1)+" / "+scanImages.length+"页，请勿离开此页面。";
+          const data=await toJpegData(scanImages[idx].file);
+          const response=await context.request("/ocr-essay",{paper_id:p.id,image_data:data});
+          if(!response?.text?.trim())throw Error("第"+(idx+1)+"页没有识别出文字。");
+          sections.push(response.text.trim());
+        }
+        result.value=sections.join("\n\n");
+        review.hidden=false;
+        status.textContent="识别完成！请逐句对照照片校对，尤其是拼写、标点和换行；确认无误后再填入作文。";
+        result.focus();
+      }catch(err){
+        status.textContent="识别未完成："+String(err?.message||"请稍后重试")+"。已有作文草稿未改变。";
+        status.classList.add("essay-warning");
+        if(sections.length){result.value=sections.join("\n\n");review.hidden=false;}
+      }finally{scanBusy=false;redraw();}
+    };
+    const place=append=>{
+      const txt=result.value.trim();if(!txt){status.textContent="识别文本为空，请先检查图片。";return;}
+      if(!append&&editor.value.trim()&&!confirm("替换当前作文输入框的全部文字？此前保存的历史稿不会删除。"))return;
+      editor.value=append&&editor.value.trim()?editor.value.trimEnd()+"\n\n"+txt:txt;
+      saveDraft(p.id,editor.value);
+      saveStatus.textContent="识别文字已填入并保存草稿。请检查后再评分。";
+      document.getElementById("essayWords").textContent="当前 "+count(editor.value)+" 词 · "+p.word_target;
+      editor.focus();
+      status.textContent="已填入作文区；识别图片未保存，文字草稿已保存。";
+    };
+    document.getElementById("essayUseOCR").onclick=()=>place(false);
+    document.getElementById("essayAppendOCR").onclick=()=>place(true);
+    redraw();
+  }
   function editorPage(id) {
     var p=get(id);if(!p)return go("#essay");
+    resetScanImages();
     activeId=id;
     var text=work(id),items=history(id),w=count(text);
     box(top(p.year+" "+(p.part==="A"?"小作文":"大作文"),"#essay")+
       '<section class="essay-heading"><div><span class="essay-type">'+e(p.type)+'</span><h1>'+p.year+' 年 '+e(p.title)+'</h1><p>Part '+p.part+' · '+e(p.word_target)+' · 满分 '+p.max_score+' 分</p></div><a href="#essay-history/'+e(id)+'" class="essay-soft">历史记录（'+items.length+'）</a></section>'+
       '<section class="essay-question"><h2>原题 Directions</h2><p lang="en">'+e(p.prompt_en)+'</p>'+picture(p)+'</section>'+
       '<section class="essay-answer"><div class="essay-flex"><h2>我的作文</h2><span id="essayWords">当前 '+w+' 词 · '+e(p.word_target)+'</span></div>'+
+      scanMarkup()+
       '<textarea id="essayInput" aria-label="输入英语作文" spellcheck="true" autocapitalize="sentences" placeholder="在这里输入你的作文……可以分段，输入内容会自动保存。">'+e(text)+'</textarea>'+
       '<p id="essaySaveStatus" class="essay-save">草稿自动保存在当前账号，也会随原网站学习进度同步。</p>'+
       '<div class="essay-toolbar"><button id="essaySave" class="essay-soft">保存草稿</button><button id="essayArchive" class="essay-soft">保存这一稿到历史</button><button id="essayNew" class="essay-soft">重新写一篇</button><button id="essayGrade" class="essay-main">保存本次作文并用 DeepSeek 评分</button></div>'+
@@ -126,6 +249,7 @@
     };
     document.getElementById("essayGrade").onclick=function(){grade(p,ta.value);};
     imageStatus();
+    installScanControls(p,ta,sv);
   }
   function report(r,p) {
     if(!r)return '<p class="essay-save">本次保存成功，尚无 AI 评分。</p>';
