@@ -61,5 +61,27 @@ const saved=await call('/sync/push',{chunks:[
 ]});
 assert.equal(saved.status,200,JSON.stringify(saved));
 assert.equal(saved.data.written,1,'essay chunk was rejected by worker');
+
+let seenVision=null;
+env.AI={run:async(model,params)=>{
+  seenVision={model,params};
+  return {choices:[{message:{content:"Here is an uncorected handwritten sentence."}}]};
+}};
+const photo='data:image/jpeg;base64,'+'A'.repeat(1800);
+const recognized=await call('/ocr-essay',{paper_id:'2026_B',image_data:photo});
+assert.equal(recognized.status,200,JSON.stringify(recognized));
+assert.equal(recognized.data.review_required,true);
+assert.match(recognized.data.text,/uncorected/);
+assert.equal(seenVision.model,'@cf/google/gemma-4-26b-a4b-it');
+assert(seenVision.params.messages[1].content.some(x=>x.type==='image_url'),'image not sent to vision model');
+const invalidPhoto=await call('/ocr-essay',{paper_id:'2026_B',image_data:'https://example.com/private.jpg'});
+assert.equal(invalidPhoto.status,400,'remote URL must not be accepted');
+const noAuthPhoto=await call('/ocr-essay',{paper_id:'2026_B',image_data:photo},{headers:{Authorization:''}});
+assert.equal(noAuthPhoto.status,401);
+delete env.AI;
+const notConfigured=await call('/ocr-essay',{paper_id:'2026_B',image_data:photo});
+assert.equal(notConfigured.status,503,'missing AI binding must be an explicit error');
+assert.equal(notConfigured.data.error.code,'ocr_not_configured');
+
 globalThis.fetch=originalFetch;
 console.log('PASS essay Worker: authenticated rubric A/B, validation, and independent D1 essay chunk storage');
