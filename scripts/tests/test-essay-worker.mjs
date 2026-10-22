@@ -42,7 +42,7 @@ async function call(path,body,options={}){
   return {status:res.status,data:await res.json()};
 }
 const essay='Many young people now read books online, which can improve their knowledge. Reading provides access to a wide range of ideas. However, it requires self-discipline to stay focused and to avoid distractions. We should develop a consistent reading habit, share recommendations with classmates, and make good use of digital resources. In this way, technology can support, rather than replace, the joy of reading.';
-for(const [part,year,max] of [['A',2010,10],['B',2025,20]]){
+for(const [part,year,max] of [['A',2010,10],['B',2025,20],['A',2026,10],['B',2026,20]]){
   const out=await call('/score-essay',{paper_id:year+'_'+part,year,part,title:'示例',prompt:'Write an English composition based on the assignment instructions and the provided picture.',visual_context:'original exam picture',essay});
   assert.equal(out.status,200,JSON.stringify(out));
   assert(out.data.ok);
@@ -50,14 +50,14 @@ for(const [part,year,max] of [['A',2010,10],['B',2025,20]]){
   assert.equal(out.data.review.band,part==='A'?'第五档':'第四档');
   assert(out.data.review.issues.length===1);
 }
-assert.equal(requests.length,2);
+assert.equal(requests.length,4);
 const unauthorized=await call('/score-essay',{paper_id:'2025_B',part:'B',prompt:'some prompt long enough',essay},{headers:{Authorization:''}});
 assert.equal(unauthorized.status,401);
 const malicious=await call('/score-essay',{paper_id:'2025_A_BAD',part:'A',prompt:'some prompt long enough',essay});
 assert.equal(malicious.status,400);
 // A valid essay chunk key must be recognized by the existing D1 sync API.
 const saved=await call('/sync/push',{chunks:[
-  {key:'essay:2010_A:24cead6f-ae57-4137-889a-2f0b05bcdedf',data:{paperId:'2010_A',record:{id:'24cead6f-ae57-4137-889a-2f0b05bcdedf',text:essay}}}
+  {key:'essay:2026_B:24cead6f-ae57-4137-889a-2f0b05bcdedf',data:{paperId:'2026_B',record:{id:'24cead6f-ae57-4137-889a-2f0b05bcdedf',text:essay}}}
 ]});
 assert.equal(saved.status,200,JSON.stringify(saved));
 assert.equal(saved.data.written,1,'essay chunk was rejected by worker');
