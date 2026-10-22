@@ -7,6 +7,8 @@ on:
       - 'index.html'
       - 'essay*'
       - 'scripts/tests/test-essay-feature.cjs'
+      - 'scripts/tests/test-essay-worker.mjs'
+      - 'worker/deepseek-worker.js'
       - '.github/workflows/essay-ci.yml'
   pull_request:
     paths:
@@ -31,7 +33,9 @@ jobs:
           node --check app.js
           node --check essay-papers.js
           node --check essay-trainer.js
-          node --check worker/deepseek-worker.js || test $? -eq 1
+          node --check worker/deepseek-worker.js
+      - name: Worker API regression (no secrets)
+        run: node scripts/tests/test-essay-worker.mjs
       - name: Chromium and Playwright
         run: |
           npm install --no-save playwright@1.56.1
