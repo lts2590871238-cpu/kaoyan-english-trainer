@@ -423,7 +423,7 @@
         <div class="welcome-kicker">Day ${Store.state.currentDay} / 100 · ${name}</div>
         <h1>轩轩冲刺50分大作战！</h1>
         <p>${done?'今天的正式任务已经完成啦，可以再回来看看 🌷':line}</p>
-        <button class="welcome-start" id="startToday">${done?'今天完成啦，进去看看！':'开始今天的学习！'}</button>
+        <button class="welcome-start" id="startToday">${done?'今天完成啦，进去看看！':'开始今天的学习！'}</button><a class="welcome-essay-entry" href="#essay">✍️ 历年考研作文 · 2005—2025</a>
       </div>
     </section></main>`,{minimal:true});
     $('#startToday').onclick=()=>location.hash='#daily-hub';
@@ -466,6 +466,7 @@
       ${taskCard('#account','☁️','学习进度同步',Auth.user?'已登录':'未登录',Auth.user?'换设备也能继续学习':'注册后每人独立记录')}
       ${taskCard('#wordbook','📖','学习本',`${Object.keys(Store.state.words).length} 词 · ${Object.keys(Store.state.sentences).length} 句`,'单词 + 真题句 + 错题')}
       ${taskCard('#stats','✨','学习记录',`Day ${day}`,'进度、正确率与薄弱项')}
+      ${taskCard('#essay','📝','历年考研作文','2005—2025','42 道大小作文 · DeepSeek 分档评分')}
       </div><div class="dashboard-actions"><button class="secondary" id="backWelcome">回到欢迎页</button><button class="primary" id="guidedPractice">${formalDone?'查看今日完成':'按顺序继续今天练习'}</button></div>`:waiting}</section></main>`);
     $('#backWelcome')?.addEventListener('click',()=>location.hash='#welcome');
     $('#guidedPractice')?.addEventListener('click',()=>location.hash=formalDone?'#daily-complete':nextPracticeHash(plan));
@@ -988,6 +989,16 @@
     const h=(location.hash||'#welcome').slice(1);
     try{
       if(!Auth.user&&h!=='account'&&h!=='admin-reset'){location.hash='#account';return;}
+      if(h==='essay'||h.startsWith('essay/')||h.startsWith('essay-history/')){
+        Sound.setQuiet(true);
+        if(!window.EssayModule)throw new Error('历年作文模块尚未加载');
+        return window.EssayModule.open({
+          shell,
+          state:()=>Store.state,
+          save:()=>Store.save(),
+          request:(path,body)=>Auth.request(path,{method:'POST',body},true)
+        },h);
+      }
       if(h==='account')return accountPage();
       if(h==='admin-reset')return adminResetPage();
       if(h==='welcome')return welcomePage();
