@@ -78,6 +78,14 @@ const invalidPhoto=await call('/ocr-essay',{paper_id:'2026_B',image_data:'https:
 assert.equal(invalidPhoto.status,400,'remote URL must not be accepted');
 const noAuthPhoto=await call('/ocr-essay',{paper_id:'2026_B',image_data:photo},{headers:{Authorization:''}});
 assert.equal(noAuthPhoto.status,401);
+env.AI={run:async()=>{const error=new Error('Invalid image request schema');error.status=400;throw error;}};
+const malformed=await call('/ocr-essay',{paper_id:'2026_B',image_data:photo});
+assert.equal(malformed.status,502);
+assert.equal(malformed.data.error.code,'ocr_bad_request');
+env.AI={run:async()=>{const error=new Error('Daily quota exceeded');error.status=429;throw error;}};
+const exceeded=await call('/ocr-essay',{paper_id:'2026_B',image_data:photo});
+assert.equal(exceeded.status,429);
+assert.equal(exceeded.data.error.code,'ocr_quota');
 delete env.AI;
 const notConfigured=await call('/ocr-essay',{paper_id:'2026_B',image_data:photo});
 assert.equal(notConfigured.status,503,'missing AI binding must be an explicit error');
