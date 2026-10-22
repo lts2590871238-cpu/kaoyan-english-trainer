@@ -56,17 +56,41 @@
     document.getElementById("essayExport").onclick=download;
   }
   function picture(p) {
-    if(p.part!=="B")return "";
-    return '<section class="essay-visual"><h3>原题配图／表格</h3>'+
-      '<img id="essayOriginalImage" src="essay-scans/'+p.year+'.jpg" alt="'+p.year+'年考研英语一作文原题扫描页" loading="eager">'+
-      '<p id="essayImageStatus" class="essay-img-note">如需完整阅读文字与图片，请放大原卷；下方文字概述仅用于辅助审题。</p>'+
-      '<p class="essay-image-summary">主题核对：'+e(p.visual_description||"以原始试卷为准")+'</p></section>';
+    return '<section class="essay-visual"><h3>原题扫描（Part A / Part B 同页）</h3>'+
+      '<button type="button" class="essay-image-open" id="essayOpenImage" aria-label="放大查看本年原题扫描页">'+
+      '<img id="essayOriginalImage" src="essay-scans/'+p.year+'.jpg" alt="'+p.year+'年考研英语一写作原题完整扫描页" loading="eager"></button>'+
+      '<p id="essayImageStatus" class="essay-img-note">点击原题图片可全屏放大，关闭后直接返回写作页。</p>'+
+      (p.part==="B"?'<p class="essay-image-summary">审题核对：'+e(p.visual_description||"以原始试卷为准")+'</p>':"")+
+      '</section>';
   }
   function imageStatus(){
-    var im=document.getElementById("essayOriginalImage"),t=document.getElementById("essayImageStatus");
-    if(!im||!t)return;
-    im.onerror=function(){im.hidden=true;t.textContent="原题扫描图尚未在当前部署中加载。请以交接包原卷为准；图片缺失时，大作文评分仅供初步参考。";t.classList.add("essay-warning");};
-    im.onload=function(){t.textContent="原题扫描图已加载，可点击放大查看。"; im.onclick=function(){ window.open(im.src,"_blank","noopener,noreferrer"); };};
+    var im=document.getElementById("essayOriginalImage"),t=document.getElementById("essayImageStatus"),
+      btn=document.getElementById("essayOpenImage");
+    if(!im||!t||!btn)return;
+    im.onerror=function(){
+      btn.hidden=true;t.textContent="本题扫描图暂未加载，原题英文正文仍可正常练习；大作文请核对交接包原图后再正式评分。";
+      t.classList.add("essay-warning");
+    };
+    im.onload=function(){
+      btn.hidden=false;t.textContent="原卷扫描已加载，点击图片放大查看，再点“返回写作”继续。";
+    };
+    btn.onclick=function(){
+      if(!im.naturalWidth)return;
+      var old=document.getElementById("essayLightbox");
+      if(old)old.remove();
+      var box=document.createElement("div");
+      box.className="essay-lightbox";box.id="essayLightbox";box.setAttribute("role","dialog");
+      box.setAttribute("aria-modal","true");box.setAttribute("aria-label","原题图片放大");
+      box.innerHTML='<button type="button" id="essayCloseImage" class="essay-lightbox-close">← 返回写作</button>'+
+        '<img src="'+im.src+'" alt="'+e(im.alt)+'">';
+      document.body.appendChild(box);
+      var close=function(){box.remove();document.removeEventListener("keydown",onKey);btn.focus();};
+      var onKey=function(ev){if(ev.key==="Escape")close();};
+      document.getElementById("essayCloseImage").onclick=close;
+      box.addEventListener("click",function(ev){if(ev.target===box)close();});
+      document.addEventListener("keydown",onKey);
+      document.getElementById("essayCloseImage").focus();
+    };
     if(im.complete){if(im.naturalWidth)im.onload();else im.onerror();}
   }
   function editorPage(id) {
