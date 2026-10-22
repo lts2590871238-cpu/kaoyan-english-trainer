@@ -29,5 +29,6 @@ jobs:
           git add essay-scans/*.jpg
           if ! git diff --staged --quiet; then
             git commit -m "assets(essay): include 21 annual question scans"
-            git push
+            git pull --rebase origin feature/essay-archive-2005-2025
+            git push origin HEAD:feature/essay-archive-2005-2025
           fi
