@@ -1,7 +1,7 @@
 name: Essay archive browser regression
 on:
   push:
-    branches: [feature/essay-archive-2005-2025]
+    branches: [feature/english-essay-2026]
     paths:
       - 'app.js'
       - 'index.html'
@@ -16,6 +16,8 @@ on:
       - 'index.html'
       - 'essay*'
       - 'scripts/tests/test-essay-feature.cjs'
+      - 'scripts/tests/test-essay-worker.mjs'
+      - 'worker/deepseek-worker.js'
       - '.github/workflows/essay-ci.yml'
 permissions:
   contents: read
