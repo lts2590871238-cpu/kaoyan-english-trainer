@@ -51,7 +51,7 @@ for year in range(2005, 2026):
                 )
         if target.stat().st_size < 18000:
             raise RuntimeError("scan unexpectedly small")
-        print(f"OK {year} page {chosen + 1} / {len(paper)}: {target.stat().st_size} bytes")
+        print(f"OK {year} page {chosen + 1}: {target.stat().st_size} bytes")
     except Exception as exc:
         failed.append(f"{year}: {exc}")
         if target.exists():
