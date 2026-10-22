@@ -34,3 +34,28 @@
 - 前端目录及训练模块、云历史分片键格式、Worker `/score-essay` 年份校验均扩展至2026。
 - **先在 Cloudflare 部署本分支 `worker/deepseek-worker.js`（`v21.2.1-essay-2026`），确认 /health 版本；再合并 GitHub PR 到 main**。仅合并前端但未升级 Worker 会导致2026评分及记录云同步失败。
 - 旧账号登录、原来的每个练习模块、2005—2025 的全部数据保持不变。
+
+## 手写作文图片识别（新增，需额外绑定 AI）
+
+用户交互：
+1. 在任一年大小作文写作页面点击「拍照识别」或「上传照片」，最多按顺序添加3页。单张原图不超过15MB；前端用 Canvas 缩小到最长2300像素后编码为JPEG，发送给 Worker 的大小必须小于约1.6MB。
+2. 点击「开始识别」；每页分别调用已登录的 `POST /ocr-essay`，使用 Cloudflare Workers AI 视觉模型 `@cf/google/gemma-4-26b-a4b-it`，专门要求逐字保留笔误和语法错误，不做润色。
+3. 在「识别结果」文本框中人工核对，并明确选择「填入作文输入框」或「追加到已有作文后」。**未确认之前不覆盖任何正文，不自动提交评分**。
+4. 审查识别出的英文后点击旧有 DeepSeek 按大纲评分；现有分档评分和历史保存逻辑不变。
+
+隐私及限制：
+- 图片通过现有经过登录的 Worker 上传到 Cloudflare Workers AI 处理，不写进 `Store.state`、D1或历史作文备份；只有经人工确认的文本存入草稿。
+- 需要明确告知用户图片发送给云端，Workers AI 模型推理可能计费。不能保证潦草字迹无误，无法识别处应标注 `[unclear]`。
+- 最多3页，后端每张有大小校验，每用户每小时最多12次OCR请求；Worker对图片仅接受 `data:image/jpeg|png|webp;base64,...`，不接受远程URL。
+- 图片识别不消耗 DeepSeek API Token，**最终文字评分仍走已有 DeepSeek 接口**。
+- 图片不可用或绑定尚未配置时，保持原网站和手动作文输入可用，提示清楚原因。
+
+**安全部署顺序：**
+1. 在 Cloudflare 控制台选中已存在的 `xuanxuan-english-ai` → Settings → Bindings → Add binding → Workers AI，名称必须填 `AI`（注意：这里不是新增 D1 数据库或 Secret）。现有 `DB`、`AUTH_PEPPER`、`DEEPSEEK_API_KEY` 不能修改。
+2. 替换原 Worker `worker/deepseek-worker.js`，部署后访问 `/health`，检查 `version=v21.3.0-essay-ocr` 及 `handwriting_ocr_configured=true`，旧有 `configured`、`database`、`auth_configured` 仍为true。Workers AI绑定单独产生模型使用费用。
+3. **Worker 新版本先部署确认，再合并 PR 到主分支发布网页**，并用一张真实英文手写作文做端到端测试（此项无法用纯mock测试替代）。
+4. 如果用户暂时不希望开通 Workers AI / 无法接受潜在计费，保持 PR 未合并，现有网站不受影响。
+
+来源与格式参考：
+- https://developers.cloudflare.com/workers-ai/configuration/bindings/
+- https://developers.cloudflare.com/workers-ai/models/gemma-4-26b-a4b-it/
