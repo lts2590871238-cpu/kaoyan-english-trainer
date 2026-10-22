@@ -69,3 +69,7 @@
 .essay-empty{text-align:center;padding:45px 20px;color:#7f8b9a}
 @media(max-width:720px){.essay-page{padding:10px 10px 50px}.essay-banner{padding:23px 18px}.essay-catalog{grid-template-columns:1fr}.essay-year{padding:14px}.essay-paper{padding:12px;min-height:143px}.essay-heading{align-items:flex-start;flex-direction:column}.essay-filter button{margin-left:0}.essay-toolbar{display:grid;grid-template-columns:1fr 1fr}.essay-toolbar .essay-main{grid-column:1/-1}.essay-dimensions{grid-template-columns:repeat(2,1fr)}.essay-answer textarea{min-height:260px}.essay-crumb{gap:8px}.essay-crumb strong{order:-1;width:100%}}
 @media(max-width:365px){.essay-year-papers{grid-template-columns:1fr}.essay-summary{gap:6px}.essay-summary b{padding:8px 10px;font-size:12px}}
+
+/* The landing-page essay entry is separately discoverable from the daily-study CTA. */
+.welcome-essay-entry{display:block;width:max-content;max-width:100%;margin:16px auto 0;background:rgba(255,255,255,.95);border:1px solid #fff;border-radius:18px;padding:12px 18px;text-decoration:none;color:#9b426b;font-weight:850;box-shadow:0 6px 24px rgba(53,31,47,.1);text-shadow:none;text-align:center}
+.welcome-essay-entry:hover{background:white;transform:translateY(-1px)}
