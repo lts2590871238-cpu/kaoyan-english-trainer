@@ -3,7 +3,6 @@ import fs from 'node:fs';
 import { webcrypto } from 'node:crypto';
 
 // Import the actual Worker ESM source: no real network or Cloudflare credentials.
-globalThis.crypto=webcrypto;
 const source=fs.readFileSync(new URL('../../worker/deepseek-worker.js',import.meta.url),'utf8');
 const {default:worker}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
 const requests=[];
